@@ -3,15 +3,6 @@ package com.acme
 import org.joda.time.LocalDate
 import org.parboiled2._
 
-object DateParser {
-  def process(datum: Datum) {
-    val today = new LocalDate()
-    val result = datum.toDate(today).toString
-
-    s"${result}"
-  }
-}
-
 class DateParser(val input: ParserInput) extends Parser {
   def InputLine = rule { Expression ~ EOI }
 

@@ -4,6 +4,7 @@ import scala.annotation.tailrec
 import scala.io.StdIn
 import scala.util.{Failure, Success}
 
+import org.joda.time.LocalDate
 import org.parboiled2.ParseError
 
 object CommandLineInterface extends App {
@@ -21,9 +22,9 @@ object CommandLineInterface extends App {
       case line =>
         val parser = new DateParser(line)
         parser.InputLine.run() match {
-          case Success(result)        => println("Result: " + DateParser.process(result))
-          case Failure(e: ParseError) => println("Invalid expression: " + parser.formatError(e))
-          case Failure(e)             => println("Unexpected error: " + e)
+          case Success(result)        => println(s"Result: ${result.toDate(new LocalDate())}")
+          case Failure(e: ParseError) => println(s"Invalid expression: ${parser.formatError(e)}")
+          case Failure(e)             => println(s"Unexpected error: ${e}")
         }
         repl()
     }
