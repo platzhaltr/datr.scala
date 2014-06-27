@@ -3,10 +3,6 @@ package com.acme
 import org.joda.time.LocalDate
 import org.parboiled2._
 
-/**
- * This parser reads simple calculator expressions and evaluates them right during
- * the parsing run with the help of the value stack.
- */
 class DateParser(val input: ParserInput) extends Parser {
   def InputLine = rule { Expression ~ EOI }
 
