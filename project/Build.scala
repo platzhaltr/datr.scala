@@ -4,16 +4,16 @@ import Keys._
 object BuildSettings {
   val myBuildSettings = Defaults.defaultSettings ++ Seq (
     name         := "parboiled",
-    version      := "1.0",
+    version      := "0.1",
     organization := "com.acme",
-    scalaVersion := "2.11.0",
+    scalaVersion := "2.11.1",
     scalacOptions ++= Seq()
   )
 }
 
 object Dependencies {
-  val scalatest = "org.scalatest" %% "scalatest" % "2.1.4" % "test"
-  val parboiled = "org.parboiled" %% "parboiled" % "2.0.0-RC1"
+  val scalatest = "org.scalatest" %% "scalatest" % "2.2.0" % "test"
+  val parboiled = "org.parboiled" %% "parboiled" % "2.0.0"
 
   val myDependencies = Seq(scalatest, parboiled)
 }
