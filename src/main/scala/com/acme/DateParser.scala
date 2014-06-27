@@ -43,8 +43,8 @@ class DateParser(val input: ParserInput) extends Parser {
   }
 
   def RelativeFuture = rule {
-    Next ~ Space ~ Weekday ~> ((w) => Config(weekday = Some(w))) |
-    Next ~ Space ~ Month   ~> ((m) => Config(month = Some(m)))
+    Next ~ Space ~ Weekday ~> ((w) => Config(Seq(w))) |
+    Next ~ Space ~ Month   ~> ((m) => Config(Seq(m)))
   }
 
   def Next = rule { "next" }
@@ -78,13 +78,14 @@ class DateParser(val input: ParserInput) extends Parser {
   def Space = rule { zeroOrMore(" ") }
 }
 
-case class Weekday(d: Int) {
+sealed trait Datum
+case class Weekday(d: Int) extends Datum {
   require(d >= 1 && d <= 7)
 
   val value = d
 }
 
-case class Month(m: Int) {
+case class Month(m: Int) extends Datum {
   require(m >= 1 && m <= 12)
 
   val value = m
@@ -105,27 +106,19 @@ object Config {
   private def roll(now: Int, then: Int, border: Int) = {
     if (now == then) border else (then - now + border) % border
   }
-
 }
 
-case class Config(
-  month: Option[Month] = None,
-  weekday: Option[Weekday] = None
-) {
+case class Config(datums: Seq[Datum] = Nil) {
 
   import Config._
 
   val toDate: String = {
     val today = new LocalDate()
 
-    val result =
-      if (month.isDefined) {
-        nextMonth(today, month.get).toString
-      } else if (weekday.isDefined) {
-        nextWeekday(today, weekday.get).toString
-      } else {
-        throw new IllegalArgumentException("Invalid config.")
-      }
+    val result = datums.head match {
+      case month @ Month(_) => nextMonth(today, month).toString
+      case weekday @ Weekday(_) => nextWeekday(today, weekday).toString
+    }
 
     s"${result}"
   }
