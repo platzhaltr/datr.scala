@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package com.acme
+package org.parboiled2.examples
 
 import scala.annotation.tailrec
 import scala.util.{Failure, Success}
+import scala.io.StdIn
 import org.parboiled2._
 
-object Calculator extends App {
+object Calculator1 extends App {
   repl()
 
   @tailrec
@@ -29,10 +30,10 @@ object Calculator extends App {
     // once BUG https://issues.scala-lang.org/browse/SI-8167 is fixed
     print("---\nEnter calculator expression > ")
     Console.out.flush()
-    readLine() match {
+    StdIn.readLine() match {
       case "" =>
       case line =>
-        val parser = new Calculator(line)
+        val parser = new Calculator1(line)
         parser.InputLine.run() match {
           case Success(result)        => println("Result: " + result)
           case Failure(e: ParseError) => println("Expression is not valid: " + parser.formatError(e))
@@ -47,7 +48,7 @@ object Calculator extends App {
  * This parser reads simple calculator expressions and evaluates them right during
  * the parsing run with the help of the value stack.
  */
-class Calculator(val input: ParserInput) extends Parser {
+class Calculator1(val input: ParserInput) extends Parser {
   def InputLine = rule { Expression ~ EOI }
 
   def Expression: Rule1[Int] = rule {
