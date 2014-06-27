@@ -14,8 +14,9 @@ object BuildSettings {
 object Dependencies {
   val scalatest = "org.scalatest" %% "scalatest" % "2.2.0" % "test"
   val parboiled = "org.parboiled" %% "parboiled" % "2.0.0"
+  val reflect   = "org.scala-lang" % "scala-reflect" % "2.11.1"
 
-  val myDependencies = Seq(scalatest, parboiled)
+  val myDependencies = Seq(scalatest, parboiled, reflect)
 }
 
 object MyBuild extends Build {
