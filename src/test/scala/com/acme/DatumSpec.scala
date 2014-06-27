@@ -4,12 +4,12 @@ import org.scalatest._
 
 import org.joda.time.LocalDate
 
+import Weekday._
+import Month._
+
 class DatumSpec extends FlatSpec with Matchers {
 
   it should "interpret next weekday" in {
-
-    import Weekday._
-
     val today =  new LocalDate(2014, 6, 27) // Friday
 
     NextWeekday(Monday).toDate(today)    shouldBe new LocalDate(2014, 6, 30)
@@ -22,9 +22,6 @@ class DatumSpec extends FlatSpec with Matchers {
   }
 
   it should "interpret next month" in {
-
-    import Month._
-
     val today =  new LocalDate(2014, 1, 1)
 
     NextMonth(January).toDate(today)   shouldBe new LocalDate(2015, 1, 1)
@@ -39,5 +36,12 @@ class DatumSpec extends FlatSpec with Matchers {
     NextMonth(October).toDate(today)   shouldBe new LocalDate(2014, 10, 1)
     NextMonth(November).toDate(today)  shouldBe new LocalDate(2014, 11, 1)
     NextMonth(December).toDate(today)  shouldBe new LocalDate(2014, 12, 1)
+  }
+
+  it should "interpret settings weekday of month" in {
+    val today =  new LocalDate(2014, 1, 1)
+
+    WeekdayInMonth(1, Saturday, July).toDate(today) shouldBe new LocalDate(2014, 7, 5)
+    WeekdayInMonth(2, Saturday, July).toDate(today) shouldBe new LocalDate(2014, 7, 12)
   }
 }

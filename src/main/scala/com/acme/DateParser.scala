@@ -24,13 +24,15 @@ class DateParser(val input: ParserInput) extends Parser {
     Next ~ Space ~ MonthLiteral        ~> ((m) => NextMonth(m)) |
     Next ~ Space ~ Week                ~> (()  => InWeeks(1)) |
     In ~ Space ~ Number ~ Space ~ Week ~> ((w) => InWeeks(w)) |
-    In ~ Space ~ Number ~ Space ~ Day  ~> ((d) => InDays(d))
+    In ~ Space ~ Number ~ Space ~ Day  ~> ((d) => InDays(d)) |
+    First ~ Space ~ WeekdayLiteral ~ Space ~ In ~ Space ~ MonthLiteral ~> ((c,w,m) => WeekdayInMonth(c, w, m))
   }
 
-  def Next = rule { ignoreCase("next") }
-  def In   = rule { ignoreCase("in") }
-  def Day  = rule { ignoreCase("day")  ~ optional(ignoreCase("s")) }
-  def Week = rule { ignoreCase("week") ~ optional(ignoreCase("s")) }
+  def First = rule { ignoreCase("first") ~> (() => 1)}
+  def Next  = rule { ignoreCase("next") }
+  def In    = rule { ignoreCase("in") }
+  def Day   = rule { ignoreCase("day")  ~ optional(ignoreCase("s")) }
+  def Week  = rule { ignoreCase("week") ~ optional(ignoreCase("s")) }
 
   def Number = rule { capture(Digits) ~> (_.toInt) }
   def Digits = rule { oneOrMore(CharPredicate.Digit) }
@@ -117,3 +119,16 @@ case class InWeeks(weeks: Int) extends Datum {
 case class InDays(days: Int) extends Datum {
   override def toDate(now: LocalDate) = now.plusDays(days)
 }
+case class WeekdayInMonth(count: Int, weekday: Weekday, month: Month) extends Datum {
+  override def toDate(now: LocalDate) = {
+    val nextMonth = NextMonth(month).toDate(now)
+    val firstOfMonth = nextMonth.withDayOfMonth(1)
+
+    val firstOccurence = if (firstOfMonth.getDayOfWeek == weekday.value)
+                          firstOfMonth else NextWeekday(weekday).toDate(firstOfMonth)
+
+    // TODO guard against user error, check if still in correct month
+    InWeeks(count - 1).toDate(firstOccurence)
+  }
+}
+
