@@ -61,13 +61,14 @@ class DateParser(val input: ParserInput) extends Parser {
   def Next = rule { "next" }
 
   def Weekday: Rule1[Int]   = rule {Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday}
-  def Monday: Rule1[Int]    = rule {capture("monday")  ~> ((s: String) => 1)}
-  def Tuesday: Rule1[Int]   = rule {capture("tuesday") ~> ((s: String) => 2)}
-  def Wednesday: Rule1[Int] = rule {capture("wednesday") ~> ((s: String) => 3)}
-  def Thursday: Rule1[Int]  = rule {capture("thursday") ~> ((s: String) => 4)}
-  def Friday: Rule1[Int]    = rule {capture("friday") ~> ((s: String) => 5)}
-  def Saturday: Rule1[Int]  = rule {capture("saturday") ~> ((s: String) => 6)}
-  def Sunday: Rule1[Int]    = rule {capture("sunday") ~> ((s: String) => 7)}
+
+  def Monday: Rule1[Int]    = rule {capture(ignoreCase("monday")    | ignoreCase("mon") ) ~> ((s: String) => 1)}
+  def Tuesday: Rule1[Int]   = rule {capture(ignoreCase("tuesday")   | ignoreCase("tue") ) ~> ((s: String) => 2)}
+  def Wednesday: Rule1[Int] = rule {capture(ignoreCase("wednesday") | ignoreCase("wed") ) ~> ((s: String) => 3)}
+  def Thursday: Rule1[Int]  = rule {capture(ignoreCase("thursday")  | ignoreCase("thu") ) ~> ((s: String) => 4)}
+  def Friday: Rule1[Int]    = rule {capture(ignoreCase("friday")    | ignoreCase("fri") ) ~> ((s: String) => 5)}
+  def Saturday: Rule1[Int]  = rule {capture(ignoreCase("saturday")  | ignoreCase("sat") ) ~> ((s: String) => 6)}
+  def Sunday: Rule1[Int]    = rule {capture(ignoreCase("sunday")    | ignoreCase("sun") ) ~> ((s: String) => 7)}
 
   def Space = rule { zeroOrMore(" ") }
 }
