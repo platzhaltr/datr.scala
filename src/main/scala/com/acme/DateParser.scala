@@ -5,6 +5,8 @@ import scala.util.{Failure, Success}
 import scala.io.StdIn
 import org.parboiled2._
 
+import org.joda.time.LocalDate
+
 object DateParser extends App {
   repl()
 
@@ -20,7 +22,7 @@ object DateParser extends App {
       case line =>
         val parser = new DateParser(line)
         parser.InputLine.run() match {
-          case Success(result)        => println("Result: " + result)
+          case Success(result)        => println("Result: " + result.toDate)
           case Failure(e: ParseError) => println("Invalid expression: " + parser.formatError(e))
           case Failure(e)             => println("Unexpected error: " + e)
         }
@@ -78,13 +80,53 @@ class DateParser(val input: ParserInput) extends Parser {
 
 case class Weekday(d: Int) {
   require(d >= 1 && d <= 7)
+
+  val value = d
 }
 
 case class Month(m: Int) {
   require(m >= 1 && m <= 12)
+
+  val value = m
+}
+
+object Config {
+  val DaysInWeek = 7
+  val MonthsInYear = 12
+
+  def nextWeekday(now: LocalDate, weekday: Weekday): LocalDate = {
+    now.plusDays(roll(now.getDayOfWeek, weekday.value, DaysInWeek))
+  }
+
+  def nextMonth(now: LocalDate, month: Month): LocalDate = {
+    now.plusMonths(roll(now.getMonthOfYear, month.value, MonthsInYear))
+  }
+
+  private def roll(now: Int, then: Int, border: Int) = {
+    if (now == then) border else (then - now + border) % border
+  }
+
 }
 
 case class Config(
   month: Option[Month] = None,
   weekday: Option[Weekday] = None
-)
+) {
+
+  import Config._
+
+  val toDate: String = {
+    val today = new LocalDate()
+
+    val result =
+      if (month.isDefined) {
+        nextMonth(today, month.get).toString
+      } else if (weekday.isDefined) {
+        nextWeekday(today, weekday.get).toString
+      } else {
+        throw new IllegalArgumentException("Invalid config.")
+      }
+
+    s"${result}"
+  }
+}
