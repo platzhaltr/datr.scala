@@ -43,14 +43,18 @@ class DateParser(val input: ParserInput) extends Parser {
   }
 
   def RelativeFuture = rule {
-    Next ~ Space ~ Weekday ~> ((w) => Config(Seq(w))) |
-    Next ~ Space ~ Month   ~> ((m) => Config(Seq(m))) |
-    Next ~ Space ~ Week    ~> (() => Config(Seq(new Weeks(1))))
+    Next ~ Space ~ Weekday             ~> ((w) => Config(Seq(w))) |
+    Next ~ Space ~ Month               ~> ((m) => Config(Seq(m))) |
+    Next ~ Space ~ Week                ~> (() => Config(Seq(new Weeks(1)))) |
+    In ~ Space ~ Number ~ Space ~ Week ~> ((w) => Config(Seq(new Weeks(w))))
   }
 
   def Next = rule { ignoreCase("next") }
-
+  def In   = rule { ignoreCase("in") }
   def Week = rule { ignoreCase("week") ~ optional(ignoreCase("s")) }
+
+  def Number = rule { capture(Digits) ~> (_.toInt) }
+  def Digits = rule { oneOrMore(CharPredicate.Digit) }
 
   // Absolute Weekday
   def Weekday: Rule1[Weekday]   = rule {Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday}
