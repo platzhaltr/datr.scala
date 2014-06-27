@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.parboiled2.examples
+package com.acme
 
 import scala.annotation.tailrec
 import scala.util.{Failure, Success}
@@ -52,23 +52,29 @@ object DateParser extends App {
 class DateParser(val input: ParserInput) extends Parser {
   def InputLine = rule { Expression ~ EOI }
 
-  def Expression: Rule1[Int] = rule {
+  def Expression: Rule1[Config] = rule {
     RelativeFuture
   }
 
-  def RelativeFuture = rule { Next ~ Space ~ Weekday}
+  def RelativeFuture = rule { Next ~ Space ~ Weekday ~> ((w: Weekday) => Config(Some(w)) )}
 
   def Next = rule { "next" }
 
-  def Weekday: Rule1[Int]   = rule {Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday}
+  def Weekday: Rule1[Weekday]   = rule {Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday}
 
-  def Monday: Rule1[Int]    = rule {capture(ignoreCase("monday")    | ignoreCase("mon") ) ~> ((s: String) => 1)}
-  def Tuesday: Rule1[Int]   = rule {capture(ignoreCase("tuesday")   | ignoreCase("tue") ) ~> ((s: String) => 2)}
-  def Wednesday: Rule1[Int] = rule {capture(ignoreCase("wednesday") | ignoreCase("wed") ) ~> ((s: String) => 3)}
-  def Thursday: Rule1[Int]  = rule {capture(ignoreCase("thursday")  | ignoreCase("thu") ) ~> ((s: String) => 4)}
-  def Friday: Rule1[Int]    = rule {capture(ignoreCase("friday")    | ignoreCase("fri") ) ~> ((s: String) => 5)}
-  def Saturday: Rule1[Int]  = rule {capture(ignoreCase("saturday")  | ignoreCase("sat") ) ~> ((s: String) => 6)}
-  def Sunday: Rule1[Int]    = rule {capture(ignoreCase("sunday")    | ignoreCase("sun") ) ~> ((s: String) => 7)}
+  def Monday: Rule1[Weekday]    = rule {capture(ignoreCase("monday")    | ignoreCase("mon") ) ~> ((s: String) => new Weekday(1) )}
+  def Tuesday: Rule1[Weekday]   = rule {capture(ignoreCase("tuesday")   | ignoreCase("tue") ) ~> ((s: String) => new Weekday(2) )}
+  def Wednesday: Rule1[Weekday] = rule {capture(ignoreCase("wednesday") | ignoreCase("wed") ) ~> ((s: String) => new Weekday(3) )}
+  def Thursday: Rule1[Weekday]  = rule {capture(ignoreCase("thursday")  | ignoreCase("thu") ) ~> ((s: String) => new Weekday(4) )}
+  def Friday: Rule1[Weekday]    = rule {capture(ignoreCase("friday")    | ignoreCase("fri") ) ~> ((s: String) => new Weekday(5) )}
+  def Saturday: Rule1[Weekday]  = rule {capture(ignoreCase("saturday")  | ignoreCase("sat") ) ~> ((s: String) => new Weekday(6) )}
+  def Sunday: Rule1[Weekday]    = rule {capture(ignoreCase("sunday")    | ignoreCase("sun") ) ~> ((s: String) => new Weekday(7) )}
 
   def Space = rule { zeroOrMore(" ") }
 }
+
+case class Weekday(d: Int) {
+  require(d >= 1 && d <= 7)
+}
+
+case class Config(weekday: Option[Weekday])
