@@ -8,6 +8,14 @@ import Month._
 
 class DateParserSpec extends FlatSpec with Matchers {
 
+  it should "parse 'next week" in {
+    parse("next week") shouldBe InWeeks(1)
+  }
+
+  it should "parse 'in 3 weeks" in {
+    parse("in 3 weeks") shouldBe InWeeks(3)
+  }
+
   it should "parse 'second saturday in september'" in {
     parse("second saturday in september") shouldBe WeekdayInMonth(2, Saturday, September)
   }
