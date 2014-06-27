@@ -14,22 +14,26 @@ class DateParser(val input: ParserInput) extends Parser {
     Next ~ Space ~ WeekdayLiteral      ~> ((w) => NextWeekday(w)) |
     Next ~ Space ~ MonthLiteral        ~> ((m) => NextMonth(m)) |
     Next ~ Space ~ Week                ~> (()  => InWeeks(1)) |
+    Last ~ Space ~ WeekdayLiteral      ~> ((w) => LastWeekday(w)) |
+    Last ~ Space ~ MonthLiteral        ~> ((m) => LastMonth(m)) |
+    Last ~ Space ~ Week                ~> (()  => InWeeks(-1)) |
     In ~ Space ~ Number ~ Space ~ Week ~> ((w) => InWeeks(w)) |
     In ~ Space ~ Number ~ Space ~ Day  ~> ((d) => InDays(d)) |
     Count ~ Space ~ WeekdayLiteral ~ Space ~ In ~ Space ~ MonthLiteral ~> ((c,w,m) => WeekdayInMonth(c, w, m))
   }
 
-  def Count = rule { First | Second | Third | Fourth | Fifth}
-  def First = rule { ignoreCase("first") ~> (() => 1)}
+  def Count  = rule { First | Second | Third | Fourth | Fifth}
+  def First  = rule { ignoreCase("first")  ~> (() => 1)}
   def Second = rule { ignoreCase("second") ~> (() => 2)}
-  def Third = rule { ignoreCase("third") ~> (() => 3)}
+  def Third  = rule { ignoreCase("third")  ~> (() => 3)}
   def Fourth = rule { ignoreCase("fourth") ~> (() => 4)}
-  def Fifth = rule { ignoreCase("fifth") ~> (() => 5)}
+  def Fifth  = rule { ignoreCase("fifth")  ~> (() => 5)}
 
-  def Next  = rule { ignoreCase("next") }
-  def In    = rule { ignoreCase("in") }
-  def Day   = rule { ignoreCase("day")  ~ optional(ignoreCase("s")) }
-  def Week  = rule { ignoreCase("week") ~ optional(ignoreCase("s")) }
+  def Last = rule { ignoreCase("last") }
+  def Next = rule { ignoreCase("next") }
+  def In   = rule { ignoreCase("in") }
+  def Day  = rule { ignoreCase("day")  ~ optional(ignoreCase("s")) }
+  def Week = rule { ignoreCase("week") ~ optional(ignoreCase("s")) }
 
   def Number = rule { capture(Digits) ~> (_.toInt) }
   def Digits = rule { oneOrMore(CharPredicate.Digit) }
@@ -101,8 +105,14 @@ object Datum {
 sealed trait Datum {
   def toDate(now: LocalDate): LocalDate
 }
+case class LastWeekday(weekday: Weekday) extends Datum {
+  override def toDate(now: LocalDate) = now.minusDays( Datum.roll(weekday.value, now.getDayOfWeek, 7))
+}
 case class NextWeekday(weekday: Weekday) extends Datum {
   override def toDate(now: LocalDate) = now.plusDays(Datum.roll(now.getDayOfWeek, weekday.value, 7))
+}
+case class LastMonth(month: Month) extends Datum {
+  override def toDate(now: LocalDate) = now.minusMonths(Datum.roll(month.value, now.getMonthOfYear, 12))
 }
 case class NextMonth(month: Month) extends Datum {
   override def toDate(now: LocalDate) = now.plusMonths(Datum.roll(now.getMonthOfYear, month.value, 12))

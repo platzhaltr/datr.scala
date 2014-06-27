@@ -20,7 +20,6 @@
 ## Relative dates
 
 ```
-last wednesday
 today
 tomorrow
 yesterday

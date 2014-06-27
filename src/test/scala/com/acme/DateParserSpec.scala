@@ -15,6 +15,26 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
     withFixture(test.toNoArgTest(test))
   }
 
+  "last tuesday" in { td =>
+    parse(td.name) shouldBe LastWeekday(Tuesday)
+  }
+
+  "next tuesday" in { td =>
+    parse(td.name) shouldBe NextWeekday(Tuesday)
+  }
+
+  "last january" in { td =>
+    parse(td.name) shouldBe LastMonth(January)
+  }
+
+  "next february" in { td =>
+    parse(td.name) shouldBe NextMonth(February)
+  }
+
+  "last week" in { td =>
+    parse(td.name) shouldBe InWeeks(-1)
+  }
+
   "next week" in { td =>
     parse(td.name) shouldBe InWeeks(1)
   }

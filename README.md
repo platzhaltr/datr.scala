@@ -18,6 +18,9 @@ second mon in december
 ### Relative dates
 
 ```
+last wednesday
+last september
+last week
 next thursday
 next week
 next month
