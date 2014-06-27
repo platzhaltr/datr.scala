@@ -46,11 +46,13 @@ class DateParser(val input: ParserInput) extends Parser {
     Next ~ Space ~ Weekday             ~> ((w) => Config(Seq(w))) |
     Next ~ Space ~ Month               ~> ((m) => Config(Seq(m))) |
     Next ~ Space ~ Week                ~> (() => Config(Seq(new Weeks(1)))) |
-    In ~ Space ~ Number ~ Space ~ Week ~> ((w) => Config(Seq(new Weeks(w))))
+    In ~ Space ~ Number ~ Space ~ Week ~> ((w) => Config(Seq(new Weeks(w)))) |
+    In ~ Space ~ Number ~ Space ~ Day  ~> ((d) => Config(Seq(new Days(d))))
   }
 
   def Next = rule { ignoreCase("next") }
   def In   = rule { ignoreCase("in") }
+  def Day  = rule { ignoreCase("day")  ~ optional(ignoreCase("s")) }
   def Week = rule { ignoreCase("week") ~ optional(ignoreCase("s")) }
 
   def Number = rule { capture(Digits) ~> (_.toInt) }
@@ -99,6 +101,9 @@ case class Month(m: Int) extends Datum {
 case class Weeks(w: Int) extends Datum {
   val value = w
 }
+case class Days(d: Int) extends Datum {
+  val value = d
+}
 
 object Config {
   val DaysInWeek = 7
@@ -106,6 +111,10 @@ object Config {
 
   def inWeeks(now: LocalDate, weeks: Weeks): LocalDate = {
     now.plusWeeks(weeks.value)
+  }
+
+  def inDays(now: LocalDate, days: Days): LocalDate = {
+    now.plusDays(days.value)
   }
 
   def nextWeekday(now: LocalDate, weekday: Weekday): LocalDate = {
@@ -132,6 +141,7 @@ case class Config(datums: Seq[Datum] = Nil) {
       case month @ Month(_) => nextMonth(today, month).toString
       case weekday @ Weekday(_) => nextWeekday(today, weekday).toString
       case weeks @ Weeks(_) => inWeeks(today, weeks).toString
+      case days @ Days(_) => inDays(today, days).toString
     }
 
     s"${result}"
