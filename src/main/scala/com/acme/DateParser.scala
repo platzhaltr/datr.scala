@@ -25,10 +25,16 @@ class DateParser(val input: ParserInput) extends Parser {
     Next ~ Space ~ Week                ~> (()  => InWeeks(1)) |
     In ~ Space ~ Number ~ Space ~ Week ~> ((w) => InWeeks(w)) |
     In ~ Space ~ Number ~ Space ~ Day  ~> ((d) => InDays(d)) |
-    First ~ Space ~ WeekdayLiteral ~ Space ~ In ~ Space ~ MonthLiteral ~> ((c,w,m) => WeekdayInMonth(c, w, m))
+    Count ~ Space ~ WeekdayLiteral ~ Space ~ In ~ Space ~ MonthLiteral ~> ((c,w,m) => WeekdayInMonth(c, w, m))
   }
 
+  def Count = rule { First | Second | Third | Fourth | Fifth}
   def First = rule { ignoreCase("first") ~> (() => 1)}
+  def Second = rule { ignoreCase("second") ~> (() => 2)}
+  def Third = rule { ignoreCase("third") ~> (() => 3)}
+  def Fourth = rule { ignoreCase("fourth") ~> (() => 4)}
+  def Fifth = rule { ignoreCase("fifth") ~> (() => 5)}
+
   def Next  = rule { ignoreCase("next") }
   def In    = rule { ignoreCase("in") }
   def Day   = rule { ignoreCase("day")  ~ optional(ignoreCase("s")) }
