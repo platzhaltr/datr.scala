@@ -44,10 +44,13 @@ class DateParser(val input: ParserInput) extends Parser {
 
   def RelativeFuture = rule {
     Next ~ Space ~ Weekday ~> ((w) => Config(Seq(w))) |
-    Next ~ Space ~ Month   ~> ((m) => Config(Seq(m)))
+    Next ~ Space ~ Month   ~> ((m) => Config(Seq(m))) |
+    Next ~ Space ~ Week    ~> (() => Config(Seq(new Weeks(1))))
   }
 
   def Next = rule { "next" }
+
+  def Week = rule { ignoreCase("week") ~ optional(ignoreCase("s")) }
 
   // Absolute Weekday
   def Weekday: Rule1[Weekday]   = rule {Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday}
@@ -84,16 +87,22 @@ case class Weekday(d: Int) extends Datum {
 
   val value = d
 }
-
 case class Month(m: Int) extends Datum {
   require(m >= 1 && m <= 12)
 
   val value = m
 }
+case class Weeks(w: Int) extends Datum {
+  val value = w
+}
 
 object Config {
   val DaysInWeek = 7
   val MonthsInYear = 12
+
+  def inWeeks(now: LocalDate, weeks: Weeks): LocalDate = {
+    now.plusWeeks(weeks.value)
+  }
 
   def nextWeekday(now: LocalDate, weekday: Weekday): LocalDate = {
     now.plusDays(roll(now.getDayOfWeek, weekday.value, DaysInWeek))
@@ -118,6 +127,7 @@ case class Config(datums: Seq[Datum] = Nil) {
     val result = datums.head match {
       case month @ Month(_) => nextMonth(today, month).toString
       case weekday @ Weekday(_) => nextWeekday(today, weekday).toString
+      case weeks @ Weeks(_) => inWeeks(today, weeks).toString
     }
 
     s"${result}"
