@@ -18,13 +18,13 @@ class DateParserSpec extends FlatSpec with Matchers {
     val nextSunday = Weekday(7)
 
 
-    Config.nextWeekday(today, nextMonday) shouldBe new LocalDate(2014, 6, 30)
-    Config.nextWeekday(today, nextTuesday) shouldBe new LocalDate(2014, 7, 1)
-    Config.nextWeekday(today, nextWednesday) shouldBe new LocalDate(2014, 7, 2)
-    Config.nextWeekday(today, nextThursday) shouldBe new LocalDate(2014, 7, 3)
-    Config.nextWeekday(today, nextFriday) shouldBe new LocalDate(2014, 7, 4)
-    Config.nextWeekday(today, nextSaturday) shouldBe new LocalDate(2014, 6, 28)
-    Config.nextWeekday(today, nextSunday) shouldBe new LocalDate(2014, 6, 29)
+    DateParser.nextWeekday(today, nextMonday) shouldBe new LocalDate(2014, 6, 30)
+    DateParser.nextWeekday(today, nextTuesday) shouldBe new LocalDate(2014, 7, 1)
+    DateParser.nextWeekday(today, nextWednesday) shouldBe new LocalDate(2014, 7, 2)
+    DateParser.nextWeekday(today, nextThursday) shouldBe new LocalDate(2014, 7, 3)
+    DateParser.nextWeekday(today, nextFriday) shouldBe new LocalDate(2014, 7, 4)
+    DateParser.nextWeekday(today, nextSaturday) shouldBe new LocalDate(2014, 6, 28)
+    DateParser.nextWeekday(today, nextSunday) shouldBe new LocalDate(2014, 6, 29)
   }
 
     it should "interpret next month" in {
@@ -43,17 +43,17 @@ class DateParserSpec extends FlatSpec with Matchers {
     val nextNovember = Month(11)
     val nextDecember = Month(12)
 
-    Config.nextMonth(today, nextJanuary) shouldBe new LocalDate(2015, 1, 1)
-    Config.nextMonth(today, nextFebruary) shouldBe new LocalDate(2014, 2, 1)
-    Config.nextMonth(today, nextMarch) shouldBe new LocalDate(2014, 3, 1)
-    Config.nextMonth(today, nextApril) shouldBe new LocalDate(2014, 4, 1)
-    Config.nextMonth(today, nextMay) shouldBe new LocalDate(2014, 5, 1)
-    Config.nextMonth(today, nextJune) shouldBe new LocalDate(2014, 6, 1)
-    Config.nextMonth(today, nextJuly) shouldBe new LocalDate(2014, 7, 1)
-    Config.nextMonth(today, nextAugust) shouldBe new LocalDate(2014, 8, 1)
-    Config.nextMonth(today, nextSeptember) shouldBe new LocalDate(2014, 9, 1)
-    Config.nextMonth(today, nextOctober) shouldBe new LocalDate(2014, 10, 1)
-    Config.nextMonth(today, nextNovember) shouldBe new LocalDate(2014, 11, 1)
-    Config.nextMonth(today, nextDecember) shouldBe new LocalDate(2014, 12, 1)
+    DateParser.nextMonth(today, nextJanuary) shouldBe new LocalDate(2015, 1, 1)
+    DateParser.nextMonth(today, nextFebruary) shouldBe new LocalDate(2014, 2, 1)
+    DateParser.nextMonth(today, nextMarch) shouldBe new LocalDate(2014, 3, 1)
+    DateParser.nextMonth(today, nextApril) shouldBe new LocalDate(2014, 4, 1)
+    DateParser.nextMonth(today, nextMay) shouldBe new LocalDate(2014, 5, 1)
+    DateParser.nextMonth(today, nextJune) shouldBe new LocalDate(2014, 6, 1)
+    DateParser.nextMonth(today, nextJuly) shouldBe new LocalDate(2014, 7, 1)
+    DateParser.nextMonth(today, nextAugust) shouldBe new LocalDate(2014, 8, 1)
+    DateParser.nextMonth(today, nextSeptember) shouldBe new LocalDate(2014, 9, 1)
+    DateParser.nextMonth(today, nextOctober) shouldBe new LocalDate(2014, 10, 1)
+    DateParser.nextMonth(today, nextNovember) shouldBe new LocalDate(2014, 11, 1)
+    DateParser.nextMonth(today, nextDecember) shouldBe new LocalDate(2014, 12, 1)
   }
 }

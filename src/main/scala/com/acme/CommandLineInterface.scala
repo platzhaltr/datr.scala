@@ -21,7 +21,7 @@ object CommandLineInterface extends App {
       case line =>
         val parser = new DateParser(line)
         parser.InputLine.run() match {
-          case Success(result)        => println("Result: " + result.toDate)
+          case Success(result)        => println("Result: " + DateParser.process(result))
           case Failure(e: ParseError) => println("Invalid expression: " + parser.formatError(e))
           case Failure(e)             => println("Unexpected error: " + e)
         }

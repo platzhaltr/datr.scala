@@ -3,19 +3,58 @@ package com.acme
 import org.joda.time.LocalDate
 import org.parboiled2._
 
+object DateParser {
+  val DaysInWeek = 7
+  val MonthsInYear = 12
+
+  def process(datums: Seq[Datum]) {
+    val today = new LocalDate()
+
+    val result = datums.head match {
+      case month @ Month(_) => nextMonth(today, month).toString
+      case weekday @ Weekday(_) => nextWeekday(today, weekday).toString
+      case weeks @ Weeks(_) => inWeeks(today, weeks).toString
+      case days @ Days(_) => inDays(today, days).toString
+    }
+
+    s"${result}"
+  }
+
+  def inWeeks(now: LocalDate, weeks: Weeks): LocalDate = {
+    now.plusWeeks(weeks.value)
+  }
+
+  def inDays(now: LocalDate, days: Days): LocalDate = {
+    now.plusDays(days.value)
+  }
+
+  def nextWeekday(now: LocalDate, weekday: Weekday): LocalDate = {
+    now.plusDays(roll(now.getDayOfWeek, weekday.value, DaysInWeek))
+  }
+
+  def nextMonth(now: LocalDate, month: Month): LocalDate = {
+    now.plusMonths(roll(now.getMonthOfYear, month.value, MonthsInYear))
+  }
+
+  private def roll(now: Int, then: Int, border: Int) = {
+    if (now == then) border else (then - now + border) % border
+  }
+
+}
+
 class DateParser(val input: ParserInput) extends Parser {
   def InputLine = rule { Expression ~ EOI }
 
-  def Expression: Rule1[Config] = rule {
+  def Expression: Rule1[Seq[Datum]] = rule {
     RelativeFuture
   }
 
   def RelativeFuture = rule {
-    Next ~ Space ~ Weekday             ~> ((w) => Config(Seq(w))) |
-    Next ~ Space ~ Month               ~> ((m) => Config(Seq(m))) |
-    Next ~ Space ~ Week                ~> (() => Config(Seq(new Weeks(1)))) |
-    In ~ Space ~ Number ~ Space ~ Week ~> ((w) => Config(Seq(new Weeks(w)))) |
-    In ~ Space ~ Number ~ Space ~ Day  ~> ((d) => Config(Seq(new Days(d))))
+    Next ~ Space ~ Weekday             ~> ((w) => Seq(w)) |
+    Next ~ Space ~ Month               ~> ((m) => Seq(m)) |
+    Next ~ Space ~ Week                ~> (() => Seq(new Weeks(1))) |
+    In ~ Space ~ Number ~ Space ~ Week ~> ((w) => Seq(new Weeks(w))) |
+    In ~ Space ~ Number ~ Space ~ Day  ~> ((d) => Seq(new Days(d)))
   }
 
   def Next = rule { ignoreCase("next") }
@@ -71,47 +110,4 @@ case class Weeks(w: Int) extends Datum {
 }
 case class Days(d: Int) extends Datum {
   val value = d
-}
-
-object Config {
-  val DaysInWeek = 7
-  val MonthsInYear = 12
-
-  def inWeeks(now: LocalDate, weeks: Weeks): LocalDate = {
-    now.plusWeeks(weeks.value)
-  }
-
-  def inDays(now: LocalDate, days: Days): LocalDate = {
-    now.plusDays(days.value)
-  }
-
-  def nextWeekday(now: LocalDate, weekday: Weekday): LocalDate = {
-    now.plusDays(roll(now.getDayOfWeek, weekday.value, DaysInWeek))
-  }
-
-  def nextMonth(now: LocalDate, month: Month): LocalDate = {
-    now.plusMonths(roll(now.getMonthOfYear, month.value, MonthsInYear))
-  }
-
-  private def roll(now: Int, then: Int, border: Int) = {
-    if (now == then) border else (then - now + border) % border
-  }
-}
-
-case class Config(datums: Seq[Datum] = Nil) {
-
-  import Config._
-
-  val toDate: String = {
-    val today = new LocalDate()
-
-    val result = datums.head match {
-      case month @ Month(_) => nextMonth(today, month).toString
-      case weekday @ Weekday(_) => nextWeekday(today, weekday).toString
-      case weeks @ Weeks(_) => inWeeks(today, weeks).toString
-      case days @ Days(_) => inDays(today, days).toString
-    }
-
-    s"${result}"
-  }
 }
