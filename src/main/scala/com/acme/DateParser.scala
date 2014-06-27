@@ -48,7 +48,7 @@ class DateParser(val input: ParserInput) extends Parser {
     Next ~ Space ~ Week    ~> (() => Config(Seq(new Weeks(1))))
   }
 
-  def Next = rule { "next" }
+  def Next = rule { ignoreCase("next") }
 
   def Week = rule { ignoreCase("week") ~ optional(ignoreCase("s")) }
 
