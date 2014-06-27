@@ -2,22 +2,29 @@ package com.acme
 
 import scala.util.{Failure, Success}
 import org.scalatest._
+import org.scalatest.Matchers._
 
 import Weekday._
 import Month._
 
-class DateParserSpec extends FlatSpec with Matchers {
+class DateParserSpec extends fixture.FreeSpec with Matchers {
 
-  it should "parse 'next week" in {
-    parse("next week") shouldBe InWeeks(1)
+  type FixtureParam = TestData
+
+  override def withFixture(test: OneArgTest): Outcome = {
+    withFixture(test.toNoArgTest(test))
   }
 
-  it should "parse 'in 3 weeks" in {
-    parse("in 3 weeks") shouldBe InWeeks(3)
+  "next week" in { td =>
+    parse(td.name) shouldBe InWeeks(1)
   }
 
-  it should "parse 'second saturday in september'" in {
-    parse("second saturday in september") shouldBe WeekdayInMonth(2, Saturday, September)
+  "in 3 weeks" in { td =>
+    parse(td.name) shouldBe InWeeks(3)
+  }
+
+  "second saturday in september" in { td =>
+    parse(td.name) shouldBe WeekdayInMonth(2, Saturday, September)
   }
 
   def parse(line: String): Datum = {
