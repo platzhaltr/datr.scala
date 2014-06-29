@@ -25,6 +25,10 @@ next month
 next year
 first saturday in september
 second monday in december
+in 1 day
+in 2 weeks
+in 3 months
+in 4 years
 one day ago
 two weeks ago
 three months ago

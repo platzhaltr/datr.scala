@@ -11,25 +11,27 @@ class DateParser(val input: ParserInput) extends Parser {
   }
 
   def RelativeFuture = rule {
-    Today                              ~> (()  => InDays(0)) |
-    Tomorrow                           ~> (()  => InDays(1)) |
-    Yesterday                          ~> (()  => InDays(-1)) |
-    Next ~ Space ~ MonthToken          ~> (()  => InMonths(1)) |
-    Next ~ Space ~ SpecificWeekday     ~> ((w) => NextWeekdayByName(w)) |
-    Next ~ Space ~ SpecificMonth       ~> ((m) => NextMonthByName(m)) |
-    Next ~ Space ~ Week                ~> (()  => InWeeks(1)) |
-    Next ~ Space ~ Year                ~> (()  => InYears(1)) |
-    Last ~ Space ~ MonthToken          ~> (()  => InMonths(-1)) |
-    Last ~ Space ~ SpecificWeekday     ~> ((w) => LastWeekdayByName(w)) |
-    Last ~ Space ~ SpecificMonth       ~> ((m) => LastMonthByName(m)) |
-    Last ~ Space ~ Week                ~> (()  => InWeeks(-1)) |
-    Last ~ Space ~ Year                ~> (()  => InYears(-1)) |
-    In ~ Space ~ Number ~ Space ~ Week ~> ((w) => InWeeks(w)) |
-    In ~ Space ~ Number ~ Space ~ Day  ~> ((d) => InDays(d)) |
-    Count ~ Space ~ Day ~ Space ~ Ago  ~> ((c) => InDays(-c)) |
-    Count ~ Space ~ Week ~ Space ~ Ago ~> ((c) => InWeeks(-c)) |
+    Today                               ~> (()  => InDays(0)) |
+    Tomorrow                            ~> (()  => InDays(1)) |
+    Yesterday                           ~> (()  => InDays(-1)) |
+    Next ~ Space ~ MonthToken           ~> (()  => InMonths(1)) |
+    Next ~ Space ~ SpecificWeekday      ~> ((w) => NextWeekdayByName(w)) |
+    Next ~ Space ~ SpecificMonth        ~> ((m) => NextMonthByName(m)) |
+    Next ~ Space ~ Week                 ~> (()  => InWeeks(1)) |
+    Next ~ Space ~ Year                 ~> (()  => InYears(1)) |
+    Last ~ Space ~ MonthToken           ~> (()  => InMonths(-1)) |
+    Last ~ Space ~ SpecificWeekday      ~> ((w) => LastWeekdayByName(w)) |
+    Last ~ Space ~ SpecificMonth        ~> ((m) => LastMonthByName(m)) |
+    Last ~ Space ~ Week                 ~> (()  => InWeeks(-1)) |
+    Last ~ Space ~ Year                 ~> (()  => InYears(-1)) |
+    In ~ Space ~ Number ~ Space ~ Day   ~> ((d) => InDays(d)) |
+    In ~ Space ~ Number ~ Space ~ Week  ~> ((w) => InWeeks(w)) |
+    In ~ Space ~ Number ~ Space ~ MonthToken ~> ((m) => InMonths(m)) |
+    In ~ Space ~ Number ~ Space ~ Year ~> ((y) => InYears(y)) |
+    Count ~ Space ~ Day ~ Space ~ Ago   ~> ((c) => InDays(-c)) |
+    Count ~ Space ~ Week ~ Space ~ Ago  ~> ((c) => InWeeks(-c)) |
     Count ~ Space ~ MonthToken ~ Space ~ Ago ~> ((c) => InMonths(-c)) |
-    Count ~ Space ~ Year ~ Space ~ Ago ~> ((c) => InYears(-c)) |
+    Count ~ Space ~ Year ~ Space ~ Ago  ~> ((c) => InYears(-c)) |
     Cardinal ~ Space ~ SpecificWeekday ~ Space ~ In ~ Space ~ SpecificMonth ~> ((c,w,m) => WeekdayInMonth(c, w, m))
   }
 

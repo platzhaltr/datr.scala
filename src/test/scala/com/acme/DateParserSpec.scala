@@ -79,6 +79,22 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
     parse(td.name) shouldBe WeekdayInMonth(2, Saturday, September)
   }
 
+  "in 1 day" in { td =>
+    parse(td.name) shouldBe InDays(1)
+  }
+
+  "in 2 weeks" in { td =>
+    parse(td.name) shouldBe InWeeks(2)
+  }
+
+  "in 3 months" in { td =>
+    parse(td.name) shouldBe InMonths(3)
+  }
+
+  "in 4 years" in { td =>
+    parse(td.name) shouldBe InYears(4)
+  }
+
   "one day ago" in { td =>
     parse(td.name) shouldBe InDays(-1)
   }
