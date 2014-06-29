@@ -15,6 +15,10 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
     withFixture(test.toNoArgTest(test))
   }
 
+  "today" in { td =>
+    parse(td.name) shouldBe InDays(0)
+  }
+
   "last tuesday" in { td =>
     parse(td.name) shouldBe LastWeekday(Tuesday)
   }

@@ -11,6 +11,7 @@ class DateParser(val input: ParserInput) extends Parser {
   }
 
   def RelativeFuture = rule {
+    Today                              ~> (()  => InDays(0)) |
     Next ~ Space ~ WeekdayLiteral      ~> ((w) => NextWeekday(w)) |
     Next ~ Space ~ MonthLiteral        ~> ((m) => NextMonth(m)) |
     Next ~ Space ~ Week                ~> (()  => InWeeks(1)) |
@@ -37,6 +38,8 @@ class DateParser(val input: ParserInput) extends Parser {
 
   def Number = rule { capture(Digits) ~> (_.toInt) }
   def Digits = rule { oneOrMore(CharPredicate.Digit) }
+
+  def Today = rule { ignoreCase("today") }
 
   // Absolute Weekday
   def WeekdayLiteral: Rule1[Weekday] = rule {Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday}

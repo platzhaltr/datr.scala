@@ -20,7 +20,6 @@
 ## Relative dates
 
 ```
-today
 tomorrow
 yesterday
 next year
