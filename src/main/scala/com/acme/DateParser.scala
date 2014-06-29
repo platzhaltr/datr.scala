@@ -14,10 +14,12 @@ class DateParser(val input: ParserInput) extends Parser {
     Today                              ~> (()  => InDays(0)) |
     Tomorrow                           ~> (()  => InDays(1)) |
     Yesterday                          ~> (()  => InDays(-1)) |
+    Next ~ Space ~ MonthToken          ~> (()  => InMonths(1)) |
     Next ~ Space ~ SpecificWeekday     ~> ((w) => NextWeekdayByName(w)) |
     Next ~ Space ~ SpecificMonth       ~> ((m) => NextMonthByName(m)) |
     Next ~ Space ~ Week                ~> (()  => InWeeks(1)) |
     Next ~ Space ~ Year                ~> (()  => InYears(1)) |
+    Last ~ Space ~ MonthToken          ~> (()  => InMonths(-1)) |
     Last ~ Space ~ SpecificWeekday     ~> ((w) => LastWeekdayByName(w)) |
     Last ~ Space ~ SpecificMonth       ~> ((m) => LastMonthByName(m)) |
     Last ~ Space ~ Week                ~> (()  => InWeeks(-1)) |
@@ -43,6 +45,7 @@ class DateParser(val input: ParserInput) extends Parser {
   def Yesterday   = rule { ignoreCase("yesterday") }
   def Day         = rule { ignoreCase("day")  ~ optional(ignoreCase("s")) }
   def Week        = rule { ignoreCase("week") ~ optional(ignoreCase("s")) }
+  def MonthToken  = rule { ignoreCase("month") ~ optional(ignoreCase("s")) }
   def Year        = rule { ignoreCase("year") ~ optional(ignoreCase("s")) }
 
   def Number = rule { capture(Digits) ~> (_.toInt) }

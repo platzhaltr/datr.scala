@@ -17,6 +17,7 @@ yesterday
 last wednesday
 last september
 last week
+last month
 last year
 next thursday
 next week
