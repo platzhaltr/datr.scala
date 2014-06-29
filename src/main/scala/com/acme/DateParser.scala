@@ -14,15 +14,17 @@ class DateParser(val input: ParserInput) extends Parser {
     Today                              ~> (()  => InDays(0)) |
     Tomorrow                           ~> (()  => InDays(1)) |
     Yesterday                          ~> (()  => InDays(-1)) |
-    Next ~ Space ~ WeekdayLiteral      ~> ((w) => NextWeekday(w)) |
-    Next ~ Space ~ MonthLiteral        ~> ((m) => NextMonth(m)) |
+    Next ~ Space ~ SpecificWeekday     ~> ((w) => NextWeekdayByName(w)) |
+    Next ~ Space ~ SpecificMonth       ~> ((m) => NextMonthByName(m)) |
     Next ~ Space ~ Week                ~> (()  => InWeeks(1)) |
-    Last ~ Space ~ WeekdayLiteral      ~> ((w) => LastWeekday(w)) |
-    Last ~ Space ~ MonthLiteral        ~> ((m) => LastMonth(m)) |
+    Next ~ Space ~ Year                ~> (()  => InYears(1)) |
+    Last ~ Space ~ SpecificWeekday     ~> ((w) => LastWeekdayByName(w)) |
+    Last ~ Space ~ SpecificMonth       ~> ((m) => LastMonthByName(m)) |
     Last ~ Space ~ Week                ~> (()  => InWeeks(-1)) |
+    Last ~ Space ~ Year                ~> (()  => InYears(-1)) |
     In ~ Space ~ Number ~ Space ~ Week ~> ((w) => InWeeks(w)) |
     In ~ Space ~ Number ~ Space ~ Day  ~> ((d) => InDays(d)) |
-    Count ~ Space ~ WeekdayLiteral ~ Space ~ In ~ Space ~ MonthLiteral ~> ((c,w,m) => WeekdayInMonth(c, w, m))
+    Count ~ Space ~ SpecificWeekday ~ Space ~ In ~ Space ~ SpecificMonth ~> ((c,w,m) => WeekdayInMonth(c, w, m))
   }
 
   def Count  = rule { First | Second | Third | Fourth | Fifth}
@@ -35,18 +37,19 @@ class DateParser(val input: ParserInput) extends Parser {
   def Last = rule { ignoreCase("last") }
   def Next = rule { ignoreCase("next") }
   def In   = rule { ignoreCase("in") }
-  def Day  = rule { ignoreCase("day")  ~ optional(ignoreCase("s")) }
-  def Week = rule { ignoreCase("week") ~ optional(ignoreCase("s")) }
+
+  def Today       = rule { ignoreCase("today") }
+  def Tomorrow    = rule { ignoreCase("tomorrow") }
+  def Yesterday   = rule { ignoreCase("yesterday") }
+  def Day         = rule { ignoreCase("day")  ~ optional(ignoreCase("s")) }
+  def Week        = rule { ignoreCase("week") ~ optional(ignoreCase("s")) }
+  def Year        = rule { ignoreCase("year") ~ optional(ignoreCase("s")) }
 
   def Number = rule { capture(Digits) ~> (_.toInt) }
   def Digits = rule { oneOrMore(CharPredicate.Digit) }
 
-  def Today     = rule { ignoreCase("today") }
-  def Tomorrow  = rule { ignoreCase("tomorrow") }
-  def Yesterday = rule { ignoreCase("yesterday") }
-
   // Absolute Weekday
-  def WeekdayLiteral: Rule1[Weekday] = rule {Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday}
+  def SpecificWeekday: Rule1[Weekday] = rule {Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday}
   def Monday: Rule1[Weekday]    = rule {capture(ignoreCase("monday")    | ignoreCase("mon") ) ~> ((s: String) => Weekday.Monday )}
   def Tuesday: Rule1[Weekday]   = rule {capture(ignoreCase("tuesday")   | ignoreCase("tue") ) ~> ((s: String) => Weekday.Tuesday )}
   def Wednesday: Rule1[Weekday] = rule {capture(ignoreCase("wednesday") | ignoreCase("wed") ) ~> ((s: String) => Weekday.Wednesday )}
@@ -56,7 +59,7 @@ class DateParser(val input: ParserInput) extends Parser {
   def Sunday: Rule1[Weekday]    = rule {capture(ignoreCase("sunday")    | ignoreCase("sun") ) ~> ((s: String) => Weekday.Sunday )}
 
   // Absolute Month
-  def MonthLiteral: Rule1[Month] = rule {January | Febuary | March | April | May | June | July | August | September | October | November | December}
+  def SpecificMonth: Rule1[Month] = rule {January | Febuary | March | April | May | June | July | August | September | October | November | December}
   def January: Rule1[Month]   = rule {capture(ignoreCase("january")   | ignoreCase("jan") ) ~> ((s: String) => Month.January )}
   def Febuary: Rule1[Month]   = rule {capture(ignoreCase("february")  | ignoreCase("feb") ) ~> ((s: String) => Month.February )}
   def March: Rule1[Month]     = rule {capture(ignoreCase("march")     | ignoreCase("mar") ) ~> ((s: String) => Month.March )}
@@ -112,34 +115,39 @@ object Datum {
 sealed trait Datum {
   def toDate(now: LocalDate): LocalDate
 }
-case class LastWeekday(weekday: Weekday) extends Datum {
+case class LastWeekdayByName(weekday: Weekday) extends Datum {
   override def toDate(now: LocalDate) = now.minusDays( Datum.roll(weekday.value, now.getDayOfWeek, 7))
 }
-case class NextWeekday(weekday: Weekday) extends Datum {
+case class NextWeekdayByName(weekday: Weekday) extends Datum {
   override def toDate(now: LocalDate) = now.plusDays(Datum.roll(now.getDayOfWeek, weekday.value, 7))
 }
-case class LastMonth(month: Month) extends Datum {
+case class LastMonthByName(month: Month) extends Datum {
   override def toDate(now: LocalDate) = now.minusMonths(Datum.roll(month.value, now.getMonthOfYear, 12))
 }
-case class NextMonth(month: Month) extends Datum {
+case class NextMonthByName(month: Month) extends Datum {
   override def toDate(now: LocalDate) = now.plusMonths(Datum.roll(now.getMonthOfYear, month.value, 12))
-}
-case class InMonths(months: Int) extends Datum {
-  override def toDate(now: LocalDate) = now.plusMonths(months)
-}
-case class InWeeks(weeks: Int) extends Datum {
-  override def toDate(now: LocalDate) = now.plusWeeks(weeks)
 }
 case class InDays(days: Int) extends Datum {
   override def toDate(now: LocalDate) = now.plusDays(days)
 }
+case class InWeeks(weeks: Int) extends Datum {
+  override def toDate(now: LocalDate) = now.plusWeeks(weeks)
+}
+case class InMonths(months: Int) extends Datum {
+  override def toDate(now: LocalDate) = now.plusMonths(months)
+}
+case class InYears(years: Int) extends Datum {
+  override def toDate(now: LocalDate) = now.plusYears(years)
+}
+
+
 case class WeekdayInMonth(count: Int, weekday: Weekday, month: Month) extends Datum {
   override def toDate(now: LocalDate) = {
-    val nextMonth = NextMonth(month).toDate(now)
+    val nextMonth = NextMonthByName(month).toDate(now)
     val firstOfMonth = nextMonth.withDayOfMonth(1)
 
     val firstOccurence = if (firstOfMonth.getDayOfWeek == weekday.value)
-                          firstOfMonth else NextWeekday(weekday).toDate(firstOfMonth)
+                          firstOfMonth else NextWeekdayByName(weekday).toDate(firstOfMonth)
 
     // TODO guard against user error, check if still in correct month
     InWeeks(count - 1).toDate(firstOccurence)

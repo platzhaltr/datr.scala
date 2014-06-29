@@ -20,12 +20,13 @@
 ## Relative dates
 
 ```
-next year
 3 days from now
 three weeks ago
 ```
 
 ## Prefixes
+
+
 
 ```
 day after
@@ -46,7 +47,7 @@ the monday before
 5
 12:59
 23:59
-8p
+8pm
 noon
 afternoon
 midnight

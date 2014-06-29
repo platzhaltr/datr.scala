@@ -28,19 +28,19 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
   }
 
   "last tuesday" in { td =>
-    parse(td.name) shouldBe LastWeekday(Tuesday)
+    parse(td.name) shouldBe LastWeekdayByName(Tuesday)
   }
 
   "next tuesday" in { td =>
-    parse(td.name) shouldBe NextWeekday(Tuesday)
+    parse(td.name) shouldBe NextWeekdayByName(Tuesday)
   }
 
   "last january" in { td =>
-    parse(td.name) shouldBe LastMonth(January)
+    parse(td.name) shouldBe LastMonthByName(January)
   }
 
   "next february" in { td =>
-    parse(td.name) shouldBe NextMonth(February)
+    parse(td.name) shouldBe NextMonthByName(February)
   }
 
   "last week" in { td =>
@@ -49,6 +49,14 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
 
   "next week" in { td =>
     parse(td.name) shouldBe InWeeks(1)
+  }
+
+  "last year" in { td =>
+    parse(td.name) shouldBe InYears(-1)
+  }
+
+  "next year" in { td =>
+    parse(td.name) shouldBe InYears(1)
   }
 
   "in 3 weeks" in { td =>

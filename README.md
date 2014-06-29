@@ -17,9 +17,11 @@ yesterday
 last wednesday
 last september
 last week
+last year
 next thursday
 next week
 next month
+next year
 first saturday in september
 second monday in december
 ```
