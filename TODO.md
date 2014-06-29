@@ -21,12 +21,9 @@
 
 ```
 3 days from now
-three weeks ago
 ```
 
 ## Prefixes
-
-
 
 ```
 day after

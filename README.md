@@ -25,6 +25,10 @@ next month
 next year
 first saturday in september
 second monday in december
+one day ago
+two weeks ago
+three months ago
+four years ago
 ```
 
 ## Resources

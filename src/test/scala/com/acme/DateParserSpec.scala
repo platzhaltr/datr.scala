@@ -75,12 +75,24 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
     parse(td.name) shouldBe InYears(1)
   }
 
-  "in 3 weeks" in { td =>
-    parse(td.name) shouldBe InWeeks(3)
-  }
-
   "second saturday in september" in { td =>
     parse(td.name) shouldBe WeekdayInMonth(2, Saturday, September)
+  }
+
+  "one day ago" in { td =>
+    parse(td.name) shouldBe InDays(-1)
+  }
+
+  "two weeks ago" in { td =>
+    parse(td.name) shouldBe InWeeks(-2)
+  }
+
+  "three months ago" in { td =>
+    parse(td.name) shouldBe InMonths(-3)
+  }
+
+  "four years ago" in { td =>
+    parse(td.name) shouldBe InYears(-4)
   }
 
   def parse(line: String): Datum = {

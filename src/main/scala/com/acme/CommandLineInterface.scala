@@ -23,7 +23,7 @@ object CommandLineInterface extends App {
         val parser = new DateParser(line)
         parser.InputLine.run() match {
           case Success(result)        => println(s"Result: ${result.toDate(new LocalDate())}")
-          case Failure(e: ParseError) => println(s"Invalid expression: ${parser.formatError(e)}")
+          case Failure(e: ParseError) => println(s"Invalid expression: ${parser.formatError(e, showTraces = true)}")
           case Failure(e)             => println(s"Unexpected error: ${e}")
         }
         repl()

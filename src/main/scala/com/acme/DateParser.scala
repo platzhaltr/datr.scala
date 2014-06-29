@@ -26,19 +26,32 @@ class DateParser(val input: ParserInput) extends Parser {
     Last ~ Space ~ Year                ~> (()  => InYears(-1)) |
     In ~ Space ~ Number ~ Space ~ Week ~> ((w) => InWeeks(w)) |
     In ~ Space ~ Number ~ Space ~ Day  ~> ((d) => InDays(d)) |
-    Count ~ Space ~ SpecificWeekday ~ Space ~ In ~ Space ~ SpecificMonth ~> ((c,w,m) => WeekdayInMonth(c, w, m))
+    Count ~ Space ~ Day ~ Space ~ Ago  ~> ((c) => InDays(-c)) |
+    Count ~ Space ~ Week ~ Space ~ Ago ~> ((c) => InWeeks(-c)) |
+    Count ~ Space ~ MonthToken ~ Space ~ Ago ~> ((c) => InMonths(-c)) |
+    Count ~ Space ~ Year ~ Space ~ Ago ~> ((c) => InYears(-c)) |
+    Cardinal ~ Space ~ SpecificWeekday ~ Space ~ In ~ Space ~ SpecificMonth ~> ((c,w,m) => WeekdayInMonth(c, w, m))
   }
 
-  def Count  = rule { First | Second | Third | Fourth | Fifth}
-  def First  = rule { ignoreCase("first")  ~> (() => 1)}
-  def Second = rule { ignoreCase("second") ~> (() => 2)}
-  def Third  = rule { ignoreCase("third")  ~> (() => 3)}
-  def Fourth = rule { ignoreCase("fourth") ~> (() => 4)}
-  def Fifth  = rule { ignoreCase("fifth")  ~> (() => 5)}
+  def Cardinal = rule { First | Second | Third | Fourth | Fifth}
+  def First    = rule { ignoreCase("first")  ~> (() => 1)}
+  def Second   = rule { ignoreCase("second") ~> (() => 2)}
+  def Third    = rule { ignoreCase("third")  ~> (() => 3)}
+  def Fourth   = rule { ignoreCase("fourth") ~> (() => 4)}
+  def Fifth    = rule { ignoreCase("fifth")  ~> (() => 5)}
+
+  def Count = rule { One | Two | Three | Four | Five }
+  def One   = rule { ignoreCase("one")    ~> (() => 1)}
+  def Two   = rule { ignoreCase("two")    ~> (() => 2)}
+  def Three = rule { ignoreCase("three")  ~> (() => 3)}
+  def Four  = rule { ignoreCase("four")   ~> (() => 4)}
+  def Five  = rule { ignoreCase("five")   ~> (() => 5)}
+
+  def Ago  = rule { ignoreCase("ago") }
+  def In   = rule { ignoreCase("in") }
 
   def Last = rule { ignoreCase("last") }
   def Next = rule { ignoreCase("next") }
-  def In   = rule { ignoreCase("in") }
 
   def Today       = rule { ignoreCase("today") }
   def Tomorrow    = rule { ignoreCase("tomorrow") }
