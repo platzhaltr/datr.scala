@@ -17,12 +17,6 @@
 09:20
 ```
 
-## Relative dates
-
-```
-3 days from now
-```
-
 ## Prefixes
 
 ```
