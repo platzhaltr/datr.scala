@@ -20,8 +20,6 @@
 ## Relative dates
 
 ```
-tomorrow
-yesterday
 next year
 3 days from now
 three weeks ago

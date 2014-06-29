@@ -8,23 +8,20 @@ Enter expression >
 
 ## Supported formats
 
-### Relaxed dates
-
-```
-first saturday in september
-second mon in december
-```
-
-### Relative dates
+**Relaxed dates**
 
 ```
 today
+tomorrow
+yesterday
 last wednesday
 last september
 last week
 next thursday
 next week
 next month
+first saturday in september
+second monday in december
 ```
 
 ## Resources
