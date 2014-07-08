@@ -9,14 +9,6 @@
 2/28/79
 ```
 
-## Formal times
-
-```
-6:00
-10:17
-09:20
-```
-
 ## Prefixes
 
 Locale specific holidays?
