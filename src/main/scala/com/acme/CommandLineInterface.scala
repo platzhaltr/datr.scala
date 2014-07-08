@@ -27,17 +27,25 @@ object CommandLineInterface extends App {
             val today = new LocalDate
 
             result match {
-              case e @ LastWeekdayByName(_) => println(s"Result: ${e.process(today)}")
-              case e @ NextWeekdayByName(_) => println(s"Result: ${e.process(today)}")
-              case e @ LastMonthByName(_) => println(s"Result: ${e.process(today)}")
-              case e @ NextMonthByName(_) => println(s"Result: ${e.process(today)}")
+              // formal dates
 
-              case e @ InDays(_) => println(s"Result: ${e.process(today)}")
-              case e @ InMonths(_) => println(s"Result: ${e.process(today)}")
-              case e @ InYears(_) => println(s"Result: ${e.process(today)}")
+              case e @ OnDate(_)             => println(s"Result: ${e.process}")
+
+              // relaxed dates
+
+              case e @ LastWeekdayByName(_)  => println(s"Result: ${e.process(today)}")
+              case e @ NextWeekdayByName(_)  => println(s"Result: ${e.process(today)}")
+              case e @ LastMonthByName(_)    => println(s"Result: ${e.process(today)}")
+              case e @ NextMonthByName(_)    => println(s"Result: ${e.process(today)}")
+
+              case e @ InDays(_)             => println(s"Result: ${e.process(today)}")
+              case e @ InMonths(_)           => println(s"Result: ${e.process(today)}")
+              case e @ InYears(_)            => println(s"Result: ${e.process(today)}")
               case e @ WeekdayInMonth(_,_,_) => println(s"Result: ${e.process(today)}")
 
-              case e @ AtTime(_) => println(s"Result: ${e.process(now)}")
+              // formal times
+
+              case e @ AtTime(_)             => println(s"Result: ${e.process(now)}")
             }
           case Failure(e: ParseError) => println(s"Invalid expression: ${parser.formatError(e, showTraces = true)}")
           case Failure(e)             => println(s"Unexpected error: ${e}")

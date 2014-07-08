@@ -15,6 +15,24 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
     withFixture(test.toNoArgTest(test))
   }
 
+  // Formal dates
+
+  "2014-10-23" in { td =>
+    parse(td.name) shouldBe OnDate(Date(2014,10,23))
+  }
+
+  "20141023" in { td =>
+    parse(td.name) shouldBe OnDate(Date(2014,10,23))
+  }
+
+  "on 2014-10-23" in { td =>
+    parse(td.name) shouldBe OnDate(Date(2014,10,23))
+  }
+
+  "on 20141023" in { td =>
+    parse(td.name) shouldBe OnDate(Date(2014,10,23))
+  }
+
   // Relaxed dates
 
   "today" in { td =>

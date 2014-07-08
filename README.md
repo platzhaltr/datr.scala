@@ -8,6 +8,15 @@ Enter expression >
 
 ## Supported formats
 
+**Formal dates**
+
+```
+2014-08-20
+20140820
+on 2014-08-20
+on 20140820
+```
+
 **Relaxed dates**
 
 ```

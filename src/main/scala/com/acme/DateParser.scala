@@ -9,12 +9,17 @@ class DateParser(val input: ParserInput) extends Parser {
   def InputLine = rule { Expression ~ EOI }
 
   def Expression: Rule1[Event] = rule {
-    FormalTimes | RelaxedDates
+    FormalTimes | FormalDates | RelaxedDates
   }
 
   def FormalTimes = rule {
-    SpecificTime                        ~> ((t) => AtTime(t)) |
-    At ~ Space ~ SpecificTime           ~> ((t) => AtTime(t))
+    IsoTime                             ~> ((t) => AtTime(t)) |
+    At ~ Space ~ IsoTime                ~> ((t) => AtTime(t))
+  }
+
+  def FormalDates = rule {
+    IsoDate                             ~> ((d) => OnDate(d)) |
+    On ~ Space ~ IsoDate                ~> ((d) => OnDate(d))
   }
 
   def RelaxedDates = rule {
@@ -42,42 +47,50 @@ class DateParser(val input: ParserInput) extends Parser {
     Cardinal ~ Space ~ SpecificWeekday ~ Space ~ In ~ Space ~ SpecificMonth ~> ((c,w,m) => WeekdayInMonth(c, w, m))
   }
 
-  def Cardinal = rule { First | Second | Third | Fourth | Fifth}
-  def First    = rule { ignoreCase("first")  ~> (() => 1)}
-  def Second   = rule { ignoreCase("second") ~> (() => 2)}
-  def Third    = rule { ignoreCase("third")  ~> (() => 3)}
-  def Fourth   = rule { ignoreCase("fourth") ~> (() => 4)}
-  def Fifth    = rule { ignoreCase("fifth")  ~> (() => 5)}
+  def Cardinal     = rule { First | Second | Third | Fourth | Fifth}
+  def First        = rule { ignoreCase("first")  ~> (() => 1)}
+  def Second       = rule { ignoreCase("second") ~> (() => 2)}
+  def Third        = rule { ignoreCase("third")  ~> (() => 3)}
+  def Fourth       = rule { ignoreCase("fourth") ~> (() => 4)}
+  def Fifth        = rule { ignoreCase("fifth")  ~> (() => 5)}
 
-  def Count = rule { One | Two | Three | Four | Five }
-  def One   = rule { ignoreCase("one")   ~> (() => 1)}
-  def Two   = rule { ignoreCase("two")   ~> (() => 2)}
-  def Three = rule { ignoreCase("three") ~> (() => 3)}
-  def Four  = rule { ignoreCase("four")  ~> (() => 4)}
-  def Five  = rule { ignoreCase("five")  ~> (() => 5)}
+  def Count        = rule { One | Two | Three | Four | Five }
+  def One          = rule { ignoreCase("one")   ~> (() => 1)}
+  def Two          = rule { ignoreCase("two")   ~> (() => 2)}
+  def Three        = rule { ignoreCase("three") ~> (() => 3)}
+  def Four         = rule { ignoreCase("four")  ~> (() => 4)}
+  def Five         = rule { ignoreCase("five")  ~> (() => 5)}
 
-  def Ago  = rule { ignoreCase("ago") }
-  def In   = rule { ignoreCase("in") }
-  def At   = rule { ignoreCase("at") }
+  def Ago          = rule { ignoreCase("ago") }
+  def At           = rule { ignoreCase("at") }
+  def In           = rule { ignoreCase("in") }
+  def On           = rule { ignoreCase("on") }
 
-  def Last = rule { ignoreCase("last") }
-  def Next = rule { ignoreCase("next") }
+  def Last         = rule { ignoreCase("last") }
+  def Next         = rule { ignoreCase("next") }
 
-  def Today       = rule { ignoreCase("today") }
-  def Tomorrow    = rule { ignoreCase("tomorrow") }
-  def Yesterday   = rule { ignoreCase("yesterday") }
-  def Day         = rule { ignoreCase("day")   ~ optional(ignoreCase("s")) }
-  def Week        = rule { ignoreCase("week")  ~ optional(ignoreCase("s")) }
-  def MonthToken  = rule { ignoreCase("month") ~ optional(ignoreCase("s")) }
-  def Year        = rule { ignoreCase("year")  ~ optional(ignoreCase("s")) }
+  def Today        = rule { ignoreCase("today") }
+  def Tomorrow     = rule { ignoreCase("tomorrow") }
+  def Yesterday    = rule { ignoreCase("yesterday") }
+  def Day          = rule { ignoreCase("day")   ~ optional(ignoreCase("s")) }
+  def Week         = rule { ignoreCase("week")  ~ optional(ignoreCase("s")) }
+  def MonthToken   = rule { ignoreCase("month") ~ optional(ignoreCase("s")) }
+  def Year         = rule { ignoreCase("year")  ~ optional(ignoreCase("s")) }
 
-  def Number = rule { capture(Digits) ~> (_.toInt) }
-  def Digits = rule { oneOrMore(CharPredicate.Digit) }
-  def Colon  = rule { ignoreCase(":") }
+  def Number       = rule { capture(Digits) ~> (_.toInt) }
+  def Digits       = rule { oneOrMore(CharPredicate.Digit) }
 
-  def SpecificTime  = rule { capture(HoursDigits) ~ Colon ~ capture(MinutesDigits) ~> ((h,m) => new Time(h.toInt, m.toInt)) }
-  def HoursDigits   = rule { anyOf("01") ~ optional(CharPredicate.Digit) | ("2" ~ optional(anyOf("01234" ))) | anyOf("3456789") }
-  def MinutesDigits = rule { anyOf("012345") ~ optional(CharPredicate.Digit)}
+  def Colon        = rule { ignoreCase(":") }
+  def Dash         = rule { ignoreCase("-") }
+
+  def IsoDate      = rule { YearDigits ~ optional(Dash) ~ MonthDigits ~ optional(Dash) ~ DayDigits ~> ((y,m,d) => new Date(y,m,d)) }
+  def YearDigits   = rule { capture(4.times(CharPredicate.Digit)) ~> (_.toInt) }
+  def MonthDigits  = rule { capture("0" ~ CharPredicate.Digit | "1" ~ anyOf("012" )) ~> (_.toInt) }
+  def DayDigits    = rule { capture(anyOf("012") ~ CharPredicate.Digit | "3" ~ anyOf("01" )) ~> (_.toInt) }
+
+  def IsoTime      = rule { capture(HourDigits) ~ Colon ~ capture(MinuteDigits) ~> ((h,m) => new Time(h.toInt, m.toInt)) }
+  def HourDigits   = rule { anyOf("01") ~ optional(CharPredicate.Digit) | ("2" ~ optional(anyOf("01234" ))) | anyOf("3456789") }
+  def MinuteDigits = rule { anyOf("012345") ~ optional(CharPredicate.Digit)}
 
   // Absolute Weekday
   def SpecificWeekday: Rule1[Weekday] = rule {Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday}
@@ -138,11 +151,16 @@ case class Month(val value: Int) {
   require(value >= 1 && value <= 12)
 }
 
+case class Date(year: Int, month: Int, day: Int) {
+  require(month >= 1 && month <= 12)
+  // TODO stricter day checking?
+  require(day >= 1 && day <= 31)
+}
+
 case class Time(hours: Int, minutes: Int) {
   require(hours >= 0 && hours <= 24)
   require(minutes >= 0 && hours <= 59)
 }
-
 
 object Event {
   def roll(now: Int, then: Int, border: Int) = {
@@ -152,8 +170,16 @@ object Event {
 
 sealed trait Event
 
+// Formal Dates
+
+case class OnDate(date: Date) extends Event {
+  def process = new LocalDate(date.year, date.month, date.day)
+}
+
+// Relaxed Dates
+
 case class LastWeekdayByName(weekday: Weekday) extends Event {
-  def process(now: LocalDate) = now.minusDays( Event.roll(weekday.value, now.getDayOfWeek, 7))
+  def process(now: LocalDate) = now.minusDays(Event.roll(weekday.value, now.getDayOfWeek, 7))
 }
 case class NextWeekdayByName(weekday: Weekday) extends Event {
   def process(now: LocalDate) = now.plusDays(Event.roll(now.getDayOfWeek, weekday.value, 7))

@@ -85,4 +85,11 @@ class EventSpec extends FlatSpec with Matchers {
 
     AtTime(Time(14,0)).process(now) shouldBe new LocalDateTime(2014, 1, 2, 14, 0)
   }
+
+  // Formal dates
+
+  it should "interpret yyyy-mm-dd" in {
+    OnDate(Date(2014,1,1)).process shouldBe new LocalDate(2014, 1, 1)
+  }
+
 }

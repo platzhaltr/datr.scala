@@ -3,7 +3,6 @@
 ## Formal dates
 
 ```
-1978-01-28
 1984/04/02
 1/02/1980
 2/28/79
@@ -38,7 +37,7 @@ afternoon
 midnight
 ```
 
-## Relative times ##
+## Relaxed times ##
 
 ```
 10 seconds ago
