@@ -15,6 +15,8 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
     withFixture(test.toNoArgTest(test))
   }
 
+  // Relaxed dates
+
   "today" in { td =>
     parse(td.name) shouldBe InDays(0)
   }
@@ -111,7 +113,13 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
     parse(td.name) shouldBe InYears(-4)
   }
 
-  def parse(line: String): Datum = {
+  // Formal times
+
+  "5:00" in { td =>
+    parse(td.name) shouldBe AtTime(Time(5,0))
+  }
+
+  def parse(line: String): Event = {
     val parser = new DateParser(line)
     parser.InputLine.run() match {
       case Success(result) => result

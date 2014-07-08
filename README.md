@@ -35,6 +35,13 @@ three months ago
 four years ago
 ```
 
+**Formal times**
+
+```
+5:00
+16:00
+```
+
 ## Resources
 
 - [Natty](http://natty.joestelmach.com/)

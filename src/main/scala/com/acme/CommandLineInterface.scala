@@ -4,7 +4,7 @@ import scala.annotation.tailrec
 import scala.io.StdIn
 import scala.util.{Failure, Success}
 
-import org.joda.time.LocalDate
+import org.joda.time.{LocalDate,LocalDateTime}
 import org.parboiled2.ParseError
 
 object CommandLineInterface extends App {
@@ -22,7 +22,23 @@ object CommandLineInterface extends App {
       case line =>
         val parser = new DateParser(line)
         parser.InputLine.run() match {
-          case Success(result)        => println(s"Result: ${result.toDate(new LocalDate())}")
+          case Success(result)        =>
+            val now = new LocalDateTime
+            val today = new LocalDate
+
+            result match {
+              case e @ LastWeekdayByName(_) => println(s"Result: ${e.process(today)}")
+              case e @ NextWeekdayByName(_) => println(s"Result: ${e.process(today)}")
+              case e @ LastMonthByName(_) => println(s"Result: ${e.process(today)}")
+              case e @ NextMonthByName(_) => println(s"Result: ${e.process(today)}")
+
+              case e @ InDays(_) => println(s"Result: ${e.process(today)}")
+              case e @ InMonths(_) => println(s"Result: ${e.process(today)}")
+              case e @ InYears(_) => println(s"Result: ${e.process(today)}")
+              case e @ WeekdayInMonth(_,_,_) => println(s"Result: ${e.process(today)}")
+
+              case e @ AtTime(_) => println(s"Result: ${e.process(now)}")
+            }
           case Failure(e: ParseError) => println(s"Invalid expression: ${parser.formatError(e, showTraces = true)}")
           case Failure(e)             => println(s"Unexpected error: ${e}")
         }

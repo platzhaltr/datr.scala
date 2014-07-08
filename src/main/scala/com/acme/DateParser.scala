@@ -1,16 +1,19 @@
 package com.acme
 
 import org.joda.time.LocalDate
+import org.joda.time.LocalDateTime
+
 import org.parboiled2._
 
 class DateParser(val input: ParserInput) extends Parser {
   def InputLine = rule { Expression ~ EOI }
 
-  def Expression: Rule1[Datum] = rule {
+  def Expression: Rule1[Event] = rule {
     RelativeFuture
   }
 
   def RelativeFuture = rule {
+    FormalTime                          ~> ((t) => AtTime(t)) |
     Today                               ~> (()  => InDays(0)) |
     Tomorrow                            ~> (()  => InDays(1)) |
     Yesterday                           ~> (()  => InDays(-1)) |
@@ -43,11 +46,11 @@ class DateParser(val input: ParserInput) extends Parser {
   def Fifth    = rule { ignoreCase("fifth")  ~> (() => 5)}
 
   def Count = rule { One | Two | Three | Four | Five }
-  def One   = rule { ignoreCase("one")    ~> (() => 1)}
-  def Two   = rule { ignoreCase("two")    ~> (() => 2)}
-  def Three = rule { ignoreCase("three")  ~> (() => 3)}
-  def Four  = rule { ignoreCase("four")   ~> (() => 4)}
-  def Five  = rule { ignoreCase("five")   ~> (() => 5)}
+  def One   = rule { ignoreCase("one")   ~> (() => 1)}
+  def Two   = rule { ignoreCase("two")   ~> (() => 2)}
+  def Three = rule { ignoreCase("three") ~> (() => 3)}
+  def Four  = rule { ignoreCase("four")  ~> (() => 4)}
+  def Five  = rule { ignoreCase("five")  ~> (() => 5)}
 
   def Ago  = rule { ignoreCase("ago") }
   def In   = rule { ignoreCase("in") }
@@ -58,13 +61,18 @@ class DateParser(val input: ParserInput) extends Parser {
   def Today       = rule { ignoreCase("today") }
   def Tomorrow    = rule { ignoreCase("tomorrow") }
   def Yesterday   = rule { ignoreCase("yesterday") }
-  def Day         = rule { ignoreCase("day")  ~ optional(ignoreCase("s")) }
-  def Week        = rule { ignoreCase("week") ~ optional(ignoreCase("s")) }
+  def Day         = rule { ignoreCase("day")   ~ optional(ignoreCase("s")) }
+  def Week        = rule { ignoreCase("week")  ~ optional(ignoreCase("s")) }
   def MonthToken  = rule { ignoreCase("month") ~ optional(ignoreCase("s")) }
-  def Year        = rule { ignoreCase("year") ~ optional(ignoreCase("s")) }
+  def Year        = rule { ignoreCase("year")  ~ optional(ignoreCase("s")) }
 
   def Number = rule { capture(Digits) ~> (_.toInt) }
   def Digits = rule { oneOrMore(CharPredicate.Digit) }
+  def Colon  = rule { ignoreCase(":") }
+
+  def FormalTime    = rule { capture(HoursDigits) ~ Colon ~ capture(MinutesDigits) ~> ((h,m) => new Time(h.toInt, m.toInt)) }
+  def HoursDigits   = rule { anyOf("01") ~ optional(CharPredicate.Digit) | ("2" ~ optional(anyOf("01234" ))) | anyOf("3456789") }
+  def MinutesDigits = rule { anyOf("012345") ~ optional(CharPredicate.Digit)}
 
   // Absolute Weekday
   def SpecificWeekday: Rule1[Weekday] = rule {Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday}
@@ -125,50 +133,71 @@ case class Month(val value: Int) {
   require(value >= 1 && value <= 12)
 }
 
-object Datum {
+case class Time(hours: Int, minutes: Int) {
+  require(hours >= 0 && hours <= 24)
+  require(minutes >= 0 && hours <= 59)
+}
+
+
+object Event {
   def roll(now: Int, then: Int, border: Int) = {
     if (now == then) border else (then - now + border) % border
   }
 }
-sealed trait Datum {
-  def toDate(now: LocalDate): LocalDate
-}
-case class LastWeekdayByName(weekday: Weekday) extends Datum {
-  override def toDate(now: LocalDate) = now.minusDays( Datum.roll(weekday.value, now.getDayOfWeek, 7))
-}
-case class NextWeekdayByName(weekday: Weekday) extends Datum {
-  override def toDate(now: LocalDate) = now.plusDays(Datum.roll(now.getDayOfWeek, weekday.value, 7))
-}
-case class LastMonthByName(month: Month) extends Datum {
-  override def toDate(now: LocalDate) = now.minusMonths(Datum.roll(month.value, now.getMonthOfYear, 12))
-}
-case class NextMonthByName(month: Month) extends Datum {
-  override def toDate(now: LocalDate) = now.plusMonths(Datum.roll(now.getMonthOfYear, month.value, 12))
-}
-case class InDays(days: Int) extends Datum {
-  override def toDate(now: LocalDate) = now.plusDays(days)
-}
-case class InWeeks(weeks: Int) extends Datum {
-  override def toDate(now: LocalDate) = now.plusWeeks(weeks)
-}
-case class InMonths(months: Int) extends Datum {
-  override def toDate(now: LocalDate) = now.plusMonths(months)
-}
-case class InYears(years: Int) extends Datum {
-  override def toDate(now: LocalDate) = now.plusYears(years)
-}
 
+sealed trait Event
 
-case class WeekdayInMonth(count: Int, weekday: Weekday, month: Month) extends Datum {
-  override def toDate(now: LocalDate) = {
-    val nextMonth = NextMonthByName(month).toDate(now)
+case class LastWeekdayByName(weekday: Weekday) extends Event {
+  def process(now: LocalDate) = now.minusDays( Event.roll(weekday.value, now.getDayOfWeek, 7))
+}
+case class NextWeekdayByName(weekday: Weekday) extends Event {
+  def process(now: LocalDate) = now.plusDays(Event.roll(now.getDayOfWeek, weekday.value, 7))
+}
+case class LastMonthByName(month: Month) extends Event {
+  def process(now: LocalDate) = now.minusMonths(Event.roll(month.value, now.getMonthOfYear, 12))
+}
+case class NextMonthByName(month: Month) extends Event {
+  def process(now: LocalDate) = now.plusMonths(Event.roll(now.getMonthOfYear, month.value, 12))
+}
+case class InDays(days: Int) extends Event {
+  def process(now: LocalDate) = now.plusDays(days)
+}
+case class InWeeks(weeks: Int) extends Event {
+  def process(now: LocalDate) = now.plusWeeks(weeks)
+}
+case class InMonths(months: Int) extends Event {
+  def process(now: LocalDate) = now.plusMonths(months)
+}
+case class InYears(years: Int) extends Event {
+  def process(now: LocalDate) = now.plusYears(years)
+}
+case class WeekdayInMonth(count: Int, weekday: Weekday, month: Month) extends Event {
+  def process(now: LocalDate) = {
+    val nextMonth = NextMonthByName(month).process(now)
     val firstOfMonth = nextMonth.withDayOfMonth(1)
 
     val firstOccurence = if (firstOfMonth.getDayOfWeek == weekday.value)
-                          firstOfMonth else NextWeekdayByName(weekday).toDate(firstOfMonth)
+                          firstOfMonth else NextWeekdayByName(weekday).process(firstOfMonth)
 
     // TODO guard against user error, check if still in correct month
-    InWeeks(count - 1).toDate(firstOccurence)
+    InWeeks(count - 1).process(firstOccurence)
   }
 }
 
+// Formal times
+
+case class AtTime(time: Time) extends Event {
+  def process(now: LocalDateTime) = {
+    val date = new LocalDateTime(now.getYear, now.getMonthOfYear, now.getDayOfMonth, time.hours, time.minutes)
+
+    val nowHour     = now.getHourOfDay
+    val nowMinutes  = now.getMinuteOfHour
+    val thenHour    = time.hours
+    val thenMinutes = time.minutes
+
+    if (now.getHourOfDay < time.hours || (now.getHourOfDay == time.hours && now.getMinuteOfHour < time.minutes))
+      date
+    else
+      date.plusDays(1)
+  }
+}
