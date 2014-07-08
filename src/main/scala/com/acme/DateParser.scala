@@ -9,11 +9,15 @@ class DateParser(val input: ParserInput) extends Parser {
   def InputLine = rule { Expression ~ EOI }
 
   def Expression: Rule1[Event] = rule {
-    RelativeFuture
+    FormalTimes | RelaxedDates
   }
 
-  def RelativeFuture = rule {
-    FormalTime                          ~> ((t) => AtTime(t)) |
+  def FormalTimes = rule {
+    SpecificTime                        ~> ((t) => AtTime(t)) |
+    At ~ Space ~ SpecificTime           ~> ((t) => AtTime(t))
+  }
+
+  def RelaxedDates = rule {
     Today                               ~> (()  => InDays(0)) |
     Tomorrow                            ~> (()  => InDays(1)) |
     Yesterday                           ~> (()  => InDays(-1)) |
@@ -54,6 +58,7 @@ class DateParser(val input: ParserInput) extends Parser {
 
   def Ago  = rule { ignoreCase("ago") }
   def In   = rule { ignoreCase("in") }
+  def At   = rule { ignoreCase("at") }
 
   def Last = rule { ignoreCase("last") }
   def Next = rule { ignoreCase("next") }
@@ -70,7 +75,7 @@ class DateParser(val input: ParserInput) extends Parser {
   def Digits = rule { oneOrMore(CharPredicate.Digit) }
   def Colon  = rule { ignoreCase(":") }
 
-  def FormalTime    = rule { capture(HoursDigits) ~ Colon ~ capture(MinutesDigits) ~> ((h,m) => new Time(h.toInt, m.toInt)) }
+  def SpecificTime  = rule { capture(HoursDigits) ~ Colon ~ capture(MinutesDigits) ~> ((h,m) => new Time(h.toInt, m.toInt)) }
   def HoursDigits   = rule { anyOf("01") ~ optional(CharPredicate.Digit) | ("2" ~ optional(anyOf("01234" ))) | anyOf("3456789") }
   def MinutesDigits = rule { anyOf("012345") ~ optional(CharPredicate.Digit)}
 
