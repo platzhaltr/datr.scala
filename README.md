@@ -15,6 +15,8 @@ Enter expression >
 20140820
 on 2014-08-20
 on 20140820
+1984/04/02
+on 1984/04/02
 ```
 
 **Relaxed dates**

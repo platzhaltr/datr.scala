@@ -79,8 +79,9 @@ class DateParser(val input: ParserInput) extends Parser {
 
   def Colon        = rule { ignoreCase(":") }
   def Dash         = rule { ignoreCase("-") }
+  def Slash        = rule { ignoreCase("/") }
 
-  def IsoDate      = rule { YearDigits ~ optional(Dash) ~ MonthDigits ~ optional(Dash) ~ DayDigits ~> ((y,m,d) => new Date(y,m,d)) }
+  def IsoDate      = rule { YearDigits ~ optional(Dash | Slash) ~ MonthDigits ~ optional(Dash | Slash) ~ DayDigits ~> ((y,m,d) => new Date(y,m,d)) }
   def YearDigits   = rule { capture(4.times(CharPredicate.Digit)) ~> (_.toInt) }
   def MonthDigits  = rule { capture("0" ~ CharPredicate.Digit | "1" ~ anyOf("012" )) ~> (_.toInt) }
   def DayDigits    = rule { capture(anyOf("012") ~ CharPredicate.Digit | "3" ~ anyOf("01" )) ~> (_.toInt) }
