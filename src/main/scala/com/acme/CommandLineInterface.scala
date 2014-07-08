@@ -39,8 +39,10 @@ object CommandLineInterface extends App {
               case e @ NextMonthByName(_)    => println(s"Result: ${e.process(today)}")
 
               case e @ InDays(_)             => println(s"Result: ${e.process(today)}")
+              case e @ InWeeks(_)            => println(s"Result: ${e.process(today)}")
               case e @ InMonths(_)           => println(s"Result: ${e.process(today)}")
               case e @ InYears(_)            => println(s"Result: ${e.process(today)}")
+
               case e @ WeekdayInMonth(_,_,_) => println(s"Result: ${e.process(today)}")
 
               // formal times
