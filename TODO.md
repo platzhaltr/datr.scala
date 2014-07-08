@@ -1,12 +1,5 @@
 # TODO
 
-## Formal dates
-
-```
-1/02/1980
-2/28/79
-```
-
 ## Prefixes
 
 Locale specific holidays?

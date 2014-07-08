@@ -29,6 +29,10 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
     parse(td.name) shouldBe OnDate(Date(2014,10,23))
   }
 
+  "23/10/2014" in { td =>
+    parse(td.name) shouldBe OnDate(Date(2014,10,23))
+  }
+
   "on 2014-10-23" in { td =>
     parse(td.name) shouldBe OnDate(Date(2014,10,23))
   }
@@ -38,6 +42,10 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
   }
 
   "on 2014/10/23" in { td =>
+    parse(td.name) shouldBe OnDate(Date(2014,10,23))
+  }
+
+  "on 23/10/2014" in { td =>
     parse(td.name) shouldBe OnDate(Date(2014,10,23))
   }
 
