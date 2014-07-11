@@ -16,9 +16,6 @@ the monday before
 ## Times
 
 ```
-0600h
-06:00 hours
-5
 noon
 afternoon
 midnight
