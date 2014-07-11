@@ -1,5 +1,14 @@
 # TODO
 
+## Date & Time ##
+
+```
+saturday afternoon
+tommorow at 8
+yesterday at 10 pm
+first wednesday of march at 22:00
+```
+
 ## Prefixes
 
 Locale specific holidays?
