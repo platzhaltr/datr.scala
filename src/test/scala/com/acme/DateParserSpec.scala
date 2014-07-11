@@ -177,6 +177,24 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
     parse(td.name) shouldBe AtTime(Time(19,0))
   }
 
+  // fuzzy times
+
+  "noon" in { td =>
+    parse(td.name) shouldBe AtTime(Time(12,0))
+  }
+
+  "afternoon" in { td =>
+    parse(td.name) shouldBe AtTime(Time(16,0))
+  }
+
+  "evening" in { td =>
+    parse(td.name) shouldBe AtTime(Time(19,0))
+  }
+
+  "midnight" in { td =>
+    parse(td.name) shouldBe AtTime(Time(0,0))
+  }
+
   def parse(line: String): Event = {
     val parser = new DateParser(line)
     parser.InputLine.run() match {

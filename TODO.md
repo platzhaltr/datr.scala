@@ -13,14 +13,6 @@ the monday before
 4 tuesdays after
 ```
 
-## Times
-
-```
-noon
-afternoon
-midnight
-```
-
 ## Relaxed times ##
 
 ```

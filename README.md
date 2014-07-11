@@ -56,7 +56,15 @@ at 2:00
 6pm
 5:30 a.m.
 at 7 pm
-``
+```
+
+**Fuzzy times**
+
+```
+noon
+afternoon
+midnight
+```
 
 ## Resources
 

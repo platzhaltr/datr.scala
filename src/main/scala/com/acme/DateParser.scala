@@ -6,7 +6,7 @@ class DateParser(val input: ParserInput) extends Parser {
   def InputLine = rule { Expression ~ EOI }
 
   def Expression: Rule1[Event] = rule {
-    FormalTimes | FormalDates | RelaxedDates
+    FormalTimes | FuzzyTimes | FormalDates | RelaxedDates
   }
 
   def FormalTimes = rule {
@@ -14,6 +14,13 @@ class DateParser(val input: ParserInput) extends Parser {
     At ~ Space ~ TwelveHourTime         ~> ((t) => AtTime(t)) |
     IsoTime                             ~> ((t) => AtTime(t)) |
     At ~ Space ~ IsoTime                ~> ((t) => AtTime(t))
+  }
+
+  def FuzzyTimes    = rule {
+    Noon                                ~> ((t) => AtTime(t)) |
+    Afternoon                           ~> ((t) => AtTime(t)) |
+    Evening                             ~> ((t) => AtTime(t)) |
+    Midnight                            ~> ((t) => AtTime(t))
   }
 
   def FormalDates = rule {
@@ -77,6 +84,11 @@ class DateParser(val input: ParserInput) extends Parser {
   def Week         = rule { ignoreCase("week")  ~ optional(ignoreCase("s")) }
   def MonthToken   = rule { ignoreCase("month") ~ optional(ignoreCase("s")) }
   def Year         = rule { ignoreCase("year")  ~ optional(ignoreCase("s")) }
+
+  def Noon         = rule { ignoreCase("noon") ~> (() => new Time(12,0))}
+  def Afternoon    = rule { ignoreCase("afternoon") ~> (() => new Time(16,0))}
+  def Evening      = rule { ignoreCase("evening") ~> (() => new Time(19,0))}
+  def Midnight     = rule { ignoreCase("midnight") ~> (() => new Time(0,0))}
 
   def Number       = rule { capture(Digits) ~> (_.toInt) }
   def Digits       = rule { oneOrMore(CharPredicate.Digit) }
