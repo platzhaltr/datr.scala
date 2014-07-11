@@ -5,14 +5,23 @@ import org.parboiled2._
 class DateParser(val input: ParserInput) extends Parser {
   def InputLine = rule { Expression ~ EOI }
 
-  def Expression: Rule1[Event] = rule {
-    FormalTimes | FuzzyTimes | RelativeTimes | FormalDates | RelativeDates
+  def Expression: Rule1[Either[DateEvent, TimeEvent]] = rule {
+    Times                                      ~> ((t: TimeEvent) => Right(t)) |
+    Dates                                      ~> ((d: DateEvent) => Left(d))
+  }
+
+  def Times = rule {
+    FormalTimes | FuzzyTimes | RelativeTimes
+  }
+
+  def Dates = rule {
+    FormalDates | RelativeDates
   }
 
   def FormalTimes = rule {
     TwelveHourTime                             ~> ((t) => AtTime(t)) |
-    At ~ Space ~ TwelveHourTime                ~> ((t) => AtTime(t)) |
     IsoTime                                    ~> ((t) => AtTime(t)) |
+    At ~ Space ~ TwelveHourTime                ~> ((t) => AtTime(t)) |
     At ~ Space ~ IsoTime                       ~> ((t) => AtTime(t))
   }
 
@@ -43,28 +52,40 @@ class DateParser(val input: ParserInput) extends Parser {
   }
 
   def RelativeDates = rule {
+    RelativeDays |
+    RelativeDatesFuture |
+    RelativeDatesPast |
+    Cardinal ~ Space ~ SpecificWeekday ~ Space ~ In ~ Space ~ SpecificMonth ~> ((c,w,m) => WeekdayInMonth(c, w, m))
+  }
+
+  def RelativeDays = rule {
     Today                                      ~> (()  => InDays(0)) |
     Tomorrow                                   ~> (()  => InDays(1)) |
-    Yesterday                                  ~> (()  => InDays(-1)) |
+    Yesterday                                  ~> (()  => InDays(-1))
+  }
+
+  def RelativeDatesFuture = rule {
     Next ~ Space ~ Months                      ~> (()  => InMonths(1)) |
     Next ~ Space ~ SpecificWeekday             ~> ((w) => NextWeekdayByName(w)) |
     Next ~ Space ~ SpecificMonth               ~> ((m) => NextMonthByName(m)) |
     Next ~ Space ~ Weeks                       ~> (()  => InWeeks(1)) |
     Next ~ Space ~ Years                       ~> (()  => InYears(1)) |
+    In ~ Space ~ Number ~ Space ~ Days         ~> ((d) => InDays(d)) |
+    In ~ Space ~ Number ~ Space ~ Weeks        ~> ((w) => InWeeks(w)) |
+    In ~ Space ~ Number ~ Space ~ Months       ~> ((m) => InMonths(m)) |
+    In ~ Space ~ Number ~ Space ~ Years        ~> ((y) => InYears(y))
+  }
+
+  def RelativeDatesPast = rule {
     Last ~ Space ~ Months                      ~> (()  => InMonths(-1)) |
     Last ~ Space ~ SpecificWeekday             ~> ((w) => LastWeekdayByName(w)) |
     Last ~ Space ~ SpecificMonth               ~> ((m) => LastMonthByName(m)) |
     Last ~ Space ~ Weeks                       ~> (()  => InWeeks(-1)) |
     Last ~ Space ~ Years                       ~> (()  => InYears(-1)) |
-    In ~ Space ~ Number ~ Space ~ Days         ~> ((d) => InDays(d)) |
-    In ~ Space ~ Number ~ Space ~ Weeks        ~> ((w) => InWeeks(w)) |
-    In ~ Space ~ Number ~ Space ~ Months       ~> ((m) => InMonths(m)) |
-    In ~ Space ~ Number ~ Space ~ Years        ~> ((y) => InYears(y)) |
     Count ~ Space ~ Days ~ Space ~ Ago         ~> ((c) => InDays(-c)) |
     Count ~ Space ~ Weeks ~ Space ~ Ago        ~> ((c) => InWeeks(-c)) |
     Count ~ Space ~ Months ~ Space ~ Ago       ~> ((c) => InMonths(-c)) |
-    Count ~ Space ~ Years ~ Space ~ Ago        ~> ((c) => InYears(-c)) |
-    Cardinal ~ Space ~ SpecificWeekday ~ Space ~ In ~ Space ~ SpecificMonth ~> ((c,w,m) => WeekdayInMonth(c, w, m))
+    Count ~ Space ~ Years ~ Space ~ Ago        ~> ((c) => InYears(-c))
   }
 
   def Cardinal     = rule { First | Second | Third | Fourth | Fifth}
@@ -194,6 +215,8 @@ object Month {
 case class Month(val value: Int) {
   require(value >= 1 && value <= 12)
 }
+
+case class DateTime(date: Date, time: Time)
 
 case class Date(year: Int, month: Int, day: Int) {
   require(month >= 1 && month <= 12)

@@ -89,7 +89,9 @@ class EventSpec extends FlatSpec with Matchers {
   // Formal dates
 
   it should "interpret yyyy-mm-dd" in {
-    OnDate(Date(2014,1,1)).process shouldBe new LocalDate(2014, 1, 1)
+    val today = new LocalDate(1970, 6, 20)
+
+    OnDate(Date(2014,1,1)).process(today) shouldBe new LocalDate(2014, 1, 1)
   }
 
 }

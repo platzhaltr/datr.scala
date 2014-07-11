@@ -23,41 +23,16 @@ object CommandLineInterface extends App {
         val parser = new DateParser(line)
         parser.InputLine.run() match {
           case Success(result)        =>
-            val now = new LocalDateTime
-            val today = new LocalDate
-
             result match {
-              // formal dates
-
-              case e @ OnDate(_)             => println(s"Result: ${e.process}")
-
-              // relaxed dates
-
-              case e @ LastWeekdayByName(_)  => println(s"Result: ${e.process(today)}")
-              case e @ NextWeekdayByName(_)  => println(s"Result: ${e.process(today)}")
-              case e @ LastMonthByName(_)    => println(s"Result: ${e.process(today)}")
-              case e @ NextMonthByName(_)    => println(s"Result: ${e.process(today)}")
-              case e @ WeekdayInMonth(_,_,_) => println(s"Result: ${e.process(today)}")
-
-              // relative dates
-
-              case e @ InDays(_)             => println(s"Result: ${e.process(today)}")
-              case e @ InWeeks(_)            => println(s"Result: ${e.process(today)}")
-              case e @ InMonths(_)           => println(s"Result: ${e.process(today)}")
-              case e @ InYears(_)            => println(s"Result: ${e.process(today)}")
-
-              // relative times
-
-              case e @ InSeconds(_)          => println(s"Result: ${e.process(now)}")
-              case e @ InMinutes(_)          => println(s"Result: ${e.process(now)}")
-              case e @ InHours(_)            => println(s"Result: ${e.process(now)}")
-
-              // formal times
-
-              case e @ AtTime(_)             => println(s"Result: ${e.process(now)}")
+              case Left(dateEvent)    =>
+                val today = new LocalDate
+                println(s"Result: ${dateEvent.process(today)}")
+              case Right(timeEvent)   =>
+                val now = new LocalDateTime
+                println(s"Result: ${timeEvent.process(now)}")
             }
-          case Failure(e: ParseError)        => println(s"Invalid expression: ${parser.formatError(e, showTraces = true)}")
-          case Failure(e)                    => println(s"Unexpected error: ${e}")
+          case Failure(e: ParseError) => println(s"Invalid expression: ${parser.formatError(e, showTraces = true)}")
+          case Failure(e)             => println(s"Unexpected error: ${e}")
         }
         repl()
     }
