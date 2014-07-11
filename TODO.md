@@ -18,12 +18,7 @@ the monday before
 ```
 0600h
 06:00 hours
-6pm
-5:30 a.m.
 5
-12:59
-23:59
-8pm
 noon
 afternoon
 midnight

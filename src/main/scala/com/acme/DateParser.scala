@@ -10,6 +10,8 @@ class DateParser(val input: ParserInput) extends Parser {
   }
 
   def FormalTimes = rule {
+    TwelveHourTime                      ~> ((t) => AtTime(t)) |
+    At ~ Space ~ TwelveHourTime         ~> ((t) => AtTime(t)) |
     IsoTime                             ~> ((t) => AtTime(t)) |
     At ~ Space ~ IsoTime                ~> ((t) => AtTime(t))
   }
@@ -79,9 +81,11 @@ class DateParser(val input: ParserInput) extends Parser {
   def Number       = rule { capture(Digits) ~> (_.toInt) }
   def Digits       = rule { oneOrMore(CharPredicate.Digit) }
 
-  def Colon        = rule { ignoreCase(":") }
-  def Dash         = rule { ignoreCase("-") }
-  def Slash        = rule { ignoreCase("/") }
+  def Colon        = rule { ":" }
+  def Dash         = rule { "-" }
+  def Dot          = rule { "." }
+  def Slash        = rule { "/" }
+  def Space        = rule { zeroOrMore(" ") }
 
   def IsoDate      = rule { YearDigits ~ optional(Dash | Slash) ~ MonthDigits ~ optional(Dash | Slash) ~ DayDigits ~> ((y,m,d) => new Date(y,m,d)) }
   def LittleEndianDate =  rule { DayDigits ~ optional(Dash | Slash) ~ MonthDigits ~ optional(Dash | Slash) ~ YearDigits ~> ((d,m,y) => new Date(y,m,d)) }
@@ -89,9 +93,21 @@ class DateParser(val input: ParserInput) extends Parser {
   def MonthDigits  = rule { capture("0" ~ CharPredicate.Digit | "1" ~ anyOf("012" )) ~> (_.toInt) }
   def DayDigits    = rule { capture(anyOf("012") ~ CharPredicate.Digit | "3" ~ anyOf("01" )) ~> (_.toInt) }
 
-  def IsoTime      = rule { capture(HourDigits) ~ Colon ~ capture(MinuteDigits) ~> ((h,m) => new Time(h.toInt, m.toInt)) }
-  def HourDigits   = rule { anyOf("01") ~ optional(CharPredicate.Digit) | ("2" ~ optional(anyOf("01234" ))) | anyOf("3456789") }
-  def MinuteDigits = rule { anyOf("012345") ~ optional(CharPredicate.Digit)}
+  def IsoTime      = rule { HourDigits ~ Colon ~ MinuteDigits ~> ((h,m) => new Time(h, m)) }
+  def HourDigits   = rule { capture(anyOf("01") ~ optional(CharPredicate.Digit) | ("2" ~ optional(anyOf("01234" ))) | anyOf("3456789")) ~> (_.toInt) }
+  def MinuteDigits = rule { capture(anyOf("012345") ~ optional(CharPredicate.Digit)) ~> (_.toInt) }
+
+  def TwelveHourTime = rule {
+    TwelveHour ~ Colon ~ MinuteDigits ~ Space ~ Am ~> ((h,m) => new Time(h % 12,m)) |
+    TwelveHour ~ Colon ~ MinuteDigits ~ Space ~ Pm ~> ((h,m) => new Time((h % 12) + 12,m)) |
+    TwelveHour ~ Am                     ~> ((h) => new Time(h % 12,0)) |
+    TwelveHour ~ Pm                     ~> ((h) => new Time((h % 12) + 12,0)) |
+    TwelveHour ~ Space ~ Am             ~> ((h) => new Time(h % 12,0)) |
+    TwelveHour ~ Space ~ Pm             ~> ((h) => new Time((h % 12) + 12,0))
+  }
+  def TwelveHour   = rule { capture("0" ~ CharPredicate.Digit | "1" ~ anyOf("012") | CharPredicate.Digit) ~> (_.toInt) }
+  def Am           = rule { ignoreCase("a") ~ optional (Dot) ~ ignoreCase("m") ~ optional(Dot) }
+  def Pm           = rule { ignoreCase("p") ~ optional (Dot) ~ ignoreCase("m") ~ optional(Dot) }
 
   // Absolute Weekday
   def SpecificWeekday: Rule1[Weekday] = rule {Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday}
@@ -117,8 +133,6 @@ class DateParser(val input: ParserInput) extends Parser {
   def October: Rule1[Month]   = rule {capture(ignoreCase("october")   | ignoreCase("oct") ) ~> ((s: String) => Month.October )}
   def November: Rule1[Month]  = rule {capture(ignoreCase("november")  | ignoreCase("nov") ) ~> ((s: String) => Month.November )}
   def December: Rule1[Month]  = rule {capture(ignoreCase("december")  | ignoreCase("dec") ) ~> ((s: String) => Month.December )}
-
-  def Space = rule { zeroOrMore(" ") }
 }
 
 object Weekday {

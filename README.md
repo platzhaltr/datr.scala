@@ -53,6 +53,9 @@ four years ago
 5:00
 16:00
 at 2:00
+6pm
+5:30 a.m.
+at 7 pm
 ``
 
 ## Resources
