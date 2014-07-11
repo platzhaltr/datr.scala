@@ -6,52 +6,64 @@ class DateParser(val input: ParserInput) extends Parser {
   def InputLine = rule { Expression ~ EOI }
 
   def Expression: Rule1[Event] = rule {
-    FormalTimes | FuzzyTimes | FormalDates | RelaxedDates
+    FormalTimes | FuzzyTimes | RelativeTimes | FormalDates | RelativeDates
   }
 
   def FormalTimes = rule {
-    TwelveHourTime                      ~> ((t) => AtTime(t)) |
-    At ~ Space ~ TwelveHourTime         ~> ((t) => AtTime(t)) |
-    IsoTime                             ~> ((t) => AtTime(t)) |
-    At ~ Space ~ IsoTime                ~> ((t) => AtTime(t))
+    TwelveHourTime                             ~> ((t) => AtTime(t)) |
+    At ~ Space ~ TwelveHourTime                ~> ((t) => AtTime(t)) |
+    IsoTime                                    ~> ((t) => AtTime(t)) |
+    At ~ Space ~ IsoTime                       ~> ((t) => AtTime(t))
   }
 
-  def FuzzyTimes    = rule {
-    Noon                                ~> ((t) => AtTime(t)) |
-    Afternoon                           ~> ((t) => AtTime(t)) |
-    Evening                             ~> ((t) => AtTime(t)) |
-    Midnight                            ~> ((t) => AtTime(t))
+  def FuzzyTimes = rule {
+    Noon                                       ~> ((t) => AtTime(t)) |
+    Afternoon                                  ~> ((t) => AtTime(t)) |
+    Evening                                    ~> ((t) => AtTime(t)) |
+    Midnight                                   ~> ((t) => AtTime(t))
+  }
+
+  def RelativeTimes = rule {
+    In ~ Space ~ Number ~ Space ~ Seconds      ~> ((s) => InSeconds(s)) |
+    In ~ Space ~ Number ~ Space ~ Minutes      ~> ((m) => InMinutes(m)) |
+    In ~ Space ~ Number ~ Space ~ Hours        ~> ((h) => InHours(h)) |
+    Number ~ Space ~ Seconds ~ Space ~ Ago     ~> ((s) => InSeconds(-s)) |
+    Number ~ Space ~ Minutes ~ Space ~ Ago     ~> ((m) => InMinutes(-m)) |
+    Number ~ Space ~ Hours ~ Space ~ Ago       ~> ((h) => InHours(-h)) |
+    Number ~ Space ~ Seconds ~ Space ~ FromNow ~> ((s) => InSeconds(s)) |
+    Number ~ Space ~ Minutes ~ Space ~ FromNow ~> ((m) => InMinutes(m)) |
+    Number ~ Space ~ Hours ~ Space ~ FromNow   ~> ((h) => InHours(h))
   }
 
   def FormalDates = rule {
-    IsoDate                             ~> ((d) => OnDate(d)) |
-    On ~ Space ~ IsoDate                ~> ((d) => OnDate(d)) |
-    LittleEndianDate                    ~> ((d) => OnDate(d)) |
-    On ~ Space ~ LittleEndianDate       ~> ((d) => OnDate(d))
+    IsoDate                                    ~> ((d) => OnDate(d)) |
+    On ~ Space ~ IsoDate                       ~> ((d) => OnDate(d)) |
+    LittleEndianDate                           ~> ((d) => OnDate(d)) |
+    On ~ Space ~ LittleEndianDate              ~> ((d) => OnDate(d))
   }
 
-  def RelaxedDates = rule {
-    Today                               ~> (()  => InDays(0)) |
-    Tomorrow                            ~> (()  => InDays(1)) |
-    Yesterday                           ~> (()  => InDays(-1)) |
-    Next ~ Space ~ MonthToken           ~> (()  => InMonths(1)) |
-    Next ~ Space ~ SpecificWeekday      ~> ((w) => NextWeekdayByName(w)) |
-    Next ~ Space ~ SpecificMonth        ~> ((m) => NextMonthByName(m)) |
-    Next ~ Space ~ Week                 ~> (()  => InWeeks(1)) |
-    Next ~ Space ~ Year                 ~> (()  => InYears(1)) |
-    Last ~ Space ~ MonthToken           ~> (()  => InMonths(-1)) |
-    Last ~ Space ~ SpecificWeekday      ~> ((w) => LastWeekdayByName(w)) |
-    Last ~ Space ~ SpecificMonth        ~> ((m) => LastMonthByName(m)) |
-    Last ~ Space ~ Week                 ~> (()  => InWeeks(-1)) |
-    Last ~ Space ~ Year                 ~> (()  => InYears(-1)) |
-    In ~ Space ~ Number ~ Space ~ Day   ~> ((d) => InDays(d)) |
-    In ~ Space ~ Number ~ Space ~ Week  ~> ((w) => InWeeks(w)) |
-    In ~ Space ~ Number ~ Space ~ MonthToken ~> ((m) => InMonths(m)) |
-    In ~ Space ~ Number ~ Space ~ Year ~> ((y) => InYears(y)) |
-    Count ~ Space ~ Day ~ Space ~ Ago   ~> ((c) => InDays(-c)) |
-    Count ~ Space ~ Week ~ Space ~ Ago  ~> ((c) => InWeeks(-c)) |
-    Count ~ Space ~ MonthToken ~ Space ~ Ago ~> ((c) => InMonths(-c)) |
-    Count ~ Space ~ Year ~ Space ~ Ago  ~> ((c) => InYears(-c)) |
+  def RelativeDates = rule {
+    Today                                      ~> (()  => InDays(0)) |
+    Tomorrow                                   ~> (()  => InDays(1)) |
+    Yesterday                                  ~> (()  => InDays(-1)) |
+    Next ~ Space ~ Months                      ~> (()  => InMonths(1)) |
+    Next ~ Space ~ SpecificWeekday             ~> ((w) => NextWeekdayByName(w)) |
+    Next ~ Space ~ SpecificMonth               ~> ((m) => NextMonthByName(m)) |
+    Next ~ Space ~ Weeks                       ~> (()  => InWeeks(1)) |
+    Next ~ Space ~ Years                       ~> (()  => InYears(1)) |
+    Last ~ Space ~ Months                      ~> (()  => InMonths(-1)) |
+    Last ~ Space ~ SpecificWeekday             ~> ((w) => LastWeekdayByName(w)) |
+    Last ~ Space ~ SpecificMonth               ~> ((m) => LastMonthByName(m)) |
+    Last ~ Space ~ Weeks                       ~> (()  => InWeeks(-1)) |
+    Last ~ Space ~ Years                       ~> (()  => InYears(-1)) |
+    In ~ Space ~ Number ~ Space ~ Days         ~> ((d) => InDays(d)) |
+    In ~ Space ~ Number ~ Space ~ Weeks        ~> ((w) => InWeeks(w)) |
+    In ~ Space ~ Number ~ Space ~ Months       ~> ((m) => InMonths(m)) |
+    In ~ Space ~ Number ~ Space ~ Years        ~> ((y) => InYears(y)) |
+    Count ~ Space ~ Days ~ Space ~ Ago         ~> ((c) => InDays(-c)) |
+    Count ~ Space ~ Weeks ~ Space ~ Ago        ~> ((c) => InWeeks(-c)) |
+    Count ~ Space ~ Months ~ Space ~ Ago       ~> ((c) => InMonths(-c)) |
+    Count ~ Space ~ Years ~ Space ~ Ago        ~> ((c) => InYears(-c)) |
     Cardinal ~ Space ~ SpecificWeekday ~ Space ~ In ~ Space ~ SpecificMonth ~> ((c,w,m) => WeekdayInMonth(c, w, m))
   }
 
@@ -71,6 +83,7 @@ class DateParser(val input: ParserInput) extends Parser {
 
   def Ago          = rule { ignoreCase("ago") }
   def At           = rule { ignoreCase("at") }
+  def FromNow      = rule { ignoreCase("from now") }
   def In           = rule { ignoreCase("in") }
   def On           = rule { ignoreCase("on") }
 
@@ -80,10 +93,14 @@ class DateParser(val input: ParserInput) extends Parser {
   def Today        = rule { ignoreCase("today") }
   def Tomorrow     = rule { ignoreCase("tomorrow") }
   def Yesterday    = rule { ignoreCase("yesterday") }
-  def Day          = rule { ignoreCase("day")   ~ optional(ignoreCase("s")) }
-  def Week         = rule { ignoreCase("week")  ~ optional(ignoreCase("s")) }
-  def MonthToken   = rule { ignoreCase("month") ~ optional(ignoreCase("s")) }
-  def Year         = rule { ignoreCase("year")  ~ optional(ignoreCase("s")) }
+
+  def Seconds       = rule { ignoreCase("second") ~ optional(ignoreCase("s")) }
+  def Minutes       = rule { ignoreCase("minute") ~ optional(ignoreCase("s")) }
+  def Hours         = rule { ignoreCase("hour")   ~ optional(ignoreCase("s")) }
+  def Days          = rule { ignoreCase("day")    ~ optional(ignoreCase("s")) }
+  def Weeks         = rule { ignoreCase("week")   ~ optional(ignoreCase("s")) }
+  def Months        = rule { ignoreCase("month")  ~ optional(ignoreCase("s")) }
+  def Years         = rule { ignoreCase("year")   ~ optional(ignoreCase("s")) }
 
   def Noon         = rule { ignoreCase("noon") ~> (() => new Time(12,0))}
   def Afternoon    = rule { ignoreCase("afternoon") ~> (() => new Time(16,0))}

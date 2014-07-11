@@ -13,14 +13,6 @@ the monday before
 4 tuesdays after
 ```
 
-## Relaxed times ##
-
-```
-10 seconds ago
-in 5 minutes
-4 minutes from now
-```
-
 ## Repeats
 
 ```

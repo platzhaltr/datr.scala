@@ -31,6 +31,21 @@ case class LastMonthByName(month: Month) extends Event {
 case class NextMonthByName(month: Month) extends Event {
   def process(now: LocalDate) = now.plusMonths(Event.roll(now.getMonthOfYear, month.value, 12))
 }
+case class WeekdayInMonth(count: Int, weekday: Weekday, month: Month) extends Event {
+  def process(now: LocalDate) = {
+    val nextMonth = NextMonthByName(month).process(now)
+    val firstOfMonth = nextMonth.withDayOfMonth(1)
+
+    val firstOccurence = if (firstOfMonth.getDayOfWeek == weekday.value)
+                          firstOfMonth else NextWeekdayByName(weekday).process(firstOfMonth)
+
+    // TODO guard against user error, check if still in correct month
+    InWeeks(count - 1).process(firstOccurence)
+  }
+}
+
+// Relative Dates
+
 case class InDays(days: Int) extends Event {
   def process(now: LocalDate) = now.plusDays(days)
 }
@@ -43,17 +58,17 @@ case class InMonths(months: Int) extends Event {
 case class InYears(years: Int) extends Event {
   def process(now: LocalDate) = now.plusYears(years)
 }
-case class WeekdayInMonth(count: Int, weekday: Weekday, month: Month) extends Event {
-  def process(now: LocalDate) = {
-    val nextMonth = NextMonthByName(month).process(now)
-    val firstOfMonth = nextMonth.withDayOfMonth(1)
 
-    val firstOccurence = if (firstOfMonth.getDayOfWeek == weekday.value)
-                          firstOfMonth else NextWeekdayByName(weekday).process(firstOfMonth)
+// Relative Times
 
-    // TODO guard against user error, check if still in correct month
-    InWeeks(count - 1).process(firstOccurence)
-  }
+case class InSeconds(seconds: Int) extends Event {
+  def process(now: LocalDateTime) = now.plusSeconds(seconds)
+}
+case class InMinutes(minutes: Int) extends Event {
+  def process(now: LocalDateTime) = now.plusMinutes(minutes)
+}
+case class InHours(hours: Int) extends Event {
+  def process(now: LocalDateTime) = now.plusHours(hours)
 }
 
 // Formal times

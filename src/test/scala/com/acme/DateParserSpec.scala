@@ -195,6 +195,20 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
     parse(td.name) shouldBe AtTime(Time(0,0))
   }
 
+  // relaxed times
+
+  "10 seconds ago" in { td =>
+    parse(td.name) shouldBe InSeconds(-10)
+  }
+
+  "in 5 minutes" in { td =>
+    parse(td.name) shouldBe InMinutes(5)
+  }
+
+  "4 hours from now" in { td =>
+    parse(td.name) shouldBe InHours(4)
+  }
+
   def parse(line: String): Event = {
     val parser = new DateParser(line)
     parser.InputLine.run() match {

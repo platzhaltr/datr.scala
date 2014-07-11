@@ -58,6 +58,14 @@ at 2:00
 at 7 pm
 ```
 
+**Relaxed times**
+
+```
+10 seconds ago
+in 5 minutes
+4 hours from now
+```
+
 **Fuzzy times**
 
 ```
