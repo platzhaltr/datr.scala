@@ -169,28 +169,28 @@ class DateParser(val input: ParserInput) extends Parser {
 
   // Absolute Weekday
   def SpecificWeekday: Rule1[Weekday] = rule {Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday}
-  def Monday: Rule1[Weekday]    = rule {capture(ignoreCase("monday")    | ignoreCase("mon") ) ~> ((s: String) => Weekday.Monday )}
-  def Tuesday: Rule1[Weekday]   = rule {capture(ignoreCase("tuesday")   | ignoreCase("tue") ) ~> ((s: String) => Weekday.Tuesday )}
-  def Wednesday: Rule1[Weekday] = rule {capture(ignoreCase("wednesday") | ignoreCase("wed") ) ~> ((s: String) => Weekday.Wednesday )}
-  def Thursday: Rule1[Weekday]  = rule {capture(ignoreCase("thursday")  | ignoreCase("thu") ) ~> ((s: String) => Weekday.Thursday )}
-  def Friday: Rule1[Weekday]    = rule {capture(ignoreCase("friday")    | ignoreCase("fri") ) ~> ((s: String) => Weekday.Friday )}
-  def Saturday: Rule1[Weekday]  = rule {capture(ignoreCase("saturday")  | ignoreCase("sat") ) ~> ((s: String) => Weekday.Saturday )}
-  def Sunday: Rule1[Weekday]    = rule {capture(ignoreCase("sunday")    | ignoreCase("sun") ) ~> ((s: String) => Weekday.Sunday )}
+  def Monday: Rule1[Weekday]    = rule {(ignoreCase("monday")    | ignoreCase("mon")) ~> (() => Weekday.Monday )}
+  def Tuesday: Rule1[Weekday]   = rule {(ignoreCase("tuesday")   | ignoreCase("tue")) ~> (() => Weekday.Tuesday )}
+  def Wednesday: Rule1[Weekday] = rule {(ignoreCase("wednesday") | ignoreCase("wed")) ~> (() => Weekday.Wednesday )}
+  def Thursday: Rule1[Weekday]  = rule {(ignoreCase("thursday")  | ignoreCase("thu")) ~> (() => Weekday.Thursday )}
+  def Friday: Rule1[Weekday]    = rule {(ignoreCase("friday")    | ignoreCase("fri")) ~> (() => Weekday.Friday )}
+  def Saturday: Rule1[Weekday]  = rule {(ignoreCase("saturday")  | ignoreCase("sat")) ~> (() => Weekday.Saturday )}
+  def Sunday: Rule1[Weekday]    = rule {(ignoreCase("sunday")    | ignoreCase("sun")) ~> (() => Weekday.Sunday )}
 
   // Absolute Month
   def SpecificMonth: Rule1[Month] = rule {January | Febuary | March | April | May | June | July | August | September | October | November | December}
-  def January: Rule1[Month]   = rule {capture(ignoreCase("january")   | ignoreCase("jan") ) ~> ((s: String) => Month.January )}
-  def Febuary: Rule1[Month]   = rule {capture(ignoreCase("february")  | ignoreCase("feb") ) ~> ((s: String) => Month.February )}
-  def March: Rule1[Month]     = rule {capture(ignoreCase("march")     | ignoreCase("mar") ) ~> ((s: String) => Month.March )}
-  def April: Rule1[Month]     = rule {capture(ignoreCase("april")     | ignoreCase("apr") ) ~> ((s: String) => Month.April )}
-  def May: Rule1[Month]       = rule {capture(ignoreCase("may"))                            ~> ((s: String) => Month.May )}
-  def June: Rule1[Month]      = rule {capture(ignoreCase("june")      | ignoreCase("jun") ) ~> ((s: String) => Month.June )}
-  def July: Rule1[Month]      = rule {capture(ignoreCase("july")      | ignoreCase("jul") ) ~> ((s: String) => Month.July )}
-  def August: Rule1[Month]    = rule {capture(ignoreCase("august")    | ignoreCase("aug") ) ~> ((s: String) => Month.August )}
-  def September: Rule1[Month] = rule {capture(ignoreCase("september") | ignoreCase("sep") ) ~> ((s: String) => Month.September )}
-  def October: Rule1[Month]   = rule {capture(ignoreCase("october")   | ignoreCase("oct") ) ~> ((s: String) => Month.October )}
-  def November: Rule1[Month]  = rule {capture(ignoreCase("november")  | ignoreCase("nov") ) ~> ((s: String) => Month.November )}
-  def December: Rule1[Month]  = rule {capture(ignoreCase("december")  | ignoreCase("dec") ) ~> ((s: String) => Month.December )}
+  def January: Rule1[Month]   = rule {(ignoreCase("january")   | ignoreCase("jan")) ~> (() => Month.January )}
+  def Febuary: Rule1[Month]   = rule {(ignoreCase("february")  | ignoreCase("feb")) ~> (() => Month.February )}
+  def March: Rule1[Month]     = rule {(ignoreCase("march")     | ignoreCase("mar")) ~> (() => Month.March )}
+  def April: Rule1[Month]     = rule {(ignoreCase("april")     | ignoreCase("apr")) ~> (() => Month.April )}
+  def May: Rule1[Month]       = rule {(ignoreCase("may"))                           ~> (() => Month.May )}
+  def June: Rule1[Month]      = rule {(ignoreCase("june")      | ignoreCase("jun")) ~> (() => Month.June )}
+  def July: Rule1[Month]      = rule {(ignoreCase("july")      | ignoreCase("jul")) ~> (() => Month.July )}
+  def August: Rule1[Month]    = rule {(ignoreCase("august")    | ignoreCase("aug")) ~> (() => Month.August )}
+  def September: Rule1[Month] = rule {(ignoreCase("september") | ignoreCase("sep")) ~> (() => Month.September )}
+  def October: Rule1[Month]   = rule {(ignoreCase("october")   | ignoreCase("oct")) ~> (() => Month.October )}
+  def November: Rule1[Month]  = rule {(ignoreCase("november")  | ignoreCase("nov")) ~> (() => Month.November )}
+  def December: Rule1[Month]  = rule {(ignoreCase("december")  | ignoreCase("dec")) ~> (() => Month.December )}
 }
 
 object Weekday {
