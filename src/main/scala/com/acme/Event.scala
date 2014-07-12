@@ -3,6 +3,8 @@ package com.acme
 import org.joda.time.LocalDate
 import org.joda.time.LocalDateTime
 
+import scala.math.signum
+
 object Event {
   def roll(now: Int, next: Int, border: Int) = {
     if (now == next) border else (next - now + border) % border
@@ -100,23 +102,30 @@ case class AtTime(time: Time) extends TimeEvent {
 
 // Combinations
 case class DateTimeEvent(dateEvent: DateEvent, timeEvent: TimeEvent) extends TimeEvent {
+
+  private def adjustDays(now: LocalDateTime, signum: Int, timeEvent: TimeEvent) = {
+    timeEvent match {
+      case AtTime(time) =>
+        if (signum < 0) {
+          0
+        } else if (signum == 0) {
+          if (Event.nowBeforeNext(now,time)) 0 else -1
+        } else {
+          if (Event.nowBeforeNext(now,time)) 0 else -1
+        }
+      case _ => 0
+    }
+  }
+
   override def process(now: LocalDateTime) = {
     val newTime = timeEvent.process(now)
     val newDate = dateEvent.process(newTime.toLocalDate)
 
     val dayAdjustment = dateEvent match {
-      case InDays(days) =>
-        timeEvent match {
-          case AtTime(time) =>
-            if (days < 0) {
-              0
-            } else if (days == 0) {
-              if (Event.nowBeforeNext(now,time)) 0 else -1
-            } else {
-              if (Event.nowBeforeNext(now,time)) 0 else -1
-            }
-          case _ => 0
-        }
+      case InDays(days)     => adjustDays(now, signum(days), timeEvent)
+      case InWeeks(weeks)   => adjustDays(now, signum(weeks), timeEvent)
+      case InMonths(months) => adjustDays(now, signum(months), timeEvent)
+      case InYears(years)   => adjustDays(now, signum(years), timeEvent)
       case _ => 0
     }
 

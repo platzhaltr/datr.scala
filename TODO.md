@@ -9,7 +9,6 @@
 ## Date & Time ##
 
 ```
-in 4 weeks at 12:00
 first wednesday of march at 22:00
 saturday afternoon
 ```

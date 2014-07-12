@@ -12,8 +12,9 @@ class DateParser(val input: ParserInput) extends Parser {
   }
 
   def DateTimes = rule {
-    RelativeDays ~ Space ~ FuzzyTimes                  ~> ((d,t) => DateTimeEvent(d,t)) |
-    RelativeDays ~ Space ~ FormalTimes                 ~> ((d,t) => DateTimeEvent(d,t))
+    RelativeDays ~ Space ~ FuzzyTimes          ~> ((d,t) => DateTimeEvent(d,t)) |
+    RelativeDays ~ Space ~ FormalTimes         ~> ((d,t) => DateTimeEvent(d,t)) |
+    RelativeDatesFuture ~ Space ~ FormalTimes  ~> ((d,t) => DateTimeEvent(d,t))
   }
 
   def Times = rule {

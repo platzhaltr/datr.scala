@@ -81,6 +81,10 @@ tommorow afternoon
 yesterday evening
 tomorrow at 8 a.m.
 yesterday at 10 pm
+in 2 days at 6 pm
+in 4 weeks at 12:00
+in 3 months at 8 a.m.
+in 1 year at 20:00
 ```
 
 ## Resources
