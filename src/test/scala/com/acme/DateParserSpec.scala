@@ -221,6 +221,14 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
     parse(td.name) shouldBe Right(DateTimeEvent(InDays(-1),AtTime(Time(19,0))))
   }
 
+  "tomorrow at 8 a.m." in { td =>
+    parse(td.name) shouldBe Right(DateTimeEvent(InDays(1),AtTime(Time(8,0))))
+  }
+
+  "yesterday at 10 pm" in { td =>
+    parse(td.name) shouldBe Right(DateTimeEvent(InDays(-1),AtTime(Time(22,0))))
+  }
+
   def parse(line: String): Either[DateEvent, TimeEvent] = {
     val parser = new DateParser(line)
     parser.InputLine.run() match {

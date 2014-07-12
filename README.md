@@ -79,6 +79,8 @@ midnight
 ```
 tommorow afternoon
 yesterday evening
+tomorrow at 8 a.m.
+yesterday at 10 pm
 ```
 
 ## Resources

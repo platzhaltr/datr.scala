@@ -110,4 +110,24 @@ class EventSpec extends FlatSpec with Matchers {
     next shouldBe new LocalDateTime(2013, 12, 31, 19, 0)
   }
 
+    it should "interpret '<relative-day> <formal-time>', e.g. 'today at 8 a.m.'" in {
+    val now  = new LocalDateTime(2014, 1, 1, 14, 30)
+    val next = DateTimeEvent(InDays(0),AtTime(Time(8,0))).process(now)
+
+    next shouldBe new LocalDateTime(2014, 1, 1, 8, 0)
+  }
+
+  it should "interpret '<relative-day> <formal-time>', e.g. 'tomorrow at 8 a.m.'" in {
+    val now  = new LocalDateTime(2014, 1, 1, 14, 30)
+    val next = DateTimeEvent(InDays(1),AtTime(Time(8,0))).process(now)
+
+    next shouldBe new LocalDateTime(2014, 1, 2, 8, 0)
+  }
+
+  it should "interpret '<relative-day> <formal-time>', e.g. 'yesterday at 10 pm'" in {
+    val now  = new LocalDateTime(2014, 1, 1, 14, 30)
+    val next = DateTimeEvent(InDays(-1),AtTime(Time(22,0))).process(now)
+
+    next shouldBe new LocalDateTime(2013, 12, 31, 22, 0)
+  }
 }

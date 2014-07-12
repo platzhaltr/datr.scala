@@ -7,6 +7,10 @@ object Event {
   def roll(now: Int, next: Int, border: Int) = {
     if (now == next) border else (next - now + border) % border
   }
+
+  def nowBeforeNext(now: LocalDateTime, next: Time): Boolean = {
+    now.getHourOfDay < next.hours || (now.getHourOfDay == next.hours && now.getMinuteOfHour < next.minutes)
+  }
 }
 
 sealed trait DateEvent {
@@ -87,7 +91,7 @@ case class AtTime(time: Time) extends TimeEvent {
     val thenHour    = time.hours
     val thenMinutes = time.minutes
 
-    if (now.getHourOfDay < time.hours || (now.getHourOfDay == time.hours && now.getMinuteOfHour < time.minutes))
+    if (Event.nowBeforeNext(now, time))
       date
     else
       date.plusDays(1)
@@ -95,14 +99,29 @@ case class AtTime(time: Time) extends TimeEvent {
 }
 
 // Combinations
-
 case class DateTimeEvent(dateEvent: DateEvent, timeEvent: TimeEvent) extends TimeEvent {
   override def process(now: LocalDateTime) = {
     val newTime = timeEvent.process(now)
     val newDate = dateEvent.process(newTime.toLocalDate)
 
+    val dayAdjustment = dateEvent match {
+      case InDays(days) =>
+        timeEvent match {
+          case AtTime(time) =>
+            if (days < 0) {
+              0
+            } else if (days == 0) {
+              if (Event.nowBeforeNext(now,time)) 0 else -1
+            } else {
+              if (Event.nowBeforeNext(now,time)) 0 else -1
+            }
+          case _ => 0
+        }
+      case _ => 0
+    }
 
-    new LocalDateTime(newDate.getYear, newDate.getMonthOfYear, newDate.getDayOfMonth, newTime.getHourOfDay, newTime.getMinuteOfHour)
+    val result = new LocalDateTime(newDate.getYear, newDate.getMonthOfYear, newDate.getDayOfMonth, newTime.getHourOfDay, newTime.getMinuteOfHour)
+    result.plusDays(dayAdjustment)
   }
 
 }
