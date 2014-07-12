@@ -65,6 +65,11 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
     parse(td.name) shouldBe Left(InDays(-1))
   }
 
+  "saturday" in { td =>
+    parse(td.name) shouldBe Left(NextWeekdayByName(Saturday))
+  }
+
+
   "next monday" in { td =>
     parse(td.name) shouldBe Left(NextWeekdayByName(Monday))
   }

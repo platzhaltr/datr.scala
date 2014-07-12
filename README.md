@@ -8,6 +8,8 @@ Enter expression >
 
 ## Supported formats
 
+Some examples of supported date and time entries:
+
 **Formal dates**
 
 ```
@@ -26,6 +28,7 @@ on 1984/04/02
 today
 tomorrow
 yesterday
+saturday
 last wednesday
 last september
 last week

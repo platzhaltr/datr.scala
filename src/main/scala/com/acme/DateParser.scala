@@ -72,6 +72,7 @@ class DateParser(val input: ParserInput) extends Parser {
   }
 
   def RelativeDatesFuture = rule {
+    SpecificWeekday                            ~> ((w) => NextWeekdayByName(w)) |
     Next ~ Space ~ Months                      ~> (()  => InMonths(1)) |
     Next ~ Space ~ SpecificWeekday             ~> ((w) => NextWeekdayByName(w)) |
     Next ~ Space ~ SpecificMonth               ~> ((m) => NextMonthByName(m)) |
