@@ -1,5 +1,11 @@
 # TODO
 
+## Relative dates ##
+
+```
+2 wednesdays from now
+```
+
 ## Date & Time ##
 
 ```
@@ -33,7 +39,6 @@ the monday before
 "every first of september"
 "every 1. of sep"
 "every 1. sep"
-"2 wednesdays from now"
 ```
 
 ## Durations
