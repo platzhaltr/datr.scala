@@ -6,8 +6,13 @@ class DateParser(val input: ParserInput) extends Parser {
   def InputLine = rule { Expression ~ EOI }
 
   def Expression: Rule1[Either[DateEvent, TimeEvent]] = rule {
+    DateTimes                                  ~> ((t: TimeEvent) => Right(t)) |
     Times                                      ~> ((t: TimeEvent) => Right(t)) |
     Dates                                      ~> ((d: DateEvent) => Left(d))
+  }
+
+  def DateTimes = rule {
+    RelativeDays ~ Space ~ FuzzyTimes                  ~> ((d,t) => DateTimeEvent(d,t))
   }
 
   def Times = rule {

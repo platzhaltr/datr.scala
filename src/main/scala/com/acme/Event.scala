@@ -4,8 +4,8 @@ import org.joda.time.LocalDate
 import org.joda.time.LocalDateTime
 
 object Event {
-  def roll(now: Int, then: Int, border: Int) = {
-    if (now == then) border else (then - now + border) % border
+  def roll(now: Int, next: Int, border: Int) = {
+    if (now == next) border else (next - now + border) % border
   }
 }
 
@@ -92,4 +92,17 @@ case class AtTime(time: Time) extends TimeEvent {
     else
       date.plusDays(1)
   }
+}
+
+// Combinations
+
+case class DateTimeEvent(dateEvent: DateEvent, timeEvent: TimeEvent) extends TimeEvent {
+  override def process(now: LocalDateTime) = {
+    val newTime = timeEvent.process(now)
+    val newDate = dateEvent.process(newTime.toLocalDate)
+
+
+    new LocalDateTime(newDate.getYear, newDate.getMonthOfYear, newDate.getDayOfMonth, newTime.getHourOfDay, newTime.getMinuteOfHour)
+  }
+
 }

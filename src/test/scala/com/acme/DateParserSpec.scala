@@ -4,6 +4,8 @@ import scala.util.{Failure, Success}
 import org.scalatest._
 import org.scalatest.Matchers._
 
+import org.parboiled2.ParseError
+
 import Weekday._
 import Month._
 
@@ -209,11 +211,24 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
     parse(td.name) shouldBe Right(InHours(4))
   }
 
+  // combinations
+
+  "tomorrow afternoon" in { td =>
+    parse(td.name) shouldBe Right(DateTimeEvent(InDays(1),AtTime(Time(16,0))))
+  }
+
+  "yesterday evening" in { td =>
+    parse(td.name) shouldBe Right(DateTimeEvent(InDays(-1),AtTime(Time(19,0))))
+  }
+
   def parse(line: String): Either[DateEvent, TimeEvent] = {
     val parser = new DateParser(line)
     parser.InputLine.run() match {
       case Success(result) => result
-      case Failure(e)      => throw new IllegalArgumentException(e)
+      case Failure(e: ParseError) =>
+        println(s"Invalid expression: ${parser.formatError(e, showTraces = true)}")
+        throw new IllegalArgumentException(e)
+      case Failure(e)             => throw new IllegalArgumentException(e)
     }
   }
 

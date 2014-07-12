@@ -3,10 +3,9 @@
 ## Date & Time ##
 
 ```
-saturday afternoon
-tommorow at 8
-yesterday at 10 pm
+in 4 weeks at 12:00
 first wednesday of march at 22:00
+saturday afternoon
 ```
 
 ## Prefixes

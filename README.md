@@ -74,6 +74,13 @@ afternoon
 midnight
 ```
 
+**Combinations**
+
+```
+tommorow afternoon
+yesterday evening
+```
+
 ## Resources
 
 - [Natty](http://natty.joestelmach.com/)
