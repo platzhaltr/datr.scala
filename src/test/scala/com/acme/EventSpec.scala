@@ -159,4 +159,18 @@ class EventSpec extends FlatSpec with Matchers {
     next shouldBe new LocalDateTime(2015, 1, 1, 20, 0)
   }
 
+  it should "interpret '<cardinal-weekday> <formal-time>', e.g. 'first wednesday of march at 22:00'" in {
+    val now  = new LocalDateTime(2014, 1, 1, 14, 30)
+    val next = DateTimeEvent(WeekdayInMonth(1,Wednesday,March),AtTime(Time(22,0))).process(now)
+
+    next shouldBe new LocalDateTime(2014, 3, 5, 22, 0)
+  }
+
+  it should "interpret '<weekday> <fuzzy-time>', e.g. 'saturday afternoon'" in {
+    val now  = new LocalDateTime(2014, 1, 1, 14, 30)
+    val next = DateTimeEvent(NextWeekdayByName(Saturday),AtTime(Time(16,0))).process(now)
+
+    next shouldBe new LocalDateTime(2014, 1, 4, 16, 0)
+  }
+
 }

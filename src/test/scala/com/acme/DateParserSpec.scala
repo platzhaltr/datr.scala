@@ -250,6 +250,14 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
     parse(td.name) shouldBe Right(DateTimeEvent(InYears(1),AtTime(Time(20,0))))
   }
 
+  "first wednesday of march at 22:00" in { td =>
+    parse(td.name) shouldBe Right(DateTimeEvent(WeekdayInMonth(1,Wednesday,March),AtTime(Time(22,0))))
+  }
+
+  "saturday afternoon" in { td =>
+    parse(td.name) shouldBe Right(DateTimeEvent(NextWeekdayByName(Saturday),AtTime(Time(16,0))))
+  }
+
   def parse(line: String): Either[DateEvent, TimeEvent] = {
     val parser = new DateParser(line)
     parser.InputLine.run() match {

@@ -12,9 +12,11 @@ class DateParser(val input: ParserInput) extends Parser {
   }
 
   def DateTimes = rule {
-    RelativeDays ~ Space ~ FuzzyTimes          ~> ((d,t) => DateTimeEvent(d,t)) |
-    RelativeDays ~ Space ~ FormalTimes         ~> ((d,t) => DateTimeEvent(d,t)) |
-    RelativeDatesFuture ~ Space ~ FormalTimes  ~> ((d,t) => DateTimeEvent(d,t))
+    RelativeDays ~ Space ~ FuzzyTimes           ~> ((d,t) => DateTimeEvent(d,t)) |
+    RelativeDays ~ Space ~ FormalTimes          ~> ((d,t) => DateTimeEvent(d,t)) |
+    RelativeDatesFuture ~ Space ~ FormalTimes   ~> ((d,t) => DateTimeEvent(d,t)) |
+    SpecificWeekday ~ Space ~ FuzzyTimes        ~> ((w,t) => DateTimeEvent(NextWeekdayByName(w),t)) |
+    CardinalWeekdayInMonth ~Space ~ FormalTimes ~> ((d,t) => DateTimeEvent(d,t))
   }
 
   def Times = rule {
@@ -62,7 +64,11 @@ class DateParser(val input: ParserInput) extends Parser {
     RelativeDays |
     RelativeDatesFuture |
     RelativeDatesPast |
-    Cardinal ~ Space ~ SpecificWeekday ~ Space ~ In ~ Space ~ SpecificMonth ~> ((c,w,m) => WeekdayInMonth(c, w, m))
+    CardinalWeekdayInMonth
+  }
+
+  def CardinalWeekdayInMonth = rule {
+    Cardinal ~ Space ~ SpecificWeekday ~ Space ~ (In | Of) ~ Space ~ SpecificMonth ~> ((c,w,m) => WeekdayInMonth(c, w, m))
   }
 
   def RelativeDays = rule {
@@ -114,6 +120,7 @@ class DateParser(val input: ParserInput) extends Parser {
   def At           = rule { ignoreCase("at") }
   def FromNow      = rule { ignoreCase("from now") }
   def In           = rule { ignoreCase("in") }
+  def Of           = rule { ignoreCase("of") }
   def On           = rule { ignoreCase("on") }
 
   def Last         = rule { ignoreCase("last") }

@@ -88,6 +88,8 @@ in 2 days at 6 pm
 in 4 weeks at 12:00
 in 3 months at 8 a.m.
 in 1 year at 20:00
+first wednesday of march at 22:00
+saturday afternoon
 ```
 
 ## Resources
