@@ -1,11 +1,5 @@
 # TODO
 
-## Relative dates ##
-
-```
-2 wednesdays from now
-```
-
 ## Prefixes
 
 Locale specific holidays?
