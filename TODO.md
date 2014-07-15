@@ -23,6 +23,7 @@ the monday before
 "every second monday"
 "every 3. monday"
 "every first of september"
+"every second monday of december"
 "every 1. of sep"
 "every 1. sep"
 ```
@@ -31,6 +32,11 @@ the monday before
 
 ```
 for 6 hours
+for 7 days starting next monday
+from monday to wednesday
+from monday 12 am to tuesday 4 pm
+next sunday at 7 pm for three hours
+
 ```
 
 ## Fuzzy times ##
