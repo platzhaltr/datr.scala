@@ -31,7 +31,6 @@ the monday before
 ## Durations
 
 ```
-for 6 hours
 for 7 days starting next monday
 from monday to wednesday
 from monday 12 am to tuesday 4 pm

@@ -1,7 +1,6 @@
 package com.acme
 
-import org.joda.time.LocalDate
-import org.joda.time.LocalDateTime
+import org.joda.time.{Duration, Interval, LocalDate, LocalDateTime}
 
 import scala.math.signum
 
@@ -20,6 +19,9 @@ sealed trait DateEvent {
 }
 sealed trait TimeEvent {
   def process(now: LocalDateTime): LocalDateTime
+}
+sealed trait DurationEvent {
+ def process(now: LocalDateTime): Interval
 }
 
 // Formal Dates
@@ -97,6 +99,16 @@ case class AtTime(time: Time) extends TimeEvent {
       date
     else
       date.plusDays(1)
+  }
+}
+
+// Durations
+
+case class ForHours(hours: Int) extends DurationEvent {
+  override def process(now: LocalDateTime): Interval = {
+    val millis = hours * 60 * 60 * 1000
+
+    new Interval(now.toDateTime(), new Duration(millis))
   }
 }
 

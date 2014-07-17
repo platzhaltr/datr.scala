@@ -22,14 +22,17 @@ object CommandLineInterface extends App {
       case line =>
         val parser = new DateParser(line)
         parser.InputLine.run() match {
-          case Success(result)        =>
+          case Success(result) =>
             result match {
-              case Left(dateEvent)    =>
+              case Left(Left(dateEvent)) =>
                 val today = new LocalDate
                 println(s"Result: ${dateEvent.process(today)}")
-              case Right(timeEvent)   =>
+              case Left(Right(timeEvent)) =>
                 val now = new LocalDateTime
                 println(s"Result: ${timeEvent.process(now)}")
+              case Right(durationEvent) =>
+                val now = new LocalDateTime
+                println(s"Result: ${durationEvent.process(now)}")
             }
           case Failure(e: ParseError) => println(s"Invalid expression: ${parser.formatError(e, showTraces = true)}")
           case Failure(e)             => println(s"Unexpected error: ${e}")

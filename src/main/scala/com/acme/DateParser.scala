@@ -1,14 +1,17 @@
 package com.acme
 
+import com.acme._
 import org.parboiled2._
 
 class DateParser(val input: ParserInput) extends Parser {
+
   def InputLine = rule { Expression ~ EOI }
 
-  def Expression: Rule1[Either[DateEvent, TimeEvent]] = rule {
-    DateTimes                                  ~> ((t: TimeEvent) => Right(t)) |
-    Times                                      ~> ((t: TimeEvent) => Right(t)) |
-    Dates                                      ~> ((d: DateEvent) => Left(d))
+  def Expression: Rule1[CompoundEvent] = rule {
+    DateTimes                                  ~> ((t: TimeEvent) => Left(Right(t))) |
+    Times                                      ~> ((t: TimeEvent) => Left(Right(t)) )|
+    Dates                                      ~> ((d: DateEvent) => Left(Left(d)))  |
+    TimeDurations                              ~> ((d: DurationEvent) => Right(d))
   }
 
   def DateTimes = rule {
@@ -102,6 +105,10 @@ class DateParser(val input: ParserInput) extends Parser {
     Count ~ Space ~ Years ~ Space ~ Ago        ~> ((c) => InYears(-c))
   }
 
+  def TimeDurations = rule {
+    For ~ Space ~ Number ~ Space ~ Hours       ~> ((h) => ForHours(h))
+  }
+
   def Cardinal     = rule { First | Second | Third | Fourth | Fifth}
   def First        = rule { ignoreCase("first")  ~> (() => 1)}
   def Second       = rule { ignoreCase("second") ~> (() => 2)}
@@ -118,6 +125,7 @@ class DateParser(val input: ParserInput) extends Parser {
 
   def Ago          = rule { ignoreCase("ago") }
   def At           = rule { ignoreCase("at") }
+  def For          = rule { ignoreCase("for") }
   def FromNow      = rule { ignoreCase("from now") }
   def In           = rule { ignoreCase("in") }
   def Of           = rule { ignoreCase("of") }
@@ -130,13 +138,13 @@ class DateParser(val input: ParserInput) extends Parser {
   def Tomorrow     = rule { ignoreCase("tomorrow") }
   def Yesterday    = rule { ignoreCase("yesterday") }
 
-  def Seconds       = rule { ignoreCase("second") ~ optional(ignoreCase("s")) }
-  def Minutes       = rule { ignoreCase("minute") ~ optional(ignoreCase("s")) }
-  def Hours         = rule { ignoreCase("hour")   ~ optional(ignoreCase("s")) }
-  def Days          = rule { ignoreCase("day")    ~ optional(ignoreCase("s")) }
-  def Weeks         = rule { ignoreCase("week")   ~ optional(ignoreCase("s")) }
-  def Months        = rule { ignoreCase("month")  ~ optional(ignoreCase("s")) }
-  def Years         = rule { ignoreCase("year")   ~ optional(ignoreCase("s")) }
+  def Seconds      = rule { ignoreCase("second") ~ optional(ignoreCase("s")) }
+  def Minutes      = rule { ignoreCase("minute") ~ optional(ignoreCase("s")) }
+  def Hours        = rule { ignoreCase("hour")   ~ optional(ignoreCase("s")) }
+  def Days         = rule { ignoreCase("day")    ~ optional(ignoreCase("s")) }
+  def Weeks        = rule { ignoreCase("week")   ~ optional(ignoreCase("s")) }
+  def Months       = rule { ignoreCase("month")  ~ optional(ignoreCase("s")) }
+  def Years        = rule { ignoreCase("year")   ~ optional(ignoreCase("s")) }
 
   def Noon         = rule { ignoreCase("noon") ~> (() => new Time(12,0))}
   def Afternoon    = rule { ignoreCase("afternoon") ~> (() => new Time(16,0))}
