@@ -60,3 +60,16 @@ So this needs to be configurable.
 In some cases it might make sense to add a grace period to the time interpretation.  Let's say the time is `17:58`. If you then input `18:00`, you probably mean tomorrow at `18:00` and not today.
 
 At the moment the grace period is effectively `0`, adding one and making it even configurable should not be that hard.
+
+## Fuzzy Dates ##
+
+I'm not yet sure about what to to with fuzzy dates like
+
+```
+next weekend
+```
+
+I see two solutions:
+
+1. Give back a duration of the whole weekend
+2. Have a bias for a specific day
