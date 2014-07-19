@@ -2,7 +2,7 @@ package com.acme
 
 import org.scalatest._
 
-import org.joda.time.{LocalDate,LocalDateTime}
+import org.joda.time.{Duration,Interval,LocalDate,LocalDateTime}
 
 import Weekday._
 import Month._
@@ -92,6 +92,14 @@ class EventSpec extends FlatSpec with Matchers {
     val today = new LocalDate(1970, 6, 20)
 
     OnDate(Date(2014,1,1)).process(today) shouldBe new LocalDate(2014, 1, 1)
+  }
+
+  // Durations
+
+  it should "interpret 'for <n> hours'" in {
+    val now = new LocalDateTime(2014, 1, 1, 18, 30)
+
+    ForHours(6).process(now) shouldBe new Interval(now.toDateTime, new Duration(6 * 60 * 60 * 1000))
   }
 
   // Combinations

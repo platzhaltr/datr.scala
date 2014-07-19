@@ -77,6 +77,12 @@ afternoon
 midnight
 ```
 
+**Durations**
+
+```
+for 6 hours
+```
+
 **Combinations**
 
 ```
