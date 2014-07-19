@@ -12,12 +12,7 @@ object CommandLineInterface extends App {
 
   @tailrec
   def repl(): Unit = {
-    // TODO: Replace next three lines with `scala.Predef.readLine(text: String, args: Any*)`
-    // once BUG https://issues.scala-lang.org/browse/SI-8167 is fixed
-    print("---\nEnter expression > ")
-    Console.out.flush()
-
-    StdIn.readLine() match {
+    StdIn.readLine("---\nEnter expression > ") match {
       case "" =>
       case line =>
         val parser = new DateParser(line)
