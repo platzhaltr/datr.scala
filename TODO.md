@@ -31,6 +31,9 @@ the monday before
 ## Durations
 
 ```
+for 10 seconds
+for 3 minutes
+for 7 days
 for 7 days starting next monday
 from monday to wednesday
 from monday 12 am to tuesday 4 pm
@@ -50,7 +53,7 @@ night
 
 Depending on the usage the user might think of different things when saying `tuesday`. Maybe he is keeping track of bills. Naturally this will all (or at lost most of them will be in the past. So instead of looking at `tuesday` as the next Tuesday the `DateParse` should look into the past.
 
-The same can be said about time. If you are just tracking things you tend to look in the past.
+The same can be said about time. If you are just tracking things you tend to  look in the past.
 
 So this needs to be configurable.
 
