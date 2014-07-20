@@ -96,10 +96,22 @@ class EventSpec extends FlatSpec with Matchers {
 
   // Durations
 
+  it should "interpret 'for <n> seconds'" in {
+    val now = new LocalDateTime(2014, 1, 1, 18, 30, 30)
+
+    ForSeconds(10).process(now) shouldBe new Interval(now.toDateTime, Duration.standardSeconds(10))
+  }
+
+  it should "interpret 'for <n> minutes'" in {
+    val now = new LocalDateTime(2014, 1, 1, 18, 30)
+
+    ForMinutes(3).process(now) shouldBe new Interval(now.toDateTime, Duration.standardMinutes(3))
+  }
+
   it should "interpret 'for <n> hours'" in {
     val now = new LocalDateTime(2014, 1, 1, 18, 30)
 
-    ForHours(6).process(now) shouldBe new Interval(now.toDateTime, new Duration(6 * 60 * 60 * 1000))
+    ForHours(6).process(now) shouldBe new Interval(now.toDateTime, Duration.standardHours(6))
   }
 
   // Combinations

@@ -235,6 +235,15 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
   }
 
   // durations
+
+  "for 10 seconds" in { td =>
+    parse(td.name) shouldBe Right(ForSeconds(10))
+  }
+
+  "for 3 minutes" in { td =>
+    parse(td.name) shouldBe Right(ForMinutes(3))
+  }
+
   "for 6 hours" in { td =>
     parse(td.name) shouldBe Right(ForHours(6))
   }

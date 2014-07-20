@@ -31,8 +31,6 @@ the monday before
 ## Durations
 
 ```
-for 10 seconds
-for 3 minutes
 for 7 days
 for 7 days starting next monday
 from monday to wednesday

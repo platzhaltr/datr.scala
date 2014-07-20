@@ -104,11 +104,21 @@ case class AtTime(time: Time) extends TimeEvent {
 
 // Durations
 
+case class ForSeconds(seconds: Int) extends DurationEvent {
+  override def process(now: LocalDateTime): Interval = {
+    new Interval(now.toDateTime(), Duration.standardSeconds(seconds))
+  }
+}
+
+case class ForMinutes(minutes: Int) extends DurationEvent {
+  override def process(now: LocalDateTime): Interval = {
+    new Interval(now.toDateTime(), Duration.standardMinutes(minutes))
+  }
+}
+
 case class ForHours(hours: Int) extends DurationEvent {
   override def process(now: LocalDateTime): Interval = {
-    val millis = hours * 60 * 60 * 1000
-
-    new Interval(now.toDateTime(), new Duration(millis))
+    new Interval(now.toDateTime(), Duration.standardHours(hours))
   }
 }
 

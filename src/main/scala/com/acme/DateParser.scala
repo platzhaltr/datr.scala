@@ -106,7 +106,9 @@ class DateParser(val input: ParserInput) extends Parser {
   }
 
   def TimeDurations = rule {
-    For ~ Space ~ Number ~ Space ~ Hours       ~> ((h) => ForHours(h))
+    For ~ Space ~ Number ~ Space ~ Seconds     ~> (ForSeconds(_)) |
+    For ~ Space ~ Number ~ Space ~ Minutes     ~> (ForMinutes(_)) |
+    For ~ Space ~ Number ~ Space ~ Hours       ~> (ForHours(_))
   }
 
   def Cardinal     = rule { First | Second | Third | Fourth | Fifth}
