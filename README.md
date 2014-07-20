@@ -83,6 +83,7 @@ midnight
 for 10 seconds
 for 3 minutes
 for 6 hours
+for 7 days
 ```
 
 **Combinations**

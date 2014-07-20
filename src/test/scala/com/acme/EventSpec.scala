@@ -114,6 +114,12 @@ class EventSpec extends FlatSpec with Matchers {
     ForHours(6).process(now) shouldBe new Interval(now.toDateTime, Duration.standardHours(6))
   }
 
+  it should "interpret 'for <n> days'" in {
+    val today = new LocalDate(1970, 6, 20)
+
+    ForDays(3).process(today) shouldBe new Interval(today.toDateMidnight, Duration.standardDays(3))
+  }
+
   // Combinations
 
   it should "interpret '<relative-day> <fuzzy-time>', e.g. 'tomorrow afternoon'" in {

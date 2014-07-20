@@ -237,15 +237,19 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
   // durations
 
   "for 10 seconds" in { td =>
-    parse(td.name) shouldBe Right(ForSeconds(10))
+    parse(td.name) shouldBe Right(Right(ForSeconds(10)))
   }
 
   "for 3 minutes" in { td =>
-    parse(td.name) shouldBe Right(ForMinutes(3))
+    parse(td.name) shouldBe Right(Right(ForMinutes(3)))
   }
 
   "for 6 hours" in { td =>
-    parse(td.name) shouldBe Right(ForHours(6))
+    parse(td.name) shouldBe Right(Right(ForHours(6)))
+  }
+
+  "for 3 days" in { td =>
+    parse(td.name) shouldBe Right(Left(ForDays(3)))
   }
 
   // combinations
@@ -298,7 +302,7 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
     parse(td.name) shouldBe dateTimeEvent(NextWeekdayByName(Saturday),AtTime(Time(16,0)))
   }
 
-  def parse(line: String): CompoundEvent = {
+  def parse(line: String): ParsedCompound = {
     val parser = new DateParser(line)
     parser.InputLine.run() match {
       case Success(result) => result

@@ -20,7 +20,10 @@ sealed trait DateEvent {
 sealed trait TimeEvent {
   def process(now: LocalDateTime): LocalDateTime
 }
-sealed trait DurationEvent {
+sealed trait DateDuration {
+ def process(now: LocalDate): Interval
+}
+sealed trait TimeDuration {
  def process(now: LocalDateTime): Interval
 }
 
@@ -104,21 +107,27 @@ case class AtTime(time: Time) extends TimeEvent {
 
 // Durations
 
-case class ForSeconds(seconds: Int) extends DurationEvent {
+case class ForSeconds(seconds: Int) extends TimeDuration   {
   override def process(now: LocalDateTime): Interval = {
     new Interval(now.toDateTime(), Duration.standardSeconds(seconds))
   }
 }
 
-case class ForMinutes(minutes: Int) extends DurationEvent {
+case class ForMinutes(minutes: Int) extends TimeDuration {
   override def process(now: LocalDateTime): Interval = {
     new Interval(now.toDateTime(), Duration.standardMinutes(minutes))
   }
 }
 
-case class ForHours(hours: Int) extends DurationEvent {
+case class ForHours(hours: Int) extends TimeDuration {
   override def process(now: LocalDateTime): Interval = {
     new Interval(now.toDateTime(), Duration.standardHours(hours))
+  }
+}
+
+case class ForDays(days: Int) extends DateDuration {
+  override def process(today: LocalDate): Interval = {
+    new Interval(today.toDateMidnight(), Duration.standardDays(days))
   }
 }
 
