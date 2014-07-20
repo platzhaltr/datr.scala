@@ -7,11 +7,12 @@ class DateParser(val input: ParserInput) extends Parser {
 
   def InputLine = rule { Expression ~ EOI }
 
-  def Expression: Rule1[CompoundEvent] = rule {
+  def Expression: Rule1[ParsedCompound] = rule {
     DateTimes                                  ~> ((t: TimeEvent) => Left(Right(t))) |
     Times                                      ~> ((t: TimeEvent) => Left(Right(t)) )|
     Dates                                      ~> ((d: DateEvent) => Left(Left(d)))  |
-    TimeDurations                              ~> ((d: DurationEvent) => Right(d))
+    TimeDurations                              ~> ((d: TimeDuration) => Right(Right(d))) |
+    DateDurations                              ~> ((d: DateDuration) => Right(Left(d)))
   }
 
   def DateTimes = rule {
@@ -109,6 +110,10 @@ class DateParser(val input: ParserInput) extends Parser {
     For ~ Space ~ Number ~ Space ~ Seconds     ~> (ForSeconds(_)) |
     For ~ Space ~ Number ~ Space ~ Minutes     ~> (ForMinutes(_)) |
     For ~ Space ~ Number ~ Space ~ Hours       ~> (ForHours(_))
+  }
+
+  def DateDurations = rule {
+    For ~ Space ~ Number ~ Space ~ Days        ~> (ForDays(_))
   }
 
   def Cardinal     = rule { First | Second | Third | Fourth | Fifth}

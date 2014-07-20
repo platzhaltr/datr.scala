@@ -25,9 +25,12 @@ object CommandLineInterface extends App {
               case Left(Right(timeEvent)) =>
                 val now = new LocalDateTime
                 println(s"Result: ${timeEvent.process(now)}")
-              case Right(durationEvent) =>
+              case Left(Left(dateDuration)) =>
+                val today = new LocalDate
+                println(s"Result: ${dateDuration.process(today)}")
+              case Left(Right(timeDuration)) =>
                 val now = new LocalDateTime
-                println(s"Result: ${durationEvent.process(now)}")
+                println(s"Result: ${timeDuration.process(now)}")
             }
           case Failure(e: ParseError) => println(s"Invalid expression: ${parser.formatError(e, showTraces = true)}")
           case Failure(e)             => println(s"Unexpected error: ${e}")
