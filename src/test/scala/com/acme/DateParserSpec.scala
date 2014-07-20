@@ -252,6 +252,30 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
     parse(td.name) shouldBe Right(Left(ForDays(3)))
   }
 
+  "for 3 days starting yesterday" in { td =>
+    parse(td.name) shouldBe Right(Left(RelativeDateDuration(InDays(-1),ForDays(3))))
+  }
+
+  "for 3 days starting today" in { td =>
+    parse(td.name) shouldBe Right(Left(RelativeDateDuration(InDays(0),ForDays(3))))
+  }
+
+  "for 3 days starting tomorrow" in { td =>
+    parse(td.name) shouldBe Right(Left(RelativeDateDuration(InDays(1),ForDays(3))))
+  }
+
+  "for 3 days starting next monday" in { td =>
+    parse(td.name) shouldBe Right(Left(RelativeDateDuration(NextWeekdayByName(Monday),ForDays(3))))
+  }
+
+  "for 8 days starting in 5 weeks" in { td =>
+    parse(td.name) shouldBe Right(Left(RelativeDateDuration(InWeeks(5),ForDays(8))))
+  }
+
+  "for 8 days starting second saturday in april" in { td =>
+    parse(td.name) shouldBe Right(Left(RelativeDateDuration(WeekdayInMonth(2, Saturday, April),ForDays(8))))
+  }
+
   // combinations
 
   private def dateTimeEvent (dateEvent: DateEvent, timeEvent: TimeEvent) = {

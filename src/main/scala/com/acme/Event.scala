@@ -131,6 +131,12 @@ case class ForDays(days: Int) extends DateDuration {
   }
 }
 
+case class RelativeDateDuration(dateEvent: DateEvent, dateDuration: DateDuration) extends DateDuration {
+ override def process(today: LocalDate): Interval = {
+    dateDuration.process(dateEvent.process(today))
+  }
+}
+
 // Combinations
 case class DateTimeEvent(dateEvent: DateEvent, timeEvent: TimeEvent) extends TimeEvent {
 

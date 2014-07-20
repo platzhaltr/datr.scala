@@ -84,6 +84,12 @@ for 10 seconds
 for 3 minutes
 for 6 hours
 for 7 days
+for 3 days starting yesterday
+for 5 days starting today
+for 5 days starting tomorrow
+for 7 days starting next monday
+for 8 days starting in 5 weeks
+for 8 days starting first saturday in april
 ```
 
 **Combinations**

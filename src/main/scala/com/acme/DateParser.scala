@@ -107,13 +107,18 @@ class DateParser(val input: ParserInput) extends Parser {
   }
 
   def TimeDurations = rule {
-    For ~ Space ~ Number ~ Space ~ Seconds     ~> (ForSeconds(_)) |
-    For ~ Space ~ Number ~ Space ~ Minutes     ~> (ForMinutes(_)) |
-    For ~ Space ~ Number ~ Space ~ Hours       ~> (ForHours(_))
+    DurationPrefix ~ Seconds                   ~> (ForSeconds(_)) |
+    DurationPrefix ~ Minutes                   ~> (ForMinutes(_)) |
+    DurationPrefix ~ Hours                     ~> (ForHours(_))
   }
 
   def DateDurations = rule {
-    For ~ Space ~ Number ~ Space ~ Days        ~> (ForDays(_))
+    DurationPrefix ~ Days ~ Space ~ Starting ~ Space ~ RelativeDates ~> ((d, e) => RelativeDateDuration(e,ForDays(d))) |
+    DurationPrefix ~ Days                      ~> (ForDays(_))
+  }
+
+  def DurationPrefix = rule {
+    For ~ Space ~ Number ~ Space
   }
 
   def Cardinal     = rule { First | Second | Third | Fourth | Fifth}
@@ -137,6 +142,7 @@ class DateParser(val input: ParserInput) extends Parser {
   def In           = rule { ignoreCase("in") }
   def Of           = rule { ignoreCase("of") }
   def On           = rule { ignoreCase("on") }
+  def Starting     = rule { ignoreCase("starting") }
 
   def Last         = rule { ignoreCase("last") }
   def Next         = rule { ignoreCase("next") }

@@ -120,6 +120,31 @@ class EventSpec extends FlatSpec with Matchers {
     ForDays(3).process(today) shouldBe new Interval(today.toDateMidnight, Duration.standardDays(3))
   }
 
+  it should "interpret 'for <n> days starting yesterday'" in {
+    val today = new LocalDate(1970, 6, 20)
+
+    RelativeDateDuration(InDays(-1),ForDays(3)).process(today) shouldBe new Interval(today.minusDays(1).toDateMidnight, Duration.standardDays(3))
+  }
+
+  it should "interpret 'for <n> days starting today'" in {
+    val today = new LocalDate(1970, 6, 20)
+
+    RelativeDateDuration(InDays(0),ForDays(3)).process(today) shouldBe new Interval(today.toDateMidnight, Duration.standardDays(3))
+  }
+
+  it should "interpret 'for <n> days starting tomorrow'" in {
+    val today = new LocalDate(1970, 6, 20)
+
+    RelativeDateDuration(InDays(1),ForDays(3)).process(today) shouldBe new Interval(today.plusDays(1).toDateMidnight, Duration.standardDays(3))
+  }
+
+  it should "interpret 'for <n> days starting next monday'" in {
+    val today = new LocalDate(1970, 6, 20)
+    val nextMonday = new LocalDate(1970, 6, 22)
+
+    RelativeDateDuration(NextWeekdayByName(Monday),ForDays(3)).process(today) shouldBe new Interval(nextMonday.toDateMidnight, Duration.standardDays(3))
+  }
+
   // Combinations
 
   it should "interpret '<relative-day> <fuzzy-time>', e.g. 'tomorrow afternoon'" in {
