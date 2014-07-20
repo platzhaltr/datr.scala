@@ -29,8 +29,6 @@ object CommandLineInterface extends App {
                 val today = new LocalDate
                 println(s"Result: ${dateDuration.process(today)}")
               case Right(Right(timeDuration)) =>
-                val now = new LocalDateTime
-                println(s"Result: ${timeDuration.process(now)}")
             }
           case Failure(e: ParseError) => println(s"Invalid expression: ${parser.formatError(e, showTraces = true)}")
           case Failure(e)             => println(s"Unexpected error: ${e}")

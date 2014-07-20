@@ -116,7 +116,6 @@ class EventSpec extends FlatSpec with Matchers {
 
   it should "interpret 'for <n> days'" in {
     val today = new LocalDate(1970, 6, 20)
-
     ForDays(3).process(today) shouldBe new Interval(today.toDateMidnight, Duration.standardDays(3))
   }
 
