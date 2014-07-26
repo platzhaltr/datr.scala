@@ -116,8 +116,7 @@ class DateParser(val input: ParserInput) extends Parser {
     DurationPrefix ~ Days ~ Space ~ Starting ~ Space ~ RelativeDates ~> ((d, e) => RelativeDateDuration(e,ForDays(d))) |
     DurationPrefix ~ Days                      ~> (ForDays(_)) |
     From ~ Space ~ SpecificWeekday ~ Space ~ To ~ Space ~ SpecificWeekday ~> ((s,f) => RelativeDateDuration(NextWeekdayByName(s),UntilWeekday(f))) |
-    Till ~ Space ~ SpecificWeekday             ~> ((w) => RelativeDateDuration(InDays(0),UntilWeekday(w))) |
-    Until ~ Space ~ SpecificWeekday            ~> ((w) => RelativeDateDuration(InDays(0),UntilWeekday(w)))
+    UnTill ~ Space ~ SpecificWeekday             ~> ((w) => RelativeDateDuration(InDays(0),UntilWeekday(w)))
   }
 
   def DurationPrefix = rule {
@@ -151,6 +150,7 @@ class DateParser(val input: ParserInput) extends Parser {
   def Till         = rule { ignoreCase("till") }
   def To           = rule { ignoreCase("to") }
   def Until        = rule { ignoreCase("until") }
+  def UnTill       = rule { Till | Until }
 
   def Last         = rule { ignoreCase("last") }
   def Next         = rule { ignoreCase("next") }
