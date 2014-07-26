@@ -2,11 +2,11 @@ import sbt._
 import Keys._
 
 object BuildSettings {
-  val myBuildSettings = Defaults.defaultSettings ++ Seq (
+  val myBuildSettings = Defaults.coreDefaultSettings ++ Seq (
     name         := "datr.scala",
     version      := "0.1",
     organization := "platzhaltr",
-    scalaVersion := "2.11.1",
+    scalaVersion := "2.11.2",
     scalacOptions ++= Seq()
   )
 }
