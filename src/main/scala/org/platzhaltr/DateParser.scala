@@ -234,7 +234,7 @@ class DateParser(val input: ParserInput) extends Parser {
   def June          = rule {(ignoreCase("june")      | ignoreCase("jun")) ~> (() => Month.June )}
   def July          = rule {(ignoreCase("july")      | ignoreCase("jul")) ~> (() => Month.July )}
   def August        = rule {(ignoreCase("august")    | ignoreCase("aug")) ~> (() => Month.August )}
-  def September     = rule {(ignoreCase("september") | ignoreCase("sep")) ~> (() => Month.September )}
+  def September     = rule {(ignoreCase("september") | ignoreCase("sept") | ignoreCase("sep")) ~> (() => Month.September )}
   def October       = rule {(ignoreCase("october")   | ignoreCase("oct")) ~> (() => Month.October )}
   def November      = rule {(ignoreCase("november")  | ignoreCase("nov")) ~> (() => Month.November )}
   def December      = rule {(ignoreCase("december")  | ignoreCase("dec")) ~> (() => Month.December )}
