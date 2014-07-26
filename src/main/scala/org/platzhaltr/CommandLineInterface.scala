@@ -1,4 +1,4 @@
-package com.acme
+package org.platzhaltr
 
 import scala.annotation.tailrec
 import scala.io.StdIn

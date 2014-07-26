@@ -1,4 +1,4 @@
-package com.acme
+package org.platzhaltr
 
 import org.joda.time.{Duration, Interval, LocalDate, LocalDateTime}
 

@@ -1,6 +1,6 @@
-package com
+package org
 
-package object acme {
+package object platzhaltr {
 
   type ParsedEvent   = Either[DateEvent, TimeEvent]
   type ParsedDuration = Either[DateDuration, TimeDuration]

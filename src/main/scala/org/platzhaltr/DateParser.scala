@@ -1,6 +1,6 @@
-package com.acme
+package org.platzhaltr
 
-import com.acme._
+import org.platzhaltr._
 import org.parboiled2._
 
 class DateParser(val input: ParserInput) extends Parser {

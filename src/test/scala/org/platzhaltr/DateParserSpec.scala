@@ -1,4 +1,4 @@
-package com.acme
+package org.platzhaltr
 
 import scala.util.{Failure, Success}
 import org.scalatest._

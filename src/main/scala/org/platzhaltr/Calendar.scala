@@ -1,4 +1,4 @@
-package com.acme
+package org.platzhaltr
 
 object Weekday {
   val Monday    = Weekday(1)
