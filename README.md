@@ -109,4 +109,11 @@ saturday afternoon
 
 ## Resources
 
+**Inspirations**
+
 - [Natty](http://natty.joestelmach.com/)
+
+**Recurring Events**
+
+- RFC 5545, Internet Calendaring and Scheduling Core Object Specification (iCalendar)
+- [Martin Fowler, Recurring Events for Calendars ](http://martinfowler.com/apsupp/recurring.pdf)
