@@ -1,30 +1,13 @@
 package org.platzhaltr
 
 import org.joda.time.{Duration, Interval, LocalDate, LocalDateTime}
-
 import scala.math.signum
-
-object Event {
-  def roll(now: Int, next: Int, border: Int) = {
-    if (now == next) border else (next - now + border) % border
-  }
-
-  def nowBeforeNext(now: LocalDateTime, next: Time): Boolean = {
-    now.getHourOfDay < next.hours || (now.getHourOfDay == next.hours && now.getMinuteOfHour < next.minutes)
-  }
-}
 
 sealed trait DateEvent {
   def process(now: LocalDate): LocalDate
 }
 sealed trait TimeEvent {
   def process(now: LocalDateTime): LocalDateTime
-}
-sealed trait DateDuration {
- def process(now: LocalDate): Interval
-}
-sealed trait TimeDuration {
- def process(now: LocalDateTime): Interval
 }
 
 // Formal Dates
@@ -36,16 +19,16 @@ case class OnDate(date: Date) extends DateEvent {
 // Relaxed Dates
 
 case class LastWeekdayByName(weekday: Weekday) extends DateEvent {
-  override def process(now: LocalDate) = now.minusDays(Event.roll(weekday.value, now.getDayOfWeek, 7))
+  override def process(now: LocalDate) = now.minusDays(Calendar.roll(weekday.value, now.getDayOfWeek, 7))
 }
 case class NextWeekdayByName(weekday: Weekday) extends DateEvent {
-  override def process(now: LocalDate) = now.plusDays(Event.roll(now.getDayOfWeek, weekday.value, 7))
+  override def process(now: LocalDate) = now.plusDays(Calendar.roll(now.getDayOfWeek, weekday.value, 7))
 }
 case class LastMonthByName(month: Month) extends DateEvent {
-  override def process(now: LocalDate) = now.minusMonths(Event.roll(month.value, now.getMonthOfYear, 12))
+  override def process(now: LocalDate) = now.minusMonths(Calendar.roll(month.value, now.getMonthOfYear, 12))
 }
 case class NextMonthByName(month: Month) extends DateEvent {
-  override def process(now: LocalDate) = now.plusMonths(Event.roll(now.getMonthOfYear, month.value, 12))
+  override def process(now: LocalDate) = now.plusMonths(Calendar.roll(now.getMonthOfYear, month.value, 12))
 }
 case class WeekdayInMonth(count: Int, weekday: Weekday, month: Month) extends DateEvent {
   override def process(now: LocalDate) = {
@@ -98,64 +81,10 @@ case class AtTime(time: Time) extends TimeEvent {
     val thenHour    = time.hours
     val thenMinutes = time.minutes
 
-    if (Event.nowBeforeNext(now, time))
+    if (Calendar.nowBeforeNext(now, time))
       date
     else
       date.plusDays(1)
-  }
-}
-
-// Durations
-
-case class ForSeconds(seconds: Int) extends TimeDuration   {
-  override def process(now: LocalDateTime): Interval = {
-    new Interval(now.toDateTime(), Duration.standardSeconds(seconds))
-  }
-}
-
-case class ForMinutes(minutes: Int) extends TimeDuration {
-  override def process(now: LocalDateTime): Interval = {
-    new Interval(now.toDateTime(), Duration.standardMinutes(minutes))
-  }
-}
-
-case class ForHours(hours: Int) extends TimeDuration {
-  override def process(now: LocalDateTime): Interval = {
-    new Interval(now.toDateTime(), Duration.standardHours(hours))
-  }
-}
-
-case class ForDays(days: Int) extends DateDuration {
-  override def process(today: LocalDate): Interval = {
-    new Interval(today.toDateMidnight(), Duration.standardDays(days))
-  }
-}
-
-case class FromTimeToTime(from: AtTime, to: AtTime) extends TimeDuration {
-  override def process(now: LocalDateTime): Interval = {
-    val fromTime = from.process(now)
-    new Interval(fromTime.toDateTime(), to.process(fromTime).toDateTime())
-  }
-}
-
-case class UntilTime(atTime: AtTime) extends TimeDuration {
-  override def process(now: LocalDateTime): Interval = {
-    new Interval(now.toDateTime(), atTime.process(now).toDateTime())
-  }
-}
-
-case class UntilWeekday(weekday: Weekday) extends DateDuration {
-
-  override def process(start: LocalDate): Interval = {
-    val finishWeekday = NextWeekdayByName(weekday).process(start)
-
-    new Interval(start.toDateMidnight(), finishWeekday.toDateMidnight())
-  }
-}
-
-case class RelativeDateDuration(dateEvent: DateEvent, dateDuration: DateDuration) extends DateDuration {
-  override def process(today: LocalDate): Interval = {
-    dateDuration.process(dateEvent.process(today))
   }
 }
 
@@ -168,9 +97,9 @@ case class DateTimeEvent(dateEvent: DateEvent, timeEvent: TimeEvent) extends Tim
         if (signum < 0) {
           0
         } else if (signum == 0) {
-          if (Event.nowBeforeNext(now,time)) 0 else -1
+          if (Calendar.nowBeforeNext(now,time)) 0 else -1
         } else {
-          if (Event.nowBeforeNext(now,time)) 0 else -1
+          if (Calendar.nowBeforeNext(now,time)) 0 else -1
         }
       case _ => 0
     }

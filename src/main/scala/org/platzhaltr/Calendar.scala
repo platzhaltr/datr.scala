@@ -1,5 +1,18 @@
 package org.platzhaltr
 
+
+import org.joda.time.LocalDateTime
+
+object Calendar {
+  def roll(now: Int, next: Int, border: Int) = {
+    if (now == next) border else (next - now + border) % border
+  }
+
+  def nowBeforeNext(now: LocalDateTime, next: Time): Boolean = {
+    now.getHourOfDay < next.hours || (now.getHourOfDay == next.hours && now.getMinuteOfHour < next.minutes)
+  }
+}
+
 object Weekday {
   val Monday    = Weekday(1)
   val Tuesday   = Weekday(2)
