@@ -156,6 +156,7 @@ class DateParser(val input: ParserInput) extends Parser {
   def Starting     = rule { ignoreCase("starting") }
   def Till         = rule { ignoreCase("till") }
   def To           = rule { ignoreCase("to") }
+  def Th           = rule { ignoreCase("th") }
   def Until        = rule { ignoreCase("until") }
   def UnTill       = rule { Till | Until }
 
@@ -189,8 +190,8 @@ class DateParser(val input: ParserInput) extends Parser {
   def Space        = rule { zeroOrMore(" ") }
 
   def FormalDate   = rule {
-   DayDigits ~ optional(Dot) ~ Space ~ SpecificMonth ~ Space ~ YearDigits ~> ((d,m,y) => new Date(m.value,d,Some(y))) |
-   DayDigits ~ optional(Dot) ~ Space ~ SpecificMonth ~> ((d,m) => new Date(m.value,d)) |
+   DayDigits ~ optional(Dot | Th) ~ Space ~ SpecificMonth ~ Space ~ YearDigits ~> ((d,m,y) => new Date(m.value,d,Some(y))) |
+   DayDigits ~ optional(Dot | Th) ~ Space ~ SpecificMonth ~> ((d,m) => new Date(m.value,d)) |
    Cardinal ~ Space ~ SpecificMonth ~ Space ~ YearDigits ~> ((d,m,y) => new Date(m.value,d,Some(y))) |
    Cardinal ~ Space ~ SpecificMonth ~ Space ~> ((d,m) => new Date(m.value,d))
   }
