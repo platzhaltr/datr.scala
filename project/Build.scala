@@ -3,9 +3,9 @@ import Keys._
 
 object BuildSettings {
   val myBuildSettings = Defaults.defaultSettings ++ Seq (
-    name         := "parboiled",
+    name         := "datr.scala",
     version      := "0.1",
-    organization := "com.acme",
+    organization := "platzhaltr",
     scalaVersion := "2.11.1",
     scalacOptions ++= Seq()
   )
