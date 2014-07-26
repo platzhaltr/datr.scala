@@ -28,12 +28,6 @@ the monday before
 "every 1. sep"
 ```
 
-## Time Durations ##
-
-```
-from 13 to 8
-```
-
 ## Date Durations
 
 ```

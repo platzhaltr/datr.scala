@@ -144,6 +144,14 @@ class EventSpec extends FlatSpec with Matchers {
     RelativeDateDuration(NextWeekdayByName(Monday),ForDays(3)).process(today) shouldBe new Interval(nextMonday.toDateMidnight, Duration.standardDays(3))
   }
 
+  it should "interpret 'from <time> [to|till|until] <time>'" in {
+    val now = new LocalDateTime(2014, 1, 1, 18, 0)
+    val from = new LocalDateTime(2014, 1, 1, 18, 30)
+    val to = new LocalDateTime(2014, 1, 1, 19, 0)
+
+    FromTimeToTime(AtTime(Time(18,30)), AtTime(Time(19,0))).process(now) shouldBe new Interval(from.toDateTime, to.toDateTime)
+  }
+
   it should "interpret 'till <time>'" in {
     val now = new LocalDateTime(2014, 1, 1, 18, 30)
     val next = new LocalDateTime(2014, 1, 1, 19, 0)

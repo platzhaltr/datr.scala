@@ -131,6 +131,13 @@ case class ForDays(days: Int) extends DateDuration {
   }
 }
 
+case class FromTimeToTime(from: AtTime, to: AtTime) extends TimeDuration {
+  override def process(now: LocalDateTime): Interval = {
+    val fromTime = from.process(now)
+    new Interval(fromTime.toDateTime(), to.process(fromTime).toDateTime())
+  }
+}
+
 case class UntilTime(atTime: AtTime) extends TimeDuration {
   override def process(now: LocalDateTime): Interval = {
     new Interval(now.toDateTime(), atTime.process(now).toDateTime())

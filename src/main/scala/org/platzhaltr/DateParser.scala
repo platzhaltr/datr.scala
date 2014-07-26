@@ -113,6 +113,7 @@ class DateParser(val input: ParserInput) extends Parser {
     DurationPrefix ~ Seconds                   ~> (ForSeconds(_)) |
     DurationPrefix ~ Minutes                   ~> (ForMinutes(_)) |
     DurationPrefix ~ Hours                     ~> (ForHours(_)) |
+    From ~ Space ~ AbsoluteTimes ~ Space ~ (To | UnTill) ~ Space ~ AbsoluteTimes ~> (FromTimeToTime(_,_)) |
     UnTill ~ Space ~ AbsoluteTimes             ~> (UntilTime(_))
   }
 
