@@ -24,11 +24,15 @@ class DateParser(val input: ParserInput) extends Parser {
   }
 
   def Times = rule {
-    FormalTimes | FuzzyTimes | RelativeTimes
+    AbsoluteTimes | RelativeTimes
   }
 
   def Dates = rule {
     FormalDates | RelativeDates
+  }
+
+  def AbsoluteTimes = rule {
+    FormalTimes | FuzzyTimes
   }
 
   def FormalTimes = rule {
@@ -93,7 +97,6 @@ class DateParser(val input: ParserInput) extends Parser {
     In ~ Space ~ Number ~ Space ~ Months       ~> ((m) => InMonths(m)) |
     In ~ Space ~ Number ~ Space ~ Years        ~> ((y) => InYears(y))
   }
-
   def RelativeDatesPast = rule {
     Last ~ Space ~ Months                      ~> (()  => InMonths(-1)) |
     Last ~ Space ~ SpecificWeekday             ~> ((w) => LastWeekdayByName(w)) |
@@ -109,7 +112,8 @@ class DateParser(val input: ParserInput) extends Parser {
   def TimeDurations = rule {
     DurationPrefix ~ Seconds                   ~> (ForSeconds(_)) |
     DurationPrefix ~ Minutes                   ~> (ForMinutes(_)) |
-    DurationPrefix ~ Hours                     ~> (ForHours(_))
+    DurationPrefix ~ Hours                     ~> (ForHours(_)) |
+    UnTill ~ Space ~ AbsoluteTimes             ~> (UntilTime(_))
   }
 
   def DateDurations = rule {

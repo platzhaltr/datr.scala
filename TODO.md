@@ -31,8 +31,6 @@ the monday before
 ## Time Durations ##
 
 ```
-until 17
-until 8pm
 from 13 to 8
 ```
 

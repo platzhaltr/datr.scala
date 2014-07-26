@@ -276,6 +276,14 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
     parse(td.name) shouldBe Right(Left(RelativeDateDuration(WeekdayInMonth(2, Saturday, April),ForDays(8))))
   }
 
+  "till 12:15" in { td =>
+    parse(td.name) shouldBe Right(Right(UntilTime(AtTime(Time(12,15)))))
+  }
+
+  "until 7 pm" in { td =>
+    parse(td.name) shouldBe Right(Right(UntilTime(AtTime(Time(19,0)))))
+  }
+
   "till friday" in { td =>
     parse(td.name) shouldBe Right(Left(RelativeDateDuration(InDays(0),UntilWeekday(Friday))))
   }

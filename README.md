@@ -83,6 +83,8 @@ midnight
 for 10 seconds
 for 3 minutes
 for 6 hours
+until 17
+until 8pm
 for 7 days
 for 3 days starting yesterday
 for 5 days starting today

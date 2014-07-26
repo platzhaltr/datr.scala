@@ -131,6 +131,12 @@ case class ForDays(days: Int) extends DateDuration {
   }
 }
 
+case class UntilTime(atTime: AtTime) extends TimeDuration {
+  override def process(now: LocalDateTime): Interval = {
+    new Interval(now.toDateTime(), atTime.process(now).toDateTime())
+  }
+}
+
 case class UntilWeekday(weekday: Weekday) extends DateDuration {
 
   override def process(start: LocalDate): Interval = {
@@ -141,7 +147,7 @@ case class UntilWeekday(weekday: Weekday) extends DateDuration {
 }
 
 case class RelativeDateDuration(dateEvent: DateEvent, dateDuration: DateDuration) extends DateDuration {
- override def process(today: LocalDate): Interval = {
+  override def process(today: LocalDate): Interval = {
     dateDuration.process(dateEvent.process(today))
   }
 }
