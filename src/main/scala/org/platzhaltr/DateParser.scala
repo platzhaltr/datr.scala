@@ -8,7 +8,7 @@ class DateParser(val input: ParserInput) extends Parser {
   def InputLine = rule { Expression ~ EOI }
 
   def Expression: Rule1[ParsedCompound] = rule {
-    DateTimes                                  ~> ((t: TimeEvent) => Left(Right(t))) |
+    DateTimes                                  ~> ((d: DateEvent,t: TimeEvent) => Left(Right(DateTimeEvent(d,t)))) |
     Times                                      ~> ((t: TimeEvent) => Left(Right(t)) )|
     Dates                                      ~> ((d: DateEvent) => Left(Left(d)))  |
     TimeDurations                              ~> ((d: TimeDuration) => Right(Right(d))) |
@@ -16,9 +16,9 @@ class DateParser(val input: ParserInput) extends Parser {
   }
 
   def DateTimes = rule {
-    RelativeDays ~ Space ~ AbsoluteTimes        ~> ((d,t) => DateTimeEvent(d,t)) |
-    RelativeDatesFuture ~ Space ~ AbsoluteTimes   ~> ((d,t) => DateTimeEvent(d,t)) |
-    CardinalWeekdayInMonth ~Space ~ FormalTimes ~> ((d,t) => DateTimeEvent(d,t))
+    RelativeDays ~ Space ~ AbsoluteTimes        |
+    RelativeDatesFuture ~ Space ~ AbsoluteTimes |
+    CardinalWeekdayInMonth ~Space ~ FormalTimes
   }
 
   def Times = rule {
@@ -26,7 +26,7 @@ class DateParser(val input: ParserInput) extends Parser {
   }
 
   def Dates = rule {
-    FormalDates | RelativeDates
+    AbsoluteDates | RelativeDates
   }
 
   def AbsoluteTimes = rule {
@@ -59,7 +59,7 @@ class DateParser(val input: ParserInput) extends Parser {
     Number ~ Space ~ Hours ~ Space ~ FromNow   ~> ((h) => InHours(h))
   }
 
-  def FormalDates = rule {
+  def AbsoluteDates = rule {
     IsoDate                                    ~> ((d) => OnDate(d)) |
     On ~ Space ~ IsoDate                       ~> ((d) => OnDate(d)) |
     LittleEndianDate                           ~> ((d) => OnDate(d)) |
