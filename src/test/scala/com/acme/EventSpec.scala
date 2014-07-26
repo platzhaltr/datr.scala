@@ -144,6 +144,25 @@ class EventSpec extends FlatSpec with Matchers {
     RelativeDateDuration(NextWeekdayByName(Monday),ForDays(3)).process(today) shouldBe new Interval(nextMonday.toDateMidnight, Duration.standardDays(3))
   }
 
+  it should "interpret 'till <weekday>'" in {
+    val today = new LocalDate(1970, 6, 20)
+    val nextMonday = new LocalDate(1970, 6, 22)
+
+    val expected = new Interval(today.toDateMidnight, nextMonday.toDateMidnight)
+
+    RelativeDateDuration(InDays(0),UntilWeekday(Monday)).process(today) shouldBe expected
+  }
+
+  it should "interpret 'from <weekday> to <weekday>'" in {
+    val today = new LocalDate(1970, 6, 20)
+    val nextMonday = new LocalDate(1970, 6, 22)
+    val fridayAfterMonday = new LocalDate(1970, 6, 26)
+
+    val expected = new Interval(nextMonday.toDateMidnight, fridayAfterMonday.toDateMidnight)
+
+    RelativeDateDuration(NextWeekdayByName(Monday),UntilWeekday(Friday)).process(today) shouldBe expected
+  }
+
   // Combinations
 
   it should "interpret '<relative-day> <fuzzy-time>', e.g. 'tomorrow afternoon'" in {

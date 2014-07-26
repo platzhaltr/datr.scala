@@ -90,6 +90,8 @@ for 5 days starting tomorrow
 for 7 days starting next monday
 for 8 days starting in 5 weeks
 for 8 days starting first saturday in april
+till wednesday
+from monday to wednesday
 ```
 
 **Combinations**

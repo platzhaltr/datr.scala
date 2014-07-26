@@ -276,6 +276,18 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
     parse(td.name) shouldBe Right(Left(RelativeDateDuration(WeekdayInMonth(2, Saturday, April),ForDays(8))))
   }
 
+  "till friday" in { td =>
+    parse(td.name) shouldBe Right(Left(RelativeDateDuration(InDays(0),UntilWeekday(Friday))))
+  }
+
+  "until friday" in { td =>
+    parse(td.name) shouldBe Right(Left(RelativeDateDuration(InDays(0),UntilWeekday(Friday))))
+  }
+
+  "from monday to friday" in { td =>
+    parse(td.name) shouldBe Right(Left(RelativeDateDuration(NextWeekdayByName(Monday),UntilWeekday(Friday))))
+  }
+
   // combinations
 
   private def dateTimeEvent (dateEvent: DateEvent, timeEvent: TimeEvent) = {
