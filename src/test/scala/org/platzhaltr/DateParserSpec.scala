@@ -334,6 +334,14 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
     parse(td.name) shouldBe inDaysAtTime(-1)(22,0)
   }
 
+  "monday 12:00" in { td =>
+    parse(td.name) shouldBe dateTimeEvent(NextWeekdayByName(Monday), AtTime(Time(12,0)))
+  }
+
+  "tuesday at 5 a.m." in { td =>
+    parse(td.name) shouldBe dateTimeEvent(NextWeekdayByName(Tuesday), AtTime(Time(5,0)))
+  }
+
   "in 2 days at 6 pm" in { td =>
     parse(td.name) shouldBe inDaysAtTime(2)(18,0)
   }

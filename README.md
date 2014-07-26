@@ -106,6 +106,8 @@ tommorow afternoon
 yesterday evening
 tomorrow at 8 a.m.
 yesterday at 10 pm
+monday 12:00
+tuesday at 5 a.m.
 in 2 days at 6 pm
 in 4 weeks at 12:00
 in 3 months at 8 a.m.
