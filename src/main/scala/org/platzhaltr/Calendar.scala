@@ -46,7 +46,7 @@ case class Month(val value: Int) {
 
 case class DateTime(date: Date, time: Time)
 
-case class Date(year: Int, month: Int, day: Int) {
+case class Date(month: Int, day: Int,year: Option[Int] = None) {
   require(month >= 1 && month <= 12)
   // TODO stricter day checking?
   require(day >= 1 && day <= 31)

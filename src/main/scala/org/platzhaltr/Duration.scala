@@ -40,6 +40,15 @@ case class FromTimeToTime(from: AtTime, to: AtTime) extends TimeDuration {
   }
 }
 
+case class FromDateTimeToDateTime(from: DateTimeEvent, to: DateTimeEvent) extends TimeDuration {
+  override def process(now: LocalDateTime): Interval = {
+    val fromDateTime = from.process(now)
+    val nextDateTime = to.process(fromDateTime)
+
+    new Interval(fromDateTime.toDateTime(), nextDateTime.toDateTime())
+  }
+}
+
 case class UntilTime(atTime: AtTime) extends TimeDuration {
   override def process(now: LocalDateTime): Interval = {
     new Interval(now.toDateTime(), atTime.process(now).toDateTime())

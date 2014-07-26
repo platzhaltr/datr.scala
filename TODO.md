@@ -3,10 +3,7 @@
 ## Basics ##
 
 ```
-22. July
 23. July 12:00
-24. August 2015
-24. Aug 2015
 24. Dec 8 pm
 ```
 

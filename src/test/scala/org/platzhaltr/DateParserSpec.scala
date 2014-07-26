@@ -18,40 +18,68 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
   }
 
   // Formal dates
-  private def date(year: Int, month: Int, day: Int) = {
-    Left(Left(OnDate(Date(year,month,day))))
+  private def onDate(month: Int, day: Int, year: Option[Int] = None) = {
+    Left(Left(OnDate(Date(month,day,year))))
   }
 
   "2014-10-23" in { td =>
-    parse(td.name) shouldBe date(2014,10,23)
+    parse(td.name) shouldBe onDate(10,23,Some(2014))
   }
 
   "20141023" in { td =>
-    parse(td.name) shouldBe date(2014,10,23)
+    parse(td.name) shouldBe onDate(10,23,Some(2014))
   }
 
   "2014/10/23" in { td =>
-    parse(td.name) shouldBe date(2014,10,23)
+    parse(td.name) shouldBe onDate(10,23,Some(2014))
   }
 
   "23/10/2014" in { td =>
-    parse(td.name) shouldBe date(2014,10,23)
+    parse(td.name) shouldBe onDate(10,23,Some(2014))
   }
 
   "on 2014-10-23" in { td =>
-    parse(td.name) shouldBe date(2014,10,23)
+    parse(td.name) shouldBe onDate(10,23,Some(2014))
   }
 
   "on 20141023" in { td =>
-    parse(td.name) shouldBe date(2014,10,23)
+    parse(td.name) shouldBe onDate(10,23,Some(2014))
   }
 
   "on 2014/10/23" in { td =>
-    parse(td.name) shouldBe date(2014,10,23)
+    parse(td.name) shouldBe onDate(10,23,Some(2014))
   }
 
   "on 23/10/2014" in { td =>
-    parse(td.name) shouldBe date(2014,10,23)
+    parse(td.name) shouldBe onDate(10,23,Some(2014))
+  }
+
+  "23. October" in { td =>
+    parse(td.name) shouldBe onDate(10,23)
+  }
+
+  "on 23. Oct 2014" in { td =>
+    parse(td.name) shouldBe onDate(10,23,Some(2014))
+  }
+
+  "on 1st August" in { td =>
+    parse(td.name) shouldBe onDate(8,1)
+  }
+
+  "on 2nd August 2015" in { td =>
+    parse(td.name) shouldBe onDate(8,2,Some(2015))
+  }
+
+  "on 3rd Sep 2015" in { td =>
+    parse(td.name) shouldBe onDate(9,3,Some(2015))
+  }
+
+  "on 4th Dec 2015" in { td =>
+    parse(td.name) shouldBe onDate(12,4,Some(2015))
+  }
+
+  "on 5th August 2015" in { td =>
+    parse(td.name) shouldBe onDate(8,5,Some(2015))
   }
 
   // Relaxed dates
@@ -316,6 +344,26 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
 
   private def inDaysAtTime (days: Int)(hours: Int, minutes: Int) = {
     dateTimeEvent(InDays(days),AtTime(Time(hours,minutes)))
+  }
+
+  private def onDateTime(month: Int, day: Int, hours: Int, minutes: Int, year: Option[Int] = None) = {
+    dateTimeEvent(OnDate(Date(month, day, year)),AtTime(Time(hours,minutes)))
+  }
+
+  "23. July 12:00" in { td =>
+    parse(td.name) shouldBe onDateTime(7,23,12,0)
+  }
+
+  "on 1st August 2015 5 a.m." in { td =>
+    parse(td.name) shouldBe onDateTime(8,1,5,0, Some(2015))
+  }
+
+  "on 24. Dec 8 pm" in { td =>
+    parse(td.name) shouldBe onDateTime(12,24,20,0)
+  }
+
+  "on 24. Dec at 8 pm" in { td =>
+    parse(td.name) shouldBe onDateTime(12,24,20,0)
   }
 
   "tomorrow afternoon" in { td =>

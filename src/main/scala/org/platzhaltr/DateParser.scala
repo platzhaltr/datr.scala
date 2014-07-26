@@ -16,9 +16,16 @@ class DateParser(val input: ParserInput) extends Parser {
   }
 
   def DateTimes = rule {
-    RelativeDays ~ Space ~ AbsoluteTimes        |
-    RelativeDatesFuture ~ Space ~ AbsoluteTimes |
-    CardinalWeekdayInMonth ~Space ~ FormalTimes
+    AbsoluteDateTimes |
+    RelativeDateTimes
+  }
+
+  def RelativeDateTimes = rule {
+    RelativeDates ~ Space ~ AbsoluteTimes
+  }
+
+  def AbsoluteDateTimes = rule {
+    AbsoluteDates ~ Space ~ !(YearDigits) ~ AbsoluteTimes
   }
 
   def Times = rule {
@@ -60,10 +67,7 @@ class DateParser(val input: ParserInput) extends Parser {
   }
 
   def AbsoluteDates = rule {
-    IsoDate                                    ~> ((d) => OnDate(d)) |
-    On ~ Space ~ IsoDate                       ~> ((d) => OnDate(d)) |
-    LittleEndianDate                           ~> ((d) => OnDate(d)) |
-    On ~ Space ~ LittleEndianDate              ~> ((d) => OnDate(d))
+    optional(On ~ Space) ~ (FormalDate | IsoDate | LittleEndianDate) ~> ((d) => OnDate(d))
   }
 
   def RelativeDates = rule {
@@ -127,11 +131,11 @@ class DateParser(val input: ParserInput) extends Parser {
   }
 
   def Cardinal     = rule { First | Second | Third | Fourth | Fifth}
-  def First        = rule { ignoreCase("first")  ~> (() => 1)}
-  def Second       = rule { ignoreCase("second") ~> (() => 2)}
-  def Third        = rule { ignoreCase("third")  ~> (() => 3)}
-  def Fourth       = rule { ignoreCase("fourth") ~> (() => 4)}
-  def Fifth        = rule { ignoreCase("fifth")  ~> (() => 5)}
+  def First        = rule { (ignoreCase("first")  | ignoreCase("1st")) ~> (() => 1)}
+  def Second       = rule { (ignoreCase("second") | ignoreCase("2nd")) ~> (() => 2)}
+  def Third        = rule { (ignoreCase("third")  | ignoreCase("3rd")) ~> (() => 3)}
+  def Fourth       = rule { (ignoreCase("fourth") | ignoreCase("4th")) ~> (() => 4)}
+  def Fifth        = rule { (ignoreCase("fifth")  | ignoreCase("5th")) ~> (() => 5)}
 
   def Count        = rule { One | Two | Three | Four | Five }
   def One          = rule { ignoreCase("one")   ~> (() => 1)}
@@ -184,8 +188,14 @@ class DateParser(val input: ParserInput) extends Parser {
   def Slash        = rule { "/" }
   def Space        = rule { zeroOrMore(" ") }
 
-  def IsoDate      = rule { YearDigits ~ optional(Dash | Slash) ~ MonthDigits ~ optional(Dash | Slash) ~ DayDigits ~> ((y,m,d) => new Date(y,m,d)) }
-  def LittleEndianDate = rule { DayDigits ~ optional(Dash | Slash) ~ MonthDigits ~ optional(Dash | Slash) ~ YearDigits ~> ((d,m,y) => new Date(y,m,d)) }
+  def FormalDate   = rule {
+   DayDigits ~ optional(Dot) ~ Space ~ SpecificMonth ~ Space ~ YearDigits ~> ((d,m,y) => new Date(m.value,d,Some(y))) |
+   DayDigits ~ optional(Dot) ~ Space ~ SpecificMonth ~> ((d,m) => new Date(m.value,d)) |
+   Cardinal ~ Space ~ SpecificMonth ~ Space ~ YearDigits ~> ((d,m,y) => new Date(m.value,d,Some(y))) |
+   Cardinal ~ Space ~ SpecificMonth ~ Space ~> ((d,m) => new Date(m.value,d))
+  }
+  def IsoDate      = rule { YearDigits ~ optional(Dash | Slash) ~ MonthDigits ~ optional(Dash | Slash) ~ DayDigits ~> ((y,m,d) => new Date(m,d, Some(y))) }
+  def LittleEndianDate = rule { DayDigits ~ optional(Dash | Slash) ~ MonthDigits ~ optional(Dash | Slash) ~ YearDigits ~> ((d,m,y) => new Date(m,d, Some(y))) }
   def YearDigits   = rule { capture(4.times(CharPredicate.Digit)) ~> (_.toInt) }
   def MonthDigits  = rule { capture("0" ~ CharPredicate.Digit | "1" ~ anyOf("012" )) ~> (_.toInt) }
   def DayDigits    = rule { capture(anyOf("012") ~ CharPredicate.Digit | "3" ~ anyOf("01" )) ~> (_.toInt) }

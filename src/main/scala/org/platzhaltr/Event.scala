@@ -13,7 +13,9 @@ sealed trait TimeEvent {
 // Formal Dates
 
 case class OnDate(date: Date) extends DateEvent {
-  override def process(now: LocalDate) = new LocalDate(date.year, date.month, date.day)
+  override def process(now: LocalDate) =
+
+  new LocalDate(date.year.getOrElse(now.getYear), date.month, date.day)
 }
 
 // Relaxed Dates
