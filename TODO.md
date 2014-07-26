@@ -28,10 +28,17 @@ the monday before
 "every 1. sep"
 ```
 
-## Durations
+## Time Durations ##
 
 ```
-from monday to wednesday
+until 17
+until 8pm
+from 13 to 8
+```
+
+## Date Durations
+
+```
 from monday 12 am to tuesday 4 pm
 next sunday at 7 pm for three hours
 ```
