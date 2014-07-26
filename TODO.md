@@ -1,5 +1,15 @@
 # TODO
 
+## Basics ##
+
+```
+22. July
+23. July 12:00
+24. August 2015
+24. Aug 2015
+24. Dec 8 pm
+```
+
 ## Prefixes
 
 Locale specific holidays?
@@ -31,7 +41,6 @@ the monday before
 ## Date Durations
 
 ```
-from monday 12 am to tuesday 4 pm
 next sunday at 7 pm for three hours
 ```
 
