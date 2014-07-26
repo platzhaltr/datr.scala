@@ -16,10 +16,8 @@ class DateParser(val input: ParserInput) extends Parser {
   }
 
   def DateTimes = rule {
-    RelativeDays ~ Space ~ FuzzyTimes           ~> ((d,t) => DateTimeEvent(d,t)) |
-    RelativeDays ~ Space ~ FormalTimes          ~> ((d,t) => DateTimeEvent(d,t)) |
-    RelativeDatesFuture ~ Space ~ FormalTimes   ~> ((d,t) => DateTimeEvent(d,t)) |
-    SpecificWeekday ~ Space ~ FuzzyTimes        ~> ((w,t) => DateTimeEvent(NextWeekdayByName(w),t)) |
+    RelativeDays ~ Space ~ AbsoluteTimes        ~> ((d,t) => DateTimeEvent(d,t)) |
+    RelativeDatesFuture ~ Space ~ AbsoluteTimes   ~> ((d,t) => DateTimeEvent(d,t)) |
     CardinalWeekdayInMonth ~Space ~ FormalTimes ~> ((d,t) => DateTimeEvent(d,t))
   }
 
