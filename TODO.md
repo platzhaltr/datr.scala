@@ -26,6 +26,7 @@ the monday before
 "every second monday of december"
 "every 1. of sep"
 "every 1. sep"
+"every day at 8pm for 60 minutes"
 ```
 
 **Implementation Ideas**
