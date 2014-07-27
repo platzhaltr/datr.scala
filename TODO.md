@@ -1,12 +1,5 @@
 # TODO
 
-## Basics ##
-
-```
-23. July 12:00
-24. Dec 8 pm
-```
-
 ## Prefixes
 
 Locale specific holidays?
@@ -20,7 +13,7 @@ the monday before
 4 tuesdays after
 ```
 
-## Repeats
+## Recurring Events
 
 ```
 "every 10 minutes"
@@ -34,6 +27,19 @@ the monday before
 "every 1. of sep"
 "every 1. sep"
 ```
+
+**Implementation Ideas**
+
+I haven't found a library that supports recurring events.
+
+RecurringEvent
+ - frequency
+ - firstOccurence
+ - repeat for x times
+
+Frequency
+ - basic (minute, hour, daily, weekly, monthly, yearly)
+- special (cardinal weekday)
 
 ## Date Durations
 
