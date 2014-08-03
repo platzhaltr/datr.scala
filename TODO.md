@@ -1,6 +1,6 @@
 # TODO
 
-## Prefixes
+## Location based dates and times
 
 Locale specific holidays?
 
@@ -11,6 +11,16 @@ the monday after
 the monday before
 2 fridays before
 4 tuesdays after
+```
+
+Location specific times
+
+```
+sunrise
+at sunrise
+at sunset
+two hours after sunrise
+one hour before sunset
 ```
 
 ## Recurring Events
