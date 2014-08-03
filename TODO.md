@@ -35,12 +35,16 @@ I haven't found a library that supports recurring events.
 
 RecurringEvent
  - frequency
+ - repeatability
  - firstOccurence
- - repeat for x times
 
 Frequency
- - basic (minute, hour, daily, weekly, monthly, yearly)
-- special (cardinal weekday)
+  - basic (minute, hour, daily, weekly, monthly, yearly)
+  - special (cardinal weekday)
+
+Repeatability
+  - until specific date
+  - number of times
 
 ## Date Durations
 
