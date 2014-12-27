@@ -6,17 +6,17 @@ object BuildSettings {
     name         := "datr.scala",
     version      := "0.1",
     organization := "platzhaltr",
-    scalaVersion := "2.11.2",
+    scalaVersion := "2.11.4",
     scalacOptions ++= Seq()
   )
 }
 
 object Dependencies {
-  val jodaTime    = "joda-time" % "joda-time" % "2.3"
-  val jodaConvert = "org.joda" % "joda-convert" % "1.6"
-  val scalatest   = "org.scalatest" %% "scalatest" % "2.2.0" % "test"
-  val parboiled   = "org.parboiled" %% "parboiled" % "2.0.0"
-  val reflect     = "org.scala-lang" % "scala-reflect" % "2.11.1"
+  val jodaTime    = "joda-time" % "joda-time" % "2.6"
+  val jodaConvert = "org.joda" % "joda-convert" % "1.7"
+  val scalatest   = "org.scalatest" %% "scalatest" % "2.2.1" % "test"
+    val parboiled   = "org.parboiled" %% "parboiled" % "2.0.1"
+  val reflect     = "org.scala-lang" % "scala-reflect" % "2.11.4"
 
   val myDependencies = Seq(jodaTime, jodaConvert, scalatest, parboiled, reflect)
 }
