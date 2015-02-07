@@ -1,5 +1,7 @@
 import sbt._
 import Keys._
+import org.scalajs.sbtplugin.ScalaJSPlugin
+import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 
 object BuildSettings {
   val myBuildSettings = Defaults.coreDefaultSettings ++ Seq (
@@ -31,5 +33,5 @@ object MyBuild extends Build {
     settings =
       myBuildSettings ++
       Seq (libraryDependencies ++= myDependencies)
-  )
+  ) enablePlugins(ScalaJSPlugin)
 }
