@@ -8,6 +8,7 @@ object BuildSettings {
     name         := "datr.scala",
     version      := "0.1",
     organization := "platzhaltr",
+    resolvers += "bintray-alexander_myltsev" at "https://oss.sonatype.org/content/repositories/snapshots",
     scalaVersion := "2.11.5",
     scalacOptions ++= Seq()
   )
@@ -17,7 +18,7 @@ object Dependencies {
   val jodaTime    = "joda-time" % "joda-time" % "2.7"
   val jodaConvert = "org.joda" % "joda-convert" % "1.7"
   val scalatest   = "org.scalatest" %% "scalatest" % "2.2.4" % "test"
-    val parboiled   = "org.parboiled" %% "parboiled" % "2.0.1"
+  val parboiled   = "org.parboiled" %% "parboiled_sjs0.6" % "2.0.1"
   val reflect     = "org.scala-lang" % "scala-reflect" % "2.11.5"
 
   val myDependencies = Seq(jodaTime, jodaConvert, scalatest, parboiled, reflect)
