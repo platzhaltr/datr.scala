@@ -2,6 +2,16 @@ package org.platzhaltr
 
 import org.platzhaltr._
 import org.parboiled2._
+import scala.scalajs.js
+import js.annotation.JSExport
+
+@JSExport
+object DateParser {
+
+  @JSExport
+  def read(input: String) = new DateParser (input).InputLine.run()
+
+}
 
 class DateParser(val input: ParserInput) extends Parser {
 
