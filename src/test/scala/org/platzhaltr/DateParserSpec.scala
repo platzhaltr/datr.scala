@@ -4,7 +4,7 @@ import scala.util.{Failure, Success}
 import org.scalatest._
 import org.scalatest.Matchers._
 
-import org.parboiled2.ParseError
+import org.parboiled2.{ParseError, ErrorFormatter}
 
 import Weekday._
 import Month._
@@ -419,7 +419,7 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
     parser.InputLine.run() match {
       case Success(result) => result
       case Failure(e: ParseError) =>
-        println(s"Invalid expression: ${parser.formatError(e, showTraces = true)}")
+        println(s"Invalid expression: ${parser.formatError(e, new ErrorFormatter(showTraces = true))}")
         throw new IllegalArgumentException(e)
       case Failure(e)             => throw new IllegalArgumentException(e)
     }

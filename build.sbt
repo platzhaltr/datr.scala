@@ -12,4 +12,4 @@ libraryDependencies += "org.joda" % "joda-convert" % "1.7"
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.4" % "test"
 
-libraryDependencies += "org.parboiled" %% "parboiled" % "2.0.1"
+libraryDependencies += "org.parboiled" %% "parboiled" % "2.1.0"
