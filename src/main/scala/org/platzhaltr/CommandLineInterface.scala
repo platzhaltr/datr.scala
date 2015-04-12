@@ -5,7 +5,7 @@ import scala.io.StdIn
 import scala.util.{Failure, Success}
 
 import org.joda.time.{LocalDate,LocalDateTime}
-import org.parboiled2.ParseError
+import org.parboiled2.{ParseError, ErrorFormatter}
 
 object CommandLineInterface extends App {
   repl()
@@ -32,7 +32,7 @@ object CommandLineInterface extends App {
                 val now = new LocalDateTime
                 println(s"Result: ${timeDuration.process(now)}")
             }
-          case Failure(e: ParseError) => println(s"Invalid expression: ${parser.formatError(e, showTraces = true)}")
+          case Failure(e: ParseError) => println(s"Invalid expression: ${parser.formatError(e, new ErrorFormatter(showTraces = true))}")
           case Failure(e)             => println(s"Unexpected error: ${e}")
         }
         repl()

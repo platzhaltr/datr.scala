@@ -28,32 +28,32 @@ class DurationSpec extends FlatSpec with Matchers {
 
   it should "interpret 'for <n> days'" in {
     val today = new LocalDate(1970, 6, 20)
-    ForDays(3).process(today) shouldBe new Interval(today.toDateMidnight, Duration.standardDays(3))
+    ForDays(3).process(today) shouldBe new Interval(today.toDateTimeAtStartOfDay, Duration.standardDays(3))
   }
 
   it should "interpret 'for <n> days starting yesterday'" in {
     val today = new LocalDate(1970, 6, 20)
 
-    RelativeDateDuration(InDays(-1),ForDays(3)).process(today) shouldBe new Interval(today.minusDays(1).toDateMidnight, Duration.standardDays(3))
+    RelativeDateDuration(InDays(-1),ForDays(3)).process(today) shouldBe new Interval(today.minusDays(1).toDateTimeAtStartOfDay, Duration.standardDays(3))
   }
 
   it should "interpret 'for <n> days starting today'" in {
     val today = new LocalDate(1970, 6, 20)
 
-    RelativeDateDuration(InDays(0),ForDays(3)).process(today) shouldBe new Interval(today.toDateMidnight, Duration.standardDays(3))
+    RelativeDateDuration(InDays(0),ForDays(3)).process(today) shouldBe new Interval(today.toDateTimeAtStartOfDay, Duration.standardDays(3))
   }
 
   it should "interpret 'for <n> days starting tomorrow'" in {
     val today = new LocalDate(1970, 6, 20)
 
-    RelativeDateDuration(InDays(1),ForDays(3)).process(today) shouldBe new Interval(today.plusDays(1).toDateMidnight, Duration.standardDays(3))
+    RelativeDateDuration(InDays(1),ForDays(3)).process(today) shouldBe new Interval(today.plusDays(1).toDateTimeAtStartOfDay, Duration.standardDays(3))
   }
 
   it should "interpret 'for <n> days starting next monday'" in {
     val today = new LocalDate(1970, 6, 20)
     val nextMonday = new LocalDate(1970, 6, 22)
 
-    RelativeDateDuration(NextWeekdayByName(Monday),ForDays(3)).process(today) shouldBe new Interval(nextMonday.toDateMidnight, Duration.standardDays(3))
+    RelativeDateDuration(NextWeekdayByName(Monday),ForDays(3)).process(today) shouldBe new Interval(nextMonday.toDateTimeAtStartOfDay, Duration.standardDays(3))
   }
 
   it should "interpret 'from <time> [to|till|until] <time>'" in {
@@ -82,7 +82,7 @@ class DurationSpec extends FlatSpec with Matchers {
     val today = new LocalDate(1970, 6, 20)
     val nextMonday = new LocalDate(1970, 6, 22)
 
-    val expected = new Interval(today.toDateMidnight, nextMonday.toDateMidnight)
+    val expected = new Interval(today.toDateTimeAtStartOfDay, nextMonday.toDateTimeAtStartOfDay)
 
     RelativeDateDuration(InDays(0),UntilWeekday(Monday)).process(today) shouldBe expected
   }
@@ -92,7 +92,7 @@ class DurationSpec extends FlatSpec with Matchers {
     val nextMonday = new LocalDate(1970, 6, 22)
     val fridayAfterMonday = new LocalDate(1970, 6, 26)
 
-    val expected = new Interval(nextMonday.toDateMidnight, fridayAfterMonday.toDateMidnight)
+    val expected = new Interval(nextMonday.toDateTimeAtStartOfDay, fridayAfterMonday.toDateTimeAtStartOfDay)
 
     RelativeDateDuration(NextWeekdayByName(Monday),UntilWeekday(Friday)).process(today) shouldBe expected
   }

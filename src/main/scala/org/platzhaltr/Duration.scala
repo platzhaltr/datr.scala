@@ -29,7 +29,7 @@ case class ForHours(hours: Int) extends TimeDuration {
 
 case class ForDays(days: Int) extends DateDuration {
   override def process(today: LocalDate): Interval = {
-    new Interval(today.toDateMidnight(), Duration.standardDays(days))
+    new Interval(today.toDateTimeAtStartOfDay(), Duration.standardDays(days))
   }
 }
 
@@ -60,7 +60,7 @@ case class UntilWeekday(weekday: Weekday) extends DateDuration {
   override def process(start: LocalDate): Interval = {
     val finishWeekday = NextWeekdayByName(weekday).process(start)
 
-    new Interval(start.toDateMidnight(), finishWeekday.toDateMidnight())
+    new Interval(start.toDateTimeAtStartOfDay(), finishWeekday.toDateTimeAtStartOfDay())
   }
 }
 
