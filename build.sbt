@@ -4,7 +4,7 @@ version      := "0.1"
 
 organization := "platzhaltr"
 
-scalaVersion := "2.11.5"
+scalaVersion := "2.11.6"
 
 libraryDependencies += "joda-time" % "joda-time" % "2.7"
 
