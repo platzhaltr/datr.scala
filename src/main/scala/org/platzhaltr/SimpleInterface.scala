@@ -2,12 +2,15 @@ package org.platzhaltr
 
 import scala.util.{Failure, Success}
 
+import scala.scalajs.js.annotation.JSExport
 import org.joda.time.{LocalDate,LocalDateTime}
 import org.parboiled2.{ParseError, ErrorFormatter}
 
+@JSExport
 object SimpleInterface {
   val errorFmt = new ErrorFormatter(showTraces = true)
 
+  @JSExport
   def read(line: String): Unit = {
     val parser = new DateParser(line)
     parser.InputLine.run() match {
