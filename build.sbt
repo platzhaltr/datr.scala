@@ -8,7 +8,10 @@ organization := "platzhaltr"
 
 scalaVersion := "2.11.7"
 
-libraryDependencies += "joda-time" % "joda-time" % "2.7"
+resolvers ++= Seq(
+  "snapshots"           at "https://oss.sonatype.org/content/repositories/snapshots")
+
+libraryDependencies += "org.mdedetrich" %% "soda-time" % "0.0.1-SNAPSHOT"
 
 libraryDependencies += "org.joda" % "joda-convert" % "1.7"
 
