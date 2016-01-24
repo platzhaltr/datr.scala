@@ -2,7 +2,7 @@ package org.platzhaltr
 
 import scala.util.{Failure, Success}
 
-import org.joda.time.{LocalDate,LocalDateTime}
+import java.time.{LocalDate,LocalDateTime}
 import org.parboiled2.{ParseError, ErrorFormatter}
 
 object SimpleInterface {
@@ -20,16 +20,16 @@ object SimpleInterface {
   def format(result: ParsedCompound): String = {
     result match {
       case Left(Left(dateEvent)) =>
-        val today = new LocalDate
+        val today = LocalDate.now
         s"${dateEvent.process(today)}"
       case Left(Right(timeEvent)) =>
-        val now = new LocalDateTime
+        val now = LocalDateTime.now
         s"${timeEvent.process(now)}"
       case Right(Left(dateDuration)) =>
-        val today = new LocalDate
+        val today = LocalDate.now
         s"${dateDuration.process(today)}"
       case Right(Right(timeDuration)) =>
-        val now = new LocalDateTime
+        val now = LocalDateTime.now
         s"${timeDuration.process(now)}"
     }
   }

@@ -1,7 +1,6 @@
 package org.platzhaltr
 
-
-import org.joda.time.LocalDateTime
+import java.time.LocalDateTime
 
 object Calendar {
   def roll(now: Int, next: Int, border: Int) = {
@@ -9,7 +8,7 @@ object Calendar {
   }
 
   def nowBeforeNext(now: LocalDateTime, next: Time): Boolean = {
-    now.getHourOfDay < next.hours || (now.getHourOfDay == next.hours && now.getMinuteOfHour < next.minutes)
+    now.getHour < next.hours || (now.getHour == next.hours && now.getMinute < next.minutes)
   }
 }
 

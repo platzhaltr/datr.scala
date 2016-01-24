@@ -6,9 +6,7 @@ organization := "platzhaltr"
 
 scalaVersion := "2.11.7"
 
-libraryDependencies += "joda-time" % "joda-time" % "2.7"
-
-libraryDependencies += "org.joda" % "joda-convert" % "1.7"
+libraryDependencies += "org.threeten" % "threeten-extra" % "0.9"
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.6" % "test"
 

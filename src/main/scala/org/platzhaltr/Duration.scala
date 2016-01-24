@@ -1,6 +1,7 @@
 package org.platzhaltr
 
-import org.joda.time.{Duration, Interval, LocalDate, LocalDateTime}
+import java.time.{Duration, LocalDate, LocalDateTime, ZoneOffset}
+import org.threeten.extra.Interval
 
 sealed trait DateDuration {
  def process(now: LocalDate): Interval
@@ -11,47 +12,55 @@ sealed trait TimeDuration {
 
 case class ForSeconds(seconds: Int) extends TimeDuration   {
   override def process(now: LocalDateTime): Interval = {
-    new Interval(now.toDateTime(), Duration.standardSeconds(seconds))
+    // TODO which time zone?
+    Interval.of(now.toInstant(ZoneOffset.UTC), Duration.ofSeconds(seconds))
   }
 }
 
 case class ForMinutes(minutes: Int) extends TimeDuration {
   override def process(now: LocalDateTime): Interval = {
-    new Interval(now.toDateTime(), Duration.standardMinutes(minutes))
+    // TODO which time zone?
+    Interval.of(now.toInstant(ZoneOffset.UTC), Duration.ofMinutes(minutes))
   }
 }
 
 case class ForHours(hours: Int) extends TimeDuration {
   override def process(now: LocalDateTime): Interval = {
-    new Interval(now.toDateTime(), Duration.standardHours(hours))
+    // TODO which time zone?
+    Interval.of(now.toInstant(ZoneOffset.UTC), Duration.ofHours(hours))
   }
 }
 
 case class ForDays(days: Int) extends DateDuration {
   override def process(today: LocalDate): Interval = {
-    new Interval(today.toDateTimeAtStartOfDay(), Duration.standardDays(days))
+    // TODO which time zone?
+    Interval.of(today.atStartOfDay().toInstant(ZoneOffset.UTC), Duration.ofDays(days))
   }
 }
 
 case class FromTimeToTime(from: AtTime, to: AtTime) extends TimeDuration {
   override def process(now: LocalDateTime): Interval = {
     val fromTime = from.process(now)
-    new Interval(fromTime.toDateTime(), to.process(fromTime).toDateTime())
+    // TODO which time zone?
+    Interval.of(fromTime.toInstant(ZoneOffset.UTC), to.process(fromTime).toInstant(ZoneOffset.UTC))
   }
 }
 
 case class FromDateTimeToDateTime(from: DateTimeEvent, to: DateTimeEvent) extends TimeDuration {
   override def process(now: LocalDateTime): Interval = {
+    // TODO which time zone?
+    // TODO rename vals
     val fromDateTime = from.process(now)
-    val nextDateTime = to.process(fromDateTime)
+    val nextDateTime = to.process(fromDateTime).toInstant(ZoneOffset.UTC)
 
-    new Interval(fromDateTime.toDateTime(), nextDateTime.toDateTime())
+    Interval.of(fromDateTime.toInstant(ZoneOffset.UTC), nextDateTime)
   }
 }
 
 case class UntilTime(atTime: AtTime) extends TimeDuration {
   override def process(now: LocalDateTime): Interval = {
-    new Interval(now.toDateTime(), atTime.process(now).toDateTime())
+    // TODO which time zone?
+    Interval.of(now.toInstant(ZoneOffset.UTC), atTime.process(now).toInstant(ZoneOffset.UTC))
   }
 }
 
@@ -60,7 +69,8 @@ case class UntilWeekday(weekday: Weekday) extends DateDuration {
   override def process(start: LocalDate): Interval = {
     val finishWeekday = NextWeekdayByName(weekday).process(start)
 
-    new Interval(start.toDateTimeAtStartOfDay(), finishWeekday.toDateTimeAtStartOfDay())
+    // TODO which time zone?
+    Interval.of(start.atStartOfDay().toInstant(ZoneOffset.UTC), finishWeekday.atStartOfDay().toInstant(ZoneOffset.UTC))
   }
 }
 

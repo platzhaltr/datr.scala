@@ -1,6 +1,7 @@
 package org.platzhaltr
 
-import org.joda.time.{Duration, Interval, LocalDate, LocalDateTime}
+import java.time.{Duration, LocalDate, LocalDateTime}
+import org.threeten.extra.Interval
 import scala.math.signum
 
 sealed trait DateEvent {
@@ -15,22 +16,22 @@ sealed trait TimeEvent {
 case class OnDate(date: Date) extends DateEvent {
   override def process(now: LocalDate) =
 
-  new LocalDate(date.year.getOrElse(now.getYear), date.month, date.day)
+  LocalDate.of(date.year.getOrElse(now.getYear), date.month, date.day)
 }
 
 // Relaxed Dates
 
 case class LastWeekdayByName(weekday: Weekday) extends DateEvent {
-  override def process(now: LocalDate) = now.minusDays(Calendar.roll(weekday.value, now.getDayOfWeek, 7))
+  override def process(now: LocalDate) = now.minusDays(Calendar.roll(weekday.value, now.getDayOfWeek.getValue, 7))
 }
 case class NextWeekdayByName(weekday: Weekday) extends DateEvent {
-  override def process(now: LocalDate) = now.plusDays(Calendar.roll(now.getDayOfWeek, weekday.value, 7))
+  override def process(now: LocalDate) = now.plusDays(Calendar.roll(now.getDayOfWeek.getValue, weekday.value, 7))
 }
 case class LastMonthByName(month: Month) extends DateEvent {
-  override def process(now: LocalDate) = now.minusMonths(Calendar.roll(month.value, now.getMonthOfYear, 12))
+  override def process(now: LocalDate) = now.minusMonths(Calendar.roll(month.value, now.getMonthValue, 12))
 }
 case class NextMonthByName(month: Month) extends DateEvent {
-  override def process(now: LocalDate) = now.plusMonths(Calendar.roll(now.getMonthOfYear, month.value, 12))
+  override def process(now: LocalDate) = now.plusMonths(Calendar.roll(now.getMonthValue, month.value, 12))
 }
 case class WeekdayInMonth(count: Int, weekday: Weekday, month: Month) extends DateEvent {
   override def process(now: LocalDate) = {
@@ -76,10 +77,10 @@ case class InHours(hours: Int) extends TimeEvent {
 
 case class AtTime(time: Time) extends TimeEvent {
   override def process(now: LocalDateTime) = {
-    val date = new LocalDateTime(now.getYear, now.getMonthOfYear, now.getDayOfMonth, time.hours, time.minutes)
+    val date = LocalDateTime.of(now.getYear, now.getMonth, now.getDayOfMonth, time.hours, time.minutes)
 
-    val nowHour     = now.getHourOfDay
-    val nowMinutes  = now.getMinuteOfHour
+    val nowHour     = now.getHour
+    val nowMinutes  = now.getMinute
     val thenHour    = time.hours
     val thenMinutes = time.minutes
 
@@ -119,7 +120,7 @@ case class DateTimeEvent(dateEvent: DateEvent, timeEvent: TimeEvent) extends Tim
       case _ => 0
     }
 
-    val result = new LocalDateTime(newDate.getYear, newDate.getMonthOfYear, newDate.getDayOfMonth, newTime.getHourOfDay, newTime.getMinuteOfHour)
+    val result = LocalDateTime.of(newDate.getYear, newDate.getMonthValue, newDate.getDayOfMonth, newTime.getHour, newTime.getMinute)
     result.plusDays(dayAdjustment)
   }
 
