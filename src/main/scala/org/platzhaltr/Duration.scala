@@ -3,10 +3,10 @@ package org.platzhaltr
 import java.time.{Duration, LocalDate, LocalDateTime, ZoneOffset}
 import org.threeten.extra.Interval
 
-sealed trait DateDuration {
+sealed trait DateDuration extends ParseResult {
  def process(now: LocalDate): Interval
 }
-sealed trait TimeDuration {
+sealed trait TimeDuration extends ParseResult {
  def process(now: LocalDateTime): Interval
 }
 

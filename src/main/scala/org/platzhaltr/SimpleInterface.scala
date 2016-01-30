@@ -17,18 +17,18 @@ object SimpleInterface {
     }
   }
 
-  def format(result: ParsedCompound): String = {
+  def format(result: ParseResult): String = {
     result match {
-      case Left(Left(dateEvent)) =>
+      case dateEvent: DateEvent =>
         val today = LocalDate.now
         s"${dateEvent.process(today)}"
-      case Left(Right(timeEvent)) =>
+      case timeEvent: TimeEvent =>
         val now = LocalDateTime.now
         s"${timeEvent.process(now)}"
-      case Right(Left(dateDuration)) =>
+      case dateDuration: DateDuration =>
         val today = LocalDate.now
         s"${dateDuration.process(today)}"
-      case Right(Right(timeDuration)) =>
+      case timeDuration: TimeDuration =>
         val now = LocalDateTime.now
         s"${timeDuration.process(now)}"
     }

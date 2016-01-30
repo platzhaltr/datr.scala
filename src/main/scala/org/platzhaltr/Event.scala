@@ -4,10 +4,10 @@ import java.time.{Duration, LocalDate, LocalDateTime}
 import org.threeten.extra.Interval
 import scala.math.signum
 
-sealed trait DateEvent {
+sealed trait DateEvent extends ParseResult {
   def process(now: LocalDate): LocalDate
 }
-sealed trait TimeEvent {
+sealed trait TimeEvent extends ParseResult {
   def process(now: LocalDateTime): LocalDateTime
 }
 

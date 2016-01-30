@@ -3,16 +3,18 @@ package org.platzhaltr
 import org.platzhaltr._
 import org.parboiled2._
 
+trait ParseResult
+
 class DateParser(val input: ParserInput) extends Parser {
 
   def InputLine = rule { Expression ~ EOI }
 
-  def Expression: Rule1[ParsedCompound] = rule {
-    DateTimes                                  ~> ((d: DateEvent,t: TimeEvent) => Left(Right(DateTimeEvent(d,t)))) |
-    Times                                      ~> ((t: TimeEvent) => Left(Right(t)) )|
-    Dates                                      ~> ((d: DateEvent) => Left(Left(d)))  |
-    TimeDurations                              ~> ((d: TimeDuration) => Right(Right(d))) |
-    DateDurations                              ~> ((d: DateDuration) => Right(Left(d)))
+  def Expression: Rule1[ParseResult] = rule {
+    DateTimes                                  ~> ((d: DateEvent,t: TimeEvent) => DateTimeEvent(d,t)) |
+    Times                                      ~> ((t: TimeEvent) => t)|
+    Dates                                      ~> ((d: DateEvent) => d)  |
+    TimeDurations                              ~> ((d: TimeDuration) =>  d) |
+    DateDurations                              ~> ((d: DateDuration) => d)
   }
 
   def DateTimes = rule {

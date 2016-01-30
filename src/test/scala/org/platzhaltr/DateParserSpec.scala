@@ -19,7 +19,7 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
 
   // Formal dates
   private def onDate(month: Int, day: Int, year: Option[Int] = None) = {
-    Left(Left(OnDate(Date(month,day,year))))
+    OnDate(Date(month,day,year))
   }
 
   "2014-10-23" in { td =>
@@ -85,7 +85,7 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
   // Relaxed dates
 
   private def inDays(days: Int) = {
-    Left(Left(InDays(days)))
+    InDays(days)
   }
 
   "today" in { td =>
@@ -101,7 +101,7 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
   }
 
   private def nextWeekendByName(weekday: Weekday) = {
-    Left(Left(NextWeekdayByName(weekday)))
+    NextWeekdayByName(weekday)
   }
 
   "saturday" in { td =>
@@ -117,7 +117,7 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
   }
 
   private def lastWeekendByName(weekday: Weekday) = {
-    Left(Left(LastWeekdayByName(weekday)))
+    LastWeekdayByName(weekday)
   }
 
   "last monday" in { td =>
@@ -129,77 +129,77 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
   }
 
   "last january" in { td =>
-    parse(td.name) shouldBe Left(Left(LastMonthByName(January)))
+    parse(td.name) shouldBe LastMonthByName(January)
   }
 
   "next february" in { td =>
-    parse(td.name) shouldBe Left(Left(NextMonthByName(February)))
+    parse(td.name) shouldBe NextMonthByName(February)
   }
 
   "last week" in { td =>
-    parse(td.name) shouldBe Left(Left(InWeeks(-1)))
+    parse(td.name) shouldBe InWeeks(-1)
   }
 
   "next week" in { td =>
-    parse(td.name) shouldBe Left(Left(InWeeks(1)))
+    parse(td.name) shouldBe InWeeks(1)
   }
 
   "last month" in { td =>
-    parse(td.name) shouldBe Left(Left(InMonths(-1)))
+    parse(td.name) shouldBe InMonths(-1)
   }
 
   "next month" in { td =>
-    parse(td.name) shouldBe Left(Left(InMonths(1)))
+    parse(td.name) shouldBe InMonths(1)
   }
 
   "last year" in { td =>
-    parse(td.name) shouldBe Left(Left(InYears(-1)))
+    parse(td.name) shouldBe InYears(-1)
   }
 
   "next year" in { td =>
-    parse(td.name) shouldBe Left(Left(InYears(1)))
+    parse(td.name) shouldBe InYears(1)
   }
 
   "second saturday in september" in { td =>
-    parse(td.name) shouldBe Left(Left(WeekdayInMonth(2, Saturday, September)))
+    parse(td.name) shouldBe WeekdayInMonth(2, Saturday, September)
   }
 
   "in 1 day" in { td =>
-    parse(td.name) shouldBe Left(Left(InDays(1)))
+    parse(td.name) shouldBe InDays(1)
   }
 
   "in 2 weeks" in { td =>
-    parse(td.name) shouldBe Left(Left(InWeeks(2)))
+    parse(td.name) shouldBe InWeeks(2)
   }
 
   "in 3 months" in { td =>
-    parse(td.name) shouldBe Left(Left(InMonths(3)))
+    parse(td.name) shouldBe InMonths(3)
   }
 
   "in 4 years" in { td =>
-    parse(td.name) shouldBe Left(Left(InYears(4)))
+    parse(td.name) shouldBe InYears(4)
   }
 
   "one day ago" in { td =>
-    parse(td.name) shouldBe Left(Left(InDays(-1)))
+    parse(td.name) shouldBe InDays(-1)
   }
 
   "two weeks ago" in { td =>
-    parse(td.name) shouldBe Left(Left(InWeeks(-2)))
+    parse(td.name) shouldBe InWeeks(-2)
   }
 
   "three months ago" in { td =>
-    parse(td.name) shouldBe Left(Left(InMonths(-3)))
+    parse(td.name) shouldBe InMonths(-3)
   }
 
   "four years ago" in { td =>
-    parse(td.name) shouldBe Left(Left(InYears(-4)))
+    parse(td.name) shouldBe InYears(-4)
   }
 
   // Formal times
 
   private def atTime(hours: Int, minutes: Int) = {
-    Left(Right(AtTime(Time(hours,minutes))))
+    AtTime(Time(hours,minutes))
   }
 
   "5:00" in { td =>
@@ -251,95 +251,95 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
   // relaxed times
 
   "10 seconds ago" in { td =>
-    parse(td.name) shouldBe Left(Right(InSeconds(-10)))
+    parse(td.name) shouldBe InSeconds(-10)
   }
 
   "in 5 minutes" in { td =>
-    parse(td.name) shouldBe Left(Right(InMinutes(5)))
+    parse(td.name) shouldBe InMinutes(5)
   }
 
   "4 hours from now" in { td =>
-    parse(td.name) shouldBe Left(Right(InHours(4)))
+    parse(td.name) shouldBe InHours(4)
   }
 
   // durations
 
   "for 10 seconds" in { td =>
-    parse(td.name) shouldBe Right(Right(ForSeconds(10)))
+    parse(td.name) shouldBe ForSeconds(10)
   }
 
   "for 3 minutes" in { td =>
-    parse(td.name) shouldBe Right(Right(ForMinutes(3)))
+    parse(td.name) shouldBe ForMinutes(3)
   }
 
   "for 6 hours" in { td =>
-    parse(td.name) shouldBe Right(Right(ForHours(6)))
+    parse(td.name) shouldBe ForHours(6)
   }
 
   "for 3 days" in { td =>
-    parse(td.name) shouldBe Right(Left(ForDays(3)))
+    parse(td.name) shouldBe ForDays(3)
   }
 
   "for 3 days starting yesterday" in { td =>
-    parse(td.name) shouldBe Right(Left(RelativeDateDuration(InDays(-1),ForDays(3))))
+    parse(td.name) shouldBe RelativeDateDuration(InDays(-1),ForDays(3))
   }
 
   "for 3 days starting today" in { td =>
-    parse(td.name) shouldBe Right(Left(RelativeDateDuration(InDays(0),ForDays(3))))
+    parse(td.name) shouldBe RelativeDateDuration(InDays(0),ForDays(3))
   }
 
   "for 3 days starting tomorrow" in { td =>
-    parse(td.name) shouldBe Right(Left(RelativeDateDuration(InDays(1),ForDays(3))))
+    parse(td.name) shouldBe RelativeDateDuration(InDays(1),ForDays(3))
   }
 
   "for 3 days starting next monday" in { td =>
-    parse(td.name) shouldBe Right(Left(RelativeDateDuration(NextWeekdayByName(Monday),ForDays(3))))
+    parse(td.name) shouldBe RelativeDateDuration(NextWeekdayByName(Monday),ForDays(3))
   }
 
   "for 8 days starting in 5 weeks" in { td =>
-    parse(td.name) shouldBe Right(Left(RelativeDateDuration(InWeeks(5),ForDays(8))))
+    parse(td.name) shouldBe RelativeDateDuration(InWeeks(5),ForDays(8))
   }
 
   "for 8 days starting second saturday in april" in { td =>
-    parse(td.name) shouldBe Right(Left(RelativeDateDuration(WeekdayInMonth(2, Saturday, April),ForDays(8))))
+    parse(td.name) shouldBe RelativeDateDuration(WeekdayInMonth(2, Saturday, April),ForDays(8))
   }
 
   "from 9:30 to 12:15" in { td =>
-    parse(td.name) shouldBe Right(Right(FromTimeToTime(AtTime(Time(9,30)), AtTime(Time(12,15)))))
+    parse(td.name) shouldBe FromTimeToTime(AtTime(Time(9,30)), AtTime(Time(12,15)))
   }
 
   "from 9:30 till 12:15" in { td =>
-    parse(td.name) shouldBe Right(Right(FromTimeToTime(AtTime(Time(9,30)), AtTime(Time(12,15)))))
+    parse(td.name) shouldBe FromTimeToTime(AtTime(Time(9,30)), AtTime(Time(12,15)))
   }
 
   "from 9:30 until 12:15" in { td =>
-    parse(td.name) shouldBe Right(Right(FromTimeToTime(AtTime(Time(9,30)), AtTime(Time(12,15)))))
+    parse(td.name) shouldBe FromTimeToTime(AtTime(Time(9,30)), AtTime(Time(12,15)))
   }
 
   "till 12:15" in { td =>
-    parse(td.name) shouldBe Right(Right(UntilTime(AtTime(Time(12,15)))))
+    parse(td.name) shouldBe UntilTime(AtTime(Time(12,15)))
   }
 
   "until 7 pm" in { td =>
-    parse(td.name) shouldBe Right(Right(UntilTime(AtTime(Time(19,0)))))
+    parse(td.name) shouldBe UntilTime(AtTime(Time(19,0)))
   }
 
   "till friday" in { td =>
-    parse(td.name) shouldBe Right(Left(RelativeDateDuration(InDays(0),UntilWeekday(Friday))))
+    parse(td.name) shouldBe RelativeDateDuration(InDays(0),UntilWeekday(Friday))
   }
 
   "until friday" in { td =>
-    parse(td.name) shouldBe Right(Left(RelativeDateDuration(InDays(0),UntilWeekday(Friday))))
+    parse(td.name) shouldBe RelativeDateDuration(InDays(0),UntilWeekday(Friday))
   }
 
   "from monday to friday" in { td =>
-    parse(td.name) shouldBe Right(Left(RelativeDateDuration(NextWeekdayByName(Monday),UntilWeekday(Friday))))
+    parse(td.name) shouldBe RelativeDateDuration(NextWeekdayByName(Monday),UntilWeekday(Friday))
   }
 
   // combinations
 
   private def dateTimeEvent (dateEvent: DateEvent, timeEvent: TimeEvent) = {
-    Left(Right(DateTimeEvent(dateEvent,timeEvent)))
+    DateTimeEvent(dateEvent,timeEvent)
   }
 
   private def inDaysAtTime (days: Int)(hours: Int, minutes: Int) = {
@@ -414,7 +414,7 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
     parse(td.name) shouldBe dateTimeEvent(NextWeekdayByName(Saturday),AtTime(Time(16,0)))
   }
 
-  def parse(line: String): ParsedCompound = {
+  def parse(line: String): ParseResult = {
     val parser = new DateParser(line)
     parser.InputLine.run() match {
       case Success(result) => result
