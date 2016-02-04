@@ -1,6 +1,6 @@
 package org.platzhaltr
 
-import org.platzhaltr._
+import java.time.{DayOfWeek, Month}
 import org.parboiled2._
 
 trait ParseResult
@@ -192,10 +192,10 @@ class DateParser(val input: ParserInput) extends Parser {
   def Space        = rule { zeroOrMore(" ") }
 
   def FormalDate   = rule {
-   DayDigits ~ optional(Dot | Th) ~ Space ~ SpecificMonth ~ Space ~ YearDigits ~> ((d,m,y) => new Date(m.value,d,Some(y))) |
-   DayDigits ~ optional(Dot | Th) ~ Space ~ SpecificMonth ~> ((d,m) => new Date(m.value,d)) |
-   Cardinal ~ Space ~ SpecificMonth ~ Space ~ YearDigits ~> ((d,m,y) => new Date(m.value,d,Some(y))) |
-   Cardinal ~ Space ~ SpecificMonth ~ Space ~> ((d,m) => new Date(m.value,d))
+   DayDigits ~ optional(Dot | Th) ~ Space ~ SpecificMonth ~ Space ~ YearDigits ~> ((d,m,y) => new Date(m.getValue,d,Some(y))) |
+   DayDigits ~ optional(Dot | Th) ~ Space ~ SpecificMonth ~> ((d,m) => new Date(m.getValue,d)) |
+   Cardinal ~ Space ~ SpecificMonth ~ Space ~ YearDigits ~> ((d,m,y) => new Date(m.getValue,d,Some(y))) |
+   Cardinal ~ Space ~ SpecificMonth ~ Space ~> ((d,m) => new Date(m.getValue,d))
   }
   def IsoDate      = rule { YearDigits ~ optional(Dash | Slash) ~ MonthDigits ~ optional(Dash | Slash) ~ DayDigits ~> ((y,m,d) => new Date(m,d, Some(y))) }
   def LittleEndianDate = rule { DayDigits ~ optional(Dash | Slash) ~ MonthDigits ~ optional(Dash | Slash) ~ YearDigits ~> ((d,m,y) => new Date(m,d, Some(y))) }
@@ -220,25 +220,25 @@ class DateParser(val input: ParserInput) extends Parser {
   def Pm         = rule { ignoreCase("p") ~ optional (Dot) ~ ignoreCase("m") ~ optional(Dot) }
 
   def SpecificWeekday = rule {Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday}
-  def Monday          = rule {(ignoreCase("monday")    | ignoreCase("mon")) ~> (() => Weekday.Monday )}
-  def Tuesday         = rule {(ignoreCase("tuesday")   | ignoreCase("tue")) ~> (() => Weekday.Tuesday )}
-  def Wednesday       = rule {(ignoreCase("wednesday") | ignoreCase("wed")) ~> (() => Weekday.Wednesday )}
-  def Thursday        = rule {(ignoreCase("thursday")  | ignoreCase("thu")) ~> (() => Weekday.Thursday )}
-  def Friday          = rule {(ignoreCase("friday")    | ignoreCase("fri")) ~> (() => Weekday.Friday )}
-  def Saturday        = rule {(ignoreCase("saturday")  | ignoreCase("sat")) ~> (() => Weekday.Saturday )}
-  def Sunday          = rule {(ignoreCase("sunday")    | ignoreCase("sun")) ~> (() => Weekday.Sunday )}
+  def Monday          = rule {(ignoreCase("monday")    | ignoreCase("mon")) ~> (() => DayOfWeek.MONDAY )}
+  def Tuesday         = rule {(ignoreCase("tuesday")   | ignoreCase("tue")) ~> (() => DayOfWeek.TUESDAY )}
+  def Wednesday       = rule {(ignoreCase("wednesday") | ignoreCase("wed")) ~> (() => DayOfWeek.WEDNESDAY )}
+  def Thursday        = rule {(ignoreCase("thursday")  | ignoreCase("thu")) ~> (() => DayOfWeek.THURSDAY )}
+  def Friday          = rule {(ignoreCase("friday")    | ignoreCase("fri")) ~> (() => DayOfWeek.FRIDAY )}
+  def Saturday        = rule {(ignoreCase("saturday")  | ignoreCase("sat")) ~> (() => DayOfWeek.SATURDAY )}
+  def Sunday          = rule {(ignoreCase("sunday")    | ignoreCase("sun")) ~> (() => DayOfWeek.SUNDAY )}
 
   def SpecificMonth = rule {January | Febuary | March | April | May | June | July | August | September | October | November | December}
-  def January       = rule {(ignoreCase("january")   | ignoreCase("jan")) ~> (() => Month.January )}
-  def Febuary       = rule {(ignoreCase("february")  | ignoreCase("feb")) ~> (() => Month.February )}
-  def March         = rule {(ignoreCase("march")     | ignoreCase("mar")) ~> (() => Month.March )}
-  def April         = rule {(ignoreCase("april")     | ignoreCase("apr")) ~> (() => Month.April )}
-  def May           = rule {(ignoreCase("may"))                           ~> (() => Month.May )}
-  def June          = rule {(ignoreCase("june")      | ignoreCase("jun")) ~> (() => Month.June )}
-  def July          = rule {(ignoreCase("july")      | ignoreCase("jul")) ~> (() => Month.July )}
-  def August        = rule {(ignoreCase("august")    | ignoreCase("aug")) ~> (() => Month.August )}
-  def September     = rule {(ignoreCase("september") | ignoreCase("sept") | ignoreCase("sep")) ~> (() => Month.September )}
-  def October       = rule {(ignoreCase("october")   | ignoreCase("oct")) ~> (() => Month.October )}
-  def November      = rule {(ignoreCase("november")  | ignoreCase("nov")) ~> (() => Month.November )}
-  def December      = rule {(ignoreCase("december")  | ignoreCase("dec")) ~> (() => Month.December )}
+  def January       = rule {(ignoreCase("january")   | ignoreCase("jan")) ~> (() => Month.JANUARY )}
+  def Febuary       = rule {(ignoreCase("february")  | ignoreCase("feb")) ~> (() => Month.FEBRUARY )}
+  def March         = rule {(ignoreCase("march")     | ignoreCase("mar")) ~> (() => Month.MARCH )}
+  def April         = rule {(ignoreCase("april")     | ignoreCase("apr")) ~> (() => Month.APRIL )}
+  def May           = rule {(ignoreCase("may"))                           ~> (() => Month.MAY )}
+  def June          = rule {(ignoreCase("june")      | ignoreCase("jun")) ~> (() => Month.JUNE )}
+  def July          = rule {(ignoreCase("july")      | ignoreCase("jul")) ~> (() => Month.JULY )}
+  def August        = rule {(ignoreCase("august")    | ignoreCase("aug")) ~> (() => Month.AUGUST )}
+  def September     = rule {(ignoreCase("september") | ignoreCase("sept") | ignoreCase("sep")) ~> (() => Month.SEPTEMBER )}
+  def October       = rule {(ignoreCase("october")   | ignoreCase("oct")) ~> (() => Month.OCTOBER )}
+  def November      = rule {(ignoreCase("november")  | ignoreCase("nov")) ~> (() => Month.NOVEMBER )}
+  def December      = rule {(ignoreCase("december")  | ignoreCase("dec")) ~> (() => Month.DECEMBER )}
 }

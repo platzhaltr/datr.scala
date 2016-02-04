@@ -1,6 +1,6 @@
 package org.platzhaltr
 
-import java.time.{Duration, LocalDate, LocalDateTime}
+import java.time.{DayOfWeek, Duration, LocalDate, LocalDateTime, Month}
 import org.threeten.extra.Interval
 import scala.math.signum
 
@@ -21,24 +21,24 @@ case class OnDate(date: Date) extends DateEvent {
 
 // Relaxed Dates
 
-case class LastWeekdayByName(weekday: Weekday) extends DateEvent {
-  override def process(now: LocalDate) = now.minusDays(Calendar.roll(weekday.value, now.getDayOfWeek.getValue, 7))
+case class LastWeekdayByName(weekday: DayOfWeek) extends DateEvent {
+  override def process(now: LocalDate) = now.minusDays(Calendar.roll(weekday.getValue, now.getDayOfWeek.getValue, 7))
 }
-case class NextWeekdayByName(weekday: Weekday) extends DateEvent {
-  override def process(now: LocalDate) = now.plusDays(Calendar.roll(now.getDayOfWeek.getValue, weekday.value, 7))
+case class NextWeekdayByName(weekday: DayOfWeek) extends DateEvent {
+  override def process(now: LocalDate) = now.plusDays(Calendar.roll(now.getDayOfWeek.getValue, weekday.getValue, 7))
 }
 case class LastMonthByName(month: Month) extends DateEvent {
-  override def process(now: LocalDate) = now.minusMonths(Calendar.roll(month.value, now.getMonthValue, 12))
+  override def process(now: LocalDate) = now.minusMonths(Calendar.roll(month.getValue, now.getMonthValue, 12))
 }
 case class NextMonthByName(month: Month) extends DateEvent {
-  override def process(now: LocalDate) = now.plusMonths(Calendar.roll(now.getMonthValue, month.value, 12))
+  override def process(now: LocalDate) = now.plusMonths(Calendar.roll(now.getMonthValue, month.getValue, 12))
 }
-case class WeekdayInMonth(count: Int, weekday: Weekday, month: Month) extends DateEvent {
+case class WeekdayInMonth(count: Int, weekday: DayOfWeek, month: Month) extends DateEvent {
   override def process(now: LocalDate) = {
     val nextMonth = NextMonthByName(month).process(now)
     val firstOfMonth = nextMonth.withDayOfMonth(1)
 
-    val firstOccurence = if (firstOfMonth.getDayOfWeek == weekday.value)
+    val firstOccurence = if (firstOfMonth.getDayOfWeek == weekday.getValue)
                           firstOfMonth else NextWeekdayByName(weekday).process(firstOfMonth)
 
     // TODO guard against user error, check if still in correct month

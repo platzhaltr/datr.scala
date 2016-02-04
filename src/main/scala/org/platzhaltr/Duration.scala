@@ -1,6 +1,6 @@
 package org.platzhaltr
 
-import java.time.{Duration, LocalDate, LocalDateTime, ZoneOffset}
+import java.time.{DayOfWeek, Duration, LocalDate, LocalDateTime, ZoneOffset}
 import org.threeten.extra.Interval
 
 sealed trait DateDuration extends ParseResult {
@@ -64,7 +64,7 @@ case class UntilTime(atTime: AtTime) extends TimeDuration {
   }
 }
 
-case class UntilWeekday(weekday: Weekday) extends DateDuration {
+case class UntilWeekday(weekday: DayOfWeek) extends DateDuration {
 
   override def process(start: LocalDate): Interval = {
     val finishWeekday = NextWeekdayByName(weekday).process(start)

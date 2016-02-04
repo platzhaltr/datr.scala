@@ -3,9 +3,8 @@ package org.platzhaltr
 import org.scalatest._
 
 import java.time.{Duration, LocalDate, LocalDateTime, ZoneOffset}
+import java.time.DayOfWeek._
 import org.threeten.extra.Interval
-
-import Weekday._
 
 class DurationSpec extends FlatSpec with Matchers {
 
@@ -52,9 +51,9 @@ class DurationSpec extends FlatSpec with Matchers {
 
   it should "interpret 'for <n> days starting next monday'" in {
     val today = LocalDate.of(1970, 6, 20)
-    val nextMonday = LocalDate.of(1970, 6, 22)
+    val nextMONDAY = LocalDate.of(1970, 6, 22)
 
-    RelativeDateDuration(NextWeekdayByName(Monday),ForDays(3)).process(today) shouldBe Interval.of(nextMonday.atStartOfDay.toInstant(ZoneOffset.UTC), Duration.ofDays(3))
+    RelativeDateDuration(NextWeekdayByName(MONDAY),ForDays(3)).process(today) shouldBe Interval.of(nextMONDAY.atStartOfDay.toInstant(ZoneOffset.UTC), Duration.ofDays(3))
   }
 
   it should "interpret 'from <time> [to|till|until] <time>'" in {
@@ -81,21 +80,21 @@ class DurationSpec extends FlatSpec with Matchers {
 
   it should "interpret 'till <weekday>'" in {
     val today = LocalDate.of(1970, 6, 20)
-    val nextMonday = LocalDate.of(1970, 6, 22)
+    val nextMONDAY = LocalDate.of(1970, 6, 22)
 
-    val expected = Interval.of(today.atStartOfDay.toInstant(ZoneOffset.UTC), nextMonday.atStartOfDay.toInstant(ZoneOffset.UTC))
+    val expected = Interval.of(today.atStartOfDay.toInstant(ZoneOffset.UTC), nextMONDAY.atStartOfDay.toInstant(ZoneOffset.UTC))
 
-    RelativeDateDuration(InDays(0),UntilWeekday(Monday)).process(today) shouldBe expected
+    RelativeDateDuration(InDays(0),UntilWeekday(MONDAY)).process(today) shouldBe expected
   }
 
   it should "interpret 'from <weekday> to <weekday>'" in {
     val today = LocalDate.of(1970, 6, 20)
-    val nextMonday = LocalDate.of(1970, 6, 22)
-    val fridayAfterMonday = LocalDate.of(1970, 6, 26)
+    val nextMONDAY = LocalDate.of(1970, 6, 22)
+    val fridayAfterMONDAY = LocalDate.of(1970, 6, 26)
 
-    val expected = Interval.of(nextMonday.atStartOfDay.toInstant(ZoneOffset.UTC), fridayAfterMonday.atStartOfDay.toInstant(ZoneOffset.UTC))
+    val expected = Interval.of(nextMONDAY.atStartOfDay.toInstant(ZoneOffset.UTC), fridayAfterMONDAY.atStartOfDay.toInstant(ZoneOffset.UTC))
 
-    RelativeDateDuration(NextWeekdayByName(Monday),UntilWeekday(Friday)).process(today) shouldBe expected
+    RelativeDateDuration(NextWeekdayByName(MONDAY),UntilWeekday(FRIDAY)).process(today) shouldBe expected
   }
 
 }

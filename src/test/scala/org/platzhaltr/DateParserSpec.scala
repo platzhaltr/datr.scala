@@ -6,8 +6,9 @@ import org.scalatest.Matchers._
 
 import org.parboiled2.{ParseError, ErrorFormatter}
 
-import Weekday._
-import Month._
+import java.time.{DayOfWeek, Month}
+import java.time.DayOfWeek._
+import java.time.Month._
 
 class DateParserSpec extends fixture.FreeSpec with Matchers {
 
@@ -100,40 +101,40 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
     parse(td.name) shouldBe inDays(-1)
   }
 
-  private def nextWeekendByName(weekday: Weekday) = {
+  private def nextWeekendByName(weekday: DayOfWeek) = {
     NextWeekdayByName(weekday)
   }
 
   "saturday" in { td =>
-    parse(td.name) shouldBe nextWeekendByName(Saturday)
+    parse(td.name) shouldBe nextWeekendByName(SATURDAY)
   }
 
   "next monday" in { td =>
-    parse(td.name) shouldBe nextWeekendByName(Monday)
+    parse(td.name) shouldBe nextWeekendByName(MONDAY)
   }
 
   "next tuesday" in { td =>
-    parse(td.name) shouldBe nextWeekendByName(Tuesday)
+    parse(td.name) shouldBe nextWeekendByName(TUESDAY)
   }
 
-  private def lastWeekendByName(weekday: Weekday) = {
+  private def lastWeekendByName(weekday: DayOfWeek) = {
     LastWeekdayByName(weekday)
   }
 
   "last monday" in { td =>
-    parse(td.name) shouldBe lastWeekendByName(Monday)
+    parse(td.name) shouldBe lastWeekendByName(MONDAY)
   }
 
   "last tuesday" in { td =>
-    parse(td.name) shouldBe lastWeekendByName(Tuesday)
+    parse(td.name) shouldBe lastWeekendByName(TUESDAY)
   }
 
   "last january" in { td =>
-    parse(td.name) shouldBe LastMonthByName(January)
+    parse(td.name) shouldBe LastMonthByName(JANUARY)
   }
 
   "next february" in { td =>
-    parse(td.name) shouldBe NextMonthByName(February)
+    parse(td.name) shouldBe NextMonthByName(FEBRUARY)
   }
 
   "last week" in { td =>
@@ -161,7 +162,7 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
   }
 
   "second saturday in september" in { td =>
-    parse(td.name) shouldBe WeekdayInMonth(2, Saturday, September)
+    parse(td.name) shouldBe WeekdayInMonth(2, SATURDAY, SEPTEMBER)
   }
 
   "in 1 day" in { td =>
@@ -293,7 +294,7 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
   }
 
   "for 3 days starting next monday" in { td =>
-    parse(td.name) shouldBe RelativeDateDuration(NextWeekdayByName(Monday),ForDays(3))
+    parse(td.name) shouldBe RelativeDateDuration(NextWeekdayByName(MONDAY),ForDays(3))
   }
 
   "for 8 days starting in 5 weeks" in { td =>
@@ -301,7 +302,7 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
   }
 
   "for 8 days starting second saturday in april" in { td =>
-    parse(td.name) shouldBe RelativeDateDuration(WeekdayInMonth(2, Saturday, April),ForDays(8))
+    parse(td.name) shouldBe RelativeDateDuration(WeekdayInMonth(2, SATURDAY, APRIL),ForDays(8))
   }
 
   "from 9:30 to 12:15" in { td =>
@@ -325,15 +326,15 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
   }
 
   "till friday" in { td =>
-    parse(td.name) shouldBe RelativeDateDuration(InDays(0),UntilWeekday(Friday))
+    parse(td.name) shouldBe RelativeDateDuration(InDays(0),UntilWeekday(FRIDAY))
   }
 
   "until friday" in { td =>
-    parse(td.name) shouldBe RelativeDateDuration(InDays(0),UntilWeekday(Friday))
+    parse(td.name) shouldBe RelativeDateDuration(InDays(0),UntilWeekday(FRIDAY))
   }
 
   "from monday to friday" in { td =>
-    parse(td.name) shouldBe RelativeDateDuration(NextWeekdayByName(Monday),UntilWeekday(Friday))
+    parse(td.name) shouldBe RelativeDateDuration(NextWeekdayByName(MONDAY),UntilWeekday(FRIDAY))
   }
 
   // combinations
@@ -383,11 +384,11 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
   }
 
   "monday 12:00" in { td =>
-    parse(td.name) shouldBe dateTimeEvent(NextWeekdayByName(Monday), AtTime(Time(12,0)))
+    parse(td.name) shouldBe dateTimeEvent(NextWeekdayByName(MONDAY), AtTime(Time(12,0)))
   }
 
   "tuesday at 5 a.m." in { td =>
-    parse(td.name) shouldBe dateTimeEvent(NextWeekdayByName(Tuesday), AtTime(Time(5,0)))
+    parse(td.name) shouldBe dateTimeEvent(NextWeekdayByName(TUESDAY), AtTime(Time(5,0)))
   }
 
   "in 2 days at 6 pm" in { td =>
@@ -407,11 +408,11 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
   }
 
   "first wednesday of march at 22:00" in { td =>
-    parse(td.name) shouldBe dateTimeEvent(WeekdayInMonth(1,Wednesday,March),AtTime(Time(22,0)))
+    parse(td.name) shouldBe dateTimeEvent(WeekdayInMonth(1,WEDNESDAY,MARCH),AtTime(Time(22,0)))
   }
 
   "saturday afternoon" in { td =>
-    parse(td.name) shouldBe dateTimeEvent(NextWeekdayByName(Saturday),AtTime(Time(16,0)))
+    parse(td.name) shouldBe dateTimeEvent(NextWeekdayByName(SATURDAY),AtTime(Time(16,0)))
   }
 
   def parse(line: String): ParseResult = {

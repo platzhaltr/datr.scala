@@ -2,77 +2,78 @@ package org.platzhaltr
 
 import org.scalatest._
 
-import java.time.{Duration, LocalDate, LocalDateTime, ZoneOffset}
+import java.time.{Duration, LocalDate, LocalDateTime, Month, ZoneOffset}
+import java.time.DayOfWeek._
+import java.time.Month._
 import org.threeten.extra.Interval
 
-import Weekday._
 import Month._
 
 class EventSpec extends FlatSpec with Matchers {
 
   it should "interpret last <weekday>" in {
-    val today = LocalDate.of(2014, 6, 27) // Friday
+    val today = LocalDate.of(2014, 6, 27) // FRIDAY
 
-    LastWeekdayByName(Thursday).process(today)  shouldBe LocalDate.of(2014, 6, 26)
-    LastWeekdayByName(Monday).process(today)    shouldBe LocalDate.of(2014, 6, 23)
-    LastWeekdayByName(Tuesday).process(today)   shouldBe LocalDate.of(2014, 6, 24)
-    LastWeekdayByName(Wednesday).process(today) shouldBe LocalDate.of(2014, 6, 25)
-    LastWeekdayByName(Friday).process(today)    shouldBe LocalDate.of(2014, 6, 20)
-    LastWeekdayByName(Saturday).process(today)  shouldBe LocalDate.of(2014, 6, 21)
-    LastWeekdayByName(Sunday).process(today)    shouldBe LocalDate.of(2014, 6, 22)
+    LastWeekdayByName(MONDAY).process(today)    shouldBe LocalDate.of(2014, 6, 23)
+    LastWeekdayByName(TUESDAY).process(today)   shouldBe LocalDate.of(2014, 6, 24)
+    LastWeekdayByName(WEDNESDAY).process(today) shouldBe LocalDate.of(2014, 6, 25)
+    LastWeekdayByName(THURSDAY).process(today)  shouldBe LocalDate.of(2014, 6, 26)
+    LastWeekdayByName(FRIDAY).process(today)    shouldBe LocalDate.of(2014, 6, 20)
+    LastWeekdayByName(SATURDAY).process(today)  shouldBe LocalDate.of(2014, 6, 21)
+    LastWeekdayByName(SUNDAY).process(today)    shouldBe LocalDate.of(2014, 6, 22)
   }
 
   it should "interpret next <weekday>" in {
-    val today = LocalDate.of(2014, 6, 27) // Friday
+    val today = LocalDate.of(2014, 6, 27) // FRIDAY
 
-    NextWeekdayByName(Monday).process(today)    shouldBe LocalDate.of(2014, 6, 30)
-    NextWeekdayByName(Tuesday).process(today)   shouldBe LocalDate.of(2014, 7, 1)
-    NextWeekdayByName(Wednesday).process(today) shouldBe LocalDate.of(2014, 7, 2)
-    NextWeekdayByName(Thursday).process(today)  shouldBe LocalDate.of(2014, 7, 3)
-    NextWeekdayByName(Friday).process(today)    shouldBe LocalDate.of(2014, 7, 4)
-    NextWeekdayByName(Saturday).process(today)  shouldBe LocalDate.of(2014, 6, 28)
-    NextWeekdayByName(Sunday).process(today)    shouldBe LocalDate.of(2014, 6, 29)
+    NextWeekdayByName(MONDAY).process(today)    shouldBe LocalDate.of(2014, 6, 30)
+    NextWeekdayByName(TUESDAY).process(today)   shouldBe LocalDate.of(2014, 7, 1)
+    NextWeekdayByName(WEDNESDAY).process(today) shouldBe LocalDate.of(2014, 7, 2)
+    NextWeekdayByName(THURSDAY).process(today)  shouldBe LocalDate.of(2014, 7, 3)
+    NextWeekdayByName(FRIDAY).process(today)    shouldBe LocalDate.of(2014, 7, 4)
+    NextWeekdayByName(SATURDAY).process(today)  shouldBe LocalDate.of(2014, 6, 28)
+    NextWeekdayByName(SUNDAY).process(today)    shouldBe LocalDate.of(2014, 6, 29)
   }
 
   it should "interpret last <month>" in {
     val today = LocalDate.of(2014, 6, 1)
 
-    LastMonthByName(January).process(today)   shouldBe LocalDate.of(2014, 1, 1)
-    LastMonthByName(February).process(today)  shouldBe LocalDate.of(2014, 2, 1)
-    LastMonthByName(March).process(today)     shouldBe LocalDate.of(2014, 3, 1)
-    LastMonthByName(April).process(today)     shouldBe LocalDate.of(2014, 4, 1)
-    LastMonthByName(May).process(today)       shouldBe LocalDate.of(2014, 5, 1)
-    LastMonthByName(June).process(today)      shouldBe LocalDate.of(2013, 6, 1)
-    LastMonthByName(July).process(today)      shouldBe LocalDate.of(2013, 7, 1)
-    LastMonthByName(August).process(today)    shouldBe LocalDate.of(2013, 8, 1)
-    LastMonthByName(September).process(today) shouldBe LocalDate.of(2013, 9, 1)
-    LastMonthByName(October).process(today)   shouldBe LocalDate.of(2013, 10, 1)
-    LastMonthByName(November).process(today)  shouldBe LocalDate.of(2013, 11, 1)
-    LastMonthByName(December).process(today)  shouldBe LocalDate.of(2013, 12, 1)
+    LastMonthByName(JANUARY).process(today)   shouldBe LocalDate.of(2014, 1, 1)
+    LastMonthByName(FEBRUARY).process(today)  shouldBe LocalDate.of(2014, 2, 1)
+    LastMonthByName(MARCH).process(today)     shouldBe LocalDate.of(2014, 3, 1)
+    LastMonthByName(APRIL).process(today)     shouldBe LocalDate.of(2014, 4, 1)
+    LastMonthByName(MAY).process(today)       shouldBe LocalDate.of(2014, 5, 1)
+    LastMonthByName(JUNE).process(today)      shouldBe LocalDate.of(2013, 6, 1)
+    LastMonthByName(JULY).process(today)      shouldBe LocalDate.of(2013, 7, 1)
+    LastMonthByName(AUGUST).process(today)    shouldBe LocalDate.of(2013, 8, 1)
+    LastMonthByName(SEPTEMBER).process(today) shouldBe LocalDate.of(2013, 9, 1)
+    LastMonthByName(OCTOBER).process(today)   shouldBe LocalDate.of(2013, 10, 1)
+    LastMonthByName(NOVEMBER).process(today)  shouldBe LocalDate.of(2013, 11, 1)
+    LastMonthByName(DECEMBER).process(today)  shouldBe LocalDate.of(2013, 12, 1)
   }
 
   it should "interpret next <month>" in {
     val today = LocalDate.of(2014, 1, 1)
 
-    NextMonthByName(January).process(today)   shouldBe LocalDate.of(2015, 1, 1)
-    NextMonthByName(February).process(today)  shouldBe LocalDate.of(2014, 2, 1)
-    NextMonthByName(March).process(today)     shouldBe LocalDate.of(2014, 3, 1)
-    NextMonthByName(April).process(today)     shouldBe LocalDate.of(2014, 4, 1)
-    NextMonthByName(May).process(today)       shouldBe LocalDate.of(2014, 5, 1)
-    NextMonthByName(June).process(today)      shouldBe LocalDate.of(2014, 6, 1)
-    NextMonthByName(July).process(today)      shouldBe LocalDate.of(2014, 7, 1)
-    NextMonthByName(August).process(today)    shouldBe LocalDate.of(2014, 8, 1)
-    NextMonthByName(September).process(today) shouldBe LocalDate.of(2014, 9, 1)
-    NextMonthByName(October).process(today)   shouldBe LocalDate.of(2014, 10, 1)
-    NextMonthByName(November).process(today)  shouldBe LocalDate.of(2014, 11, 1)
-    NextMonthByName(December).process(today)  shouldBe LocalDate.of(2014, 12, 1)
+    NextMonthByName(JANUARY).process(today)   shouldBe LocalDate.of(2015, 1, 1)
+    NextMonthByName(FEBRUARY).process(today)  shouldBe LocalDate.of(2014, 2, 1)
+    NextMonthByName(MARCH).process(today)     shouldBe LocalDate.of(2014, 3, 1)
+    NextMonthByName(APRIL).process(today)     shouldBe LocalDate.of(2014, 4, 1)
+    NextMonthByName(MAY).process(today)       shouldBe LocalDate.of(2014, 5, 1)
+    NextMonthByName(JUNE).process(today)      shouldBe LocalDate.of(2014, 6, 1)
+    NextMonthByName(JULY).process(today)      shouldBe LocalDate.of(2014, 7, 1)
+    NextMonthByName(AUGUST).process(today)    shouldBe LocalDate.of(2014, 8, 1)
+    NextMonthByName(SEPTEMBER).process(today) shouldBe LocalDate.of(2014, 9, 1)
+    NextMonthByName(OCTOBER).process(today)   shouldBe LocalDate.of(2014, 10, 1)
+    NextMonthByName(NOVEMBER).process(today)  shouldBe LocalDate.of(2014, 11, 1)
+    NextMonthByName(DECEMBER).process(today)  shouldBe LocalDate.of(2014, 12, 1)
   }
 
   it should "interpret <count> <weekday> in <month>" in {
     val today = LocalDate.of(2014, 1, 1)
 
-    WeekdayInMonth(1, Saturday, July).process(today) shouldBe LocalDate.of(2014, 7, 5)
-    WeekdayInMonth(2, Saturday, July).process(today) shouldBe LocalDate.of(2014, 7, 12)
+    WeekdayInMonth(1, SATURDAY, JULY).process(today) shouldBe LocalDate.of(2014, 7, 5)
+    WeekdayInMonth(2, SATURDAY, JULY).process(today) shouldBe LocalDate.of(2014, 7, 12)
   }
 
   it should "interpret <hour>:<minute> if time in future" in {
@@ -140,9 +141,9 @@ class EventSpec extends FlatSpec with Matchers {
 
   it should "interpret 'for <n> days starting next monday'" in {
     val today = LocalDate.of(1970, 6, 20)
-    val nextMonday = LocalDate.of(1970, 6, 22)
+    val nextMONDAY = LocalDate.of(1970, 6, 22)
 
-    RelativeDateDuration(NextWeekdayByName(Monday),ForDays(3)).process(today) shouldBe Interval.of(nextMonday.atStartOfDay.toInstant(ZoneOffset.UTC), Duration.ofDays(3))
+    RelativeDateDuration(NextWeekdayByName(MONDAY),ForDays(3)).process(today) shouldBe Interval.of(nextMONDAY.atStartOfDay.toInstant(ZoneOffset.UTC), Duration.ofDays(3))
   }
 
   it should "interpret 'from <time> [to|till|until] <time>'" in {
@@ -169,21 +170,21 @@ class EventSpec extends FlatSpec with Matchers {
 
   it should "interpret 'till <weekday>'" in {
     val today = LocalDate.of(1970, 6, 20)
-    val nextMonday = LocalDate.of(1970, 6, 22)
+    val nextMONDAY = LocalDate.of(1970, 6, 22)
 
-    val expected = Interval.of(today.atStartOfDay.toInstant(ZoneOffset.UTC), nextMonday.atStartOfDay.toInstant(ZoneOffset.UTC))
+    val expected = Interval.of(today.atStartOfDay.toInstant(ZoneOffset.UTC), nextMONDAY.atStartOfDay.toInstant(ZoneOffset.UTC))
 
-    RelativeDateDuration(InDays(0),UntilWeekday(Monday)).process(today) shouldBe expected
+    RelativeDateDuration(InDays(0),UntilWeekday(MONDAY)).process(today) shouldBe expected
   }
 
   it should "interpret 'from <weekday> to <weekday>'" in {
     val today = LocalDate.of(1970, 6, 20)
-    val nextMonday = LocalDate.of(1970, 6, 22)
-    val fridayAfterMonday = LocalDate.of(1970, 6, 26)
+    val nextMONDAY = LocalDate.of(1970, 6, 22)
+    val fridayAfterMONDAY = LocalDate.of(1970, 6, 26)
 
-    val expected = Interval.of(nextMonday.atStartOfDay.toInstant(ZoneOffset.UTC), fridayAfterMonday.atStartOfDay.toInstant(ZoneOffset.UTC))
+    val expected = Interval.of(nextMONDAY.atStartOfDay.toInstant(ZoneOffset.UTC), fridayAfterMONDAY.atStartOfDay.toInstant(ZoneOffset.UTC))
 
-    RelativeDateDuration(NextWeekdayByName(Monday),UntilWeekday(Friday)).process(today) shouldBe expected
+    RelativeDateDuration(NextWeekdayByName(MONDAY),UntilWeekday(FRIDAY)).process(today) shouldBe expected
   }
 
   // Combinations
@@ -253,14 +254,14 @@ class EventSpec extends FlatSpec with Matchers {
 
   it should "interpret '<cardinal-weekday> <formal-time>', e.g. 'first wednesday of march at 22:00'" in {
     val now  = LocalDateTime.of(2014, 1, 1, 14, 30)
-    val next = DateTimeEvent(WeekdayInMonth(1,Wednesday,March),AtTime(Time(22,0))).process(now)
+    val next = DateTimeEvent(WeekdayInMonth(1,WEDNESDAY,MARCH),AtTime(Time(22,0))).process(now)
 
     next shouldBe LocalDateTime.of(2014, 3, 5, 22, 0)
   }
 
   it should "interpret '<weekday> <fuzzy-time>', e.g. 'saturday afternoon'" in {
     val now  = LocalDateTime.of(2014, 1, 1, 14, 30)
-    val next = DateTimeEvent(NextWeekdayByName(Saturday),AtTime(Time(16,0))).process(now)
+    val next = DateTimeEvent(NextWeekdayByName(SATURDAY),AtTime(Time(16,0))).process(now)
 
     next shouldBe LocalDateTime.of(2014, 1, 4, 16, 0)
   }
