@@ -2,7 +2,7 @@ package org.platzhaltr
 
 import scala.util.{Failure, Success}
 
-import java.time.{LocalDate,LocalDateTime}
+import java.time.{LocalDate, LocalDateTime}
 import org.parboiled2.{ParseError, ErrorFormatter}
 
 object SimpleInterface {
