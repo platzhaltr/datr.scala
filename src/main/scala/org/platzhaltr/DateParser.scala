@@ -96,11 +96,12 @@ class DateParser(val input: ParserInput) extends Parser {
     Next ~ Space ~ SpecificMonth               ~> ((m) => NextMonthByName(m)) |
     Next ~ Space ~ Weeks                       ~> (()  => InWeeks(1)) |
     Next ~ Space ~ Years                       ~> (()  => InYears(1)) |
-    In ~ Space ~ Number ~ Space ~ Days         ~> ((d) => InDays(d)) |
-    In ~ Space ~ Number ~ Space ~ Weeks        ~> ((w) => InWeeks(w)) |
-    In ~ Space ~ Number ~ Space ~ Months       ~> ((m) => InMonths(m)) |
-    In ~ Space ~ Number ~ Space ~ Years        ~> ((y) => InYears(y))
+    In ~ Space ~ (Count | Number) ~ Space ~ Days         ~> ((d) => InDays(d)) |
+    In ~ Space ~ (Count | Number) ~ Space ~ Weeks        ~> ((w) => InWeeks(w)) |
+    In ~ Space ~ (Count | Number) ~ Space ~ Months       ~> ((m) => InMonths(m)) |
+    In ~ Space ~ (Count | Number) ~ Space ~ Years        ~> ((y) => InYears(y))
   }
+
   def RelativeDatesPast = rule {
     Last ~ Space ~ Months                      ~> (()  => InMonths(-1)) |
     Last ~ Space ~ SpecificWeekday             ~> ((w) => LastWeekdayByName(w)) |

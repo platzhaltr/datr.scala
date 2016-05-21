@@ -48,6 +48,10 @@ in 1 day
 in 2 weeks
 in 3 months
 in 4 years
+in one day
+in two weeks
+in three months
+in four years
 one day ago
 two weeks ago
 three months ago

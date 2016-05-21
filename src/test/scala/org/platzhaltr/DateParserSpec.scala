@@ -169,7 +169,15 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
     parse(td.name) shouldBe InDays(1)
   }
 
+  "in one day" in { td =>
+    parse(td.name) shouldBe InDays(1)
+  }
+
   "in 2 weeks" in { td =>
+    parse(td.name) shouldBe InWeeks(2)
+  }
+
+  "in two weeks" in { td =>
     parse(td.name) shouldBe InWeeks(2)
   }
 
@@ -177,7 +185,15 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
     parse(td.name) shouldBe InMonths(3)
   }
 
+  "in three months" in { td =>
+    parse(td.name) shouldBe InMonths(3)
+  }
+
   "in 4 years" in { td =>
+    parse(td.name) shouldBe InYears(4)
+  }
+
+  "in four years" in { td =>
     parse(td.name) shouldBe InYears(4)
   }
 
