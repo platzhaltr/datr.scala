@@ -8,7 +8,7 @@ import org.parboiled2.{ParseError, ErrorFormatter}
 object SimpleInterface {
   val errorFmt = new ErrorFormatter(showTraces = true)
 
-  def read(line: String): Unit = {
+  def read(line: String): String = {
     val parser = new DateParser(line)
     parser.InputLine.run() match {
       case Success(result)        => s"Result: ${format(result)}"
