@@ -1,9 +1,151 @@
 # TODO
 
+## Technical
+
+* have test suite with a reference date and only have simple, but a lot of, integration tests over the parsed dates
+
+## Duckling corpus
+
+[duckling](https://github.com/wit-ai/duckling) is an amazing Clojure library and pretty much achieves what I wanted to achieve with this little grammar. They went and build a stochastic parsing engine that you can train. I have to look into that.
+
+I really like their approach, the code and the names.
+
+They created an abstract parser that returns various types and it's up to the developer to extract what they need.
+
+```
+;; => [{:label :time
+;;        :start 15
+;;        :end 49
+;;        :value {:type "value", :value "2015-01-26T06:00:00.000-02:00", :grain :hour}
+;;        :body "last Monday of January 2015 at 6am"}]
+```
+
+The return type also allows for highlighting of the extracted part.
+
+They are not so constrained by type safety as me, but maybe I can incorporate some of their naming. I like
+
+* grain
+* period
+* shift-duration
+
+The idea of a cycle vs duration. A cycle is something that repeats itself eg. `this week`, will have a different meaning this week and next week.
+
+For now here are some things that work for them but not for me:
+
+```
+now
+mon.
+Mon, February 18
+the 1st of march
+first of march
+march first
+march 3
+march 3 2015
+march 3rd 2015
+march third 2015
+3/3/2015
+3/3/15
+2015-3-3
+on the 15
+on the 15th
+the 15th of february
+15 of february
+february the 15th
+february 15
+2/15
+on 2/15
+February 15
+Aug 8
+October 2014
+10/31/1974
+10/31/74
+10-31-74
+April 14, 2015
+14th April 15
+friday after next
+next March (should result in month)
+March after next
+Sunday, Feb 10
+Wed, Feb13
+Monday, Feb 18
+this week
+this quarter
+next quarter
+last quarter
+4th quarter 2018
+sunday from last week
+last week's sunday
+wednesday of next week
+friday after next
+the day after tomorrow
+the day before yesterday
+last Sunday of March 2014
+last Monday of March
+the week of october 6th
+last day of october 2015
+third tuesday of september 2014
+third tuesday after christmas 2014
+
+3 in the AM
+3 oclock am
+at three am
+3:18a
+@ 3pm
+3 oclock pm
+3 o'clock in the afternoon
+at 15 past 3pm
+half three
+a quarter to noon
+at 7:30 PM on Fri, Sep 20
+at 9am on Saturday
+on Saturday for 9am
+Fri, Jul 18, 2014 07:00 PM
+
+in a sec
+in one minute
+in half an hour
+in 2.5 hours
+in one hourj
+in 1h
+a day from now
+3 years from today
+this summer
+this winter
+xmas
+christmas
+new year's eve
+
+this past weekend
+this week-end
+
+by the end of next month
+by the end of next week
+by EOD
+by EOM
+after lunch
+from 9:30 - 11:00 on Thursday
+July 13-15
+July 13 to 15
+July 13 thru 15
+July 13 through 15
+July 13 - July 15
+Aug 8 - Aug 12
+9:30 - 11:00
+```
+
+## Durations
+
+What do you expect as a result, with input like
+
+`next week`
+
+The whole week or in one week?
+
+What is `yesterday evening`. Shouldn't it be a duration?
+
 ## Location based dates and times
 
-next holiday
-suggest alternatives
+next "holiday"
 
 Locale specific holidays?
 
