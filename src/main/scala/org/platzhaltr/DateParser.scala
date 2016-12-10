@@ -57,6 +57,7 @@ class DateParser(val input: ParserInput) extends Parser {
   }
 
   def RelativeTimes = rule {
+    Now                                        ~> (() => InSeconds(0)) |
     In ~ Space ~ Number ~ Space ~ Seconds      ~> ((s) => InSeconds(s)) |
     In ~ Space ~ Number ~ Space ~ Minutes      ~> ((m) => InMinutes(m)) |
     In ~ Space ~ Number ~ Space ~ Hours        ~> ((h) => InHours(h)) |

@@ -287,6 +287,10 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
 
   // relaxed times
 
+  "now" in { td =>
+    parse(td.name) shouldBe InSeconds(0)
+  }
+
   "10 seconds ago" in { td =>
     parse(td.name) shouldBe InSeconds(-10)
   }
