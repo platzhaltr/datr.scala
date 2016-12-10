@@ -105,6 +105,10 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
     NextWeekdayByName(weekday)
   }
 
+  "mon." in { td =>
+    parse(td.name) shouldBe nextWeekendByName(MONDAY)
+  }
+
   "saturday" in { td =>
     parse(td.name) shouldBe nextWeekendByName(SATURDAY)
   }

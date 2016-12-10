@@ -221,13 +221,13 @@ class DateParser(val input: ParserInput) extends Parser {
   def Pm         = rule { ignoreCase("p") ~ optional (Dot) ~ ignoreCase("m") ~ optional(Dot) }
 
   def SpecificWeekday = rule {Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday}
-  def Monday          = rule {(ignoreCase("monday")    | ignoreCase("mon")) ~> (() => DayOfWeek.MONDAY )}
-  def Tuesday         = rule {(ignoreCase("tuesday")   | ignoreCase("tue")) ~> (() => DayOfWeek.TUESDAY )}
-  def Wednesday       = rule {(ignoreCase("wednesday") | ignoreCase("wed")) ~> (() => DayOfWeek.WEDNESDAY )}
-  def Thursday        = rule {(ignoreCase("thursday")  | ignoreCase("thu")) ~> (() => DayOfWeek.THURSDAY )}
-  def Friday          = rule {(ignoreCase("friday")    | ignoreCase("fri")) ~> (() => DayOfWeek.FRIDAY )}
-  def Saturday        = rule {(ignoreCase("saturday")  | ignoreCase("sat")) ~> (() => DayOfWeek.SATURDAY )}
-  def Sunday          = rule {(ignoreCase("sunday")    | ignoreCase("sun")) ~> (() => DayOfWeek.SUNDAY )}
+  def Monday          = rule {(ignoreCase("monday")    | (ignoreCase("mon") ~ optional (Dot))) ~> (() => DayOfWeek.MONDAY )}
+  def Tuesday         = rule {(ignoreCase("tuesday")   | (ignoreCase("tue") ~ optional (Dot))) ~> (() => DayOfWeek.TUESDAY )}
+  def Wednesday       = rule {(ignoreCase("wednesday") | (ignoreCase("wed") ~ optional (Dot))) ~> (() => DayOfWeek.WEDNESDAY )}
+  def Thursday        = rule {(ignoreCase("thursday")  | (ignoreCase("thu") ~ optional (Dot))) ~> (() => DayOfWeek.THURSDAY )}
+  def Friday          = rule {(ignoreCase("friday")    | (ignoreCase("fri") ~ optional (Dot))) ~> (() => DayOfWeek.FRIDAY )}
+  def Saturday        = rule {(ignoreCase("saturday")  | (ignoreCase("sat") ~ optional (Dot))) ~> (() => DayOfWeek.SATURDAY )}
+  def Sunday          = rule {(ignoreCase("sunday")    | (ignoreCase("sun") ~ optional (Dot))) ~> (() => DayOfWeek.SUNDAY )}
 
   def SpecificMonth = rule {January | Febuary | March | April | May | June | July | August | September | October | November | December}
   def January       = rule {(ignoreCase("january")   | ignoreCase("jan")) ~> (() => Month.JANUARY )}
