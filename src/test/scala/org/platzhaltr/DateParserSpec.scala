@@ -141,6 +141,18 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
     parse(td.name) shouldBe LastMonthByName(JANUARY)
   }
 
+  "january" in { td =>
+    parse(td.name) shouldBe NextMonthByName(JANUARY)
+  }
+
+  "apr." in { td =>
+    parse(td.name) shouldBe NextMonthByName(APRIL)
+  }
+
+  "in dec." in { td =>
+    parse(td.name) shouldBe NextMonthByName(DECEMBER)
+  }
+
   "next february" in { td =>
     parse(td.name) shouldBe NextMonthByName(FEBRUARY)
   }
