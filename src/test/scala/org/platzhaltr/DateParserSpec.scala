@@ -67,6 +67,14 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
     parse(td.name) shouldBe onDate(8,1)
   }
 
+  "first march" in { td =>
+    parse(td.name) shouldBe onDate(3,1)
+  }
+
+  "the 2nd of april" in { td =>
+    parse(td.name) shouldBe onDate(4,2)
+  }
+
   "on 2nd August 2015" in { td =>
     parse(td.name) shouldBe onDate(8,2,Some(2015))
   }

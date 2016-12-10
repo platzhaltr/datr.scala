@@ -21,6 +21,8 @@ on 20140820
 on 1984/04/02
 20/02/1980
 1st August
+first march
+the 2nd of april
 2nd August 2015
 on 3rd Sep 2015
 on 4th Dec
@@ -67,8 +69,6 @@ four years ago
 5:00
 16:00
 at 2:00
-@ 3:00
-6pm
 5:30 a.m.
 at 7 pm
 ```

@@ -70,7 +70,7 @@ class DateParser(val input: ParserInput) extends Parser {
   }
 
   def AbsoluteDates = rule {
-    optional(On ~ Space) ~ (FormalDate | IsoDate | LittleEndianDate) ~> ((d) => OnDate(d))
+    optional((On|The) ~ Space) ~ (FormalDate | IsoDate | LittleEndianDate) ~> ((d) => OnDate(d))
   }
 
   def RelativeDates = rule {
@@ -163,6 +163,7 @@ class DateParser(val input: ParserInput) extends Parser {
   def Till         = rule { ignoreCase("till") }
   def To           = rule { ignoreCase("to") }
   def Th           = rule { ignoreCase("th") }
+  def The          = rule { ignoreCase("the") }
   def Until        = rule { ignoreCase("until") }
   def UnTill       = rule { Till | Until }
 
@@ -199,7 +200,7 @@ class DateParser(val input: ParserInput) extends Parser {
    DayDigits ~ optional(Dot | Th) ~ Space ~ SpecificMonth ~ Space ~ YearDigits ~> ((d,m,y) => new Date(m.getValue,d,Some(y))) |
    DayDigits ~ optional(Dot | Th) ~ Space ~ SpecificMonth ~> ((d,m) => new Date(m.getValue,d)) |
    Cardinal ~ Space ~ SpecificMonth ~ Space ~ YearDigits ~> ((d,m,y) => new Date(m.getValue,d,Some(y))) |
-   Cardinal ~ Space ~ SpecificMonth ~ Space ~> ((d,m) => new Date(m.getValue,d))
+   Cardinal ~ Space ~ optional(Of) ~ Space ~ SpecificMonth ~> ((d,m) => new Date(m.getValue,d))
   }
   def IsoDate      = rule { YearDigits ~ optional(Dash | Slash) ~ MonthDigits ~ optional(Dash | Slash) ~ DayDigits ~> ((y,m,d) => new Date(m,d, Some(y))) }
   def LittleEndianDate = rule { DayDigits ~ optional(Dash | Slash) ~ MonthDigits ~ optional(Dash | Slash) ~ YearDigits ~> ((d,m,y) => new Date(m,d, Some(y))) }

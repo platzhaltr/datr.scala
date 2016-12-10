@@ -34,8 +34,6 @@ For now here are some things that work for them but not for me:
 
 ```
 Mon, February 18
-the 1st of march
-first of march
 march first
 march 3
 march 3 2015
@@ -106,6 +104,7 @@ in one hourj
 in 1h
 a day from now
 3 years from today
+
 this summer
 this winter
 xmas
