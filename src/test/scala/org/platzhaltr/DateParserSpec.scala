@@ -185,6 +185,10 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
     parse(td.name) shouldBe WeekdayInMonth(2, SATURDAY, SEPTEMBER)
   }
 
+  "second sat in sep" in { td =>
+    parse(td.name) shouldBe WeekdayInMonth(2, SATURDAY, SEPTEMBER)
+  }
+
   "in 1 day" in { td =>
     parse(td.name) shouldBe InDays(1)
   }

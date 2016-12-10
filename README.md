@@ -33,6 +33,8 @@ today
 tomorrow
 yesterday
 saturday
+mon
+tue.
 last wednesday
 last september
 last week
@@ -44,6 +46,7 @@ next month
 next year
 first saturday in september
 second monday in december
+second mon in dec
 in 1 day
 in 2 weeks
 in 3 months
@@ -72,6 +75,7 @@ at 7 pm
 **Relaxed times**
 
 ```
+now
 10 seconds ago
 in 5 minutes
 4 hours from now
