@@ -151,7 +151,7 @@ class DateParser(val input: ParserInput) extends Parser {
   def Five         = rule { ignoreCase("five")  ~> (() => 5)}
 
   def Ago          = rule { ignoreCase("ago") }
-  def At           = rule { ignoreCase("at") }
+  def At           = rule { ignoreCase("at") | "@" }
   def For          = rule { ignoreCase("for") }
   def From         = rule { ignoreCase("from") }
   def FromNow      = rule { From ~ Space ~ Now }

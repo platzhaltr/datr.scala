@@ -251,6 +251,10 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
     parse(td.name) shouldBe atTime(2,0)
   }
 
+  "@ 3:00" in { td =>
+    parse(td.name) shouldBe atTime(3,0)
+  }
+
   "6pm" in { td =>
     parse(td.name) shouldBe atTime(18,0)
   }

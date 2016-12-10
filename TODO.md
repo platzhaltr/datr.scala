@@ -88,7 +88,6 @@ third tuesday after christmas 2014
 3 oclock am
 at three am
 3:18a
-@ 3pm
 3 oclock pm
 3 o'clock in the afternoon
 at 15 past 3pm
