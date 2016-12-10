@@ -230,16 +230,16 @@ class DateParser(val input: ParserInput) extends Parser {
   def Sunday          = rule {(ignoreCase("sunday")    | (ignoreCase("sun") ~ optional (Dot))) ~> (() => DayOfWeek.SUNDAY )}
 
   def SpecificMonth = rule {January | Febuary | March | April | May | June | July | August | September | October | November | December}
-  def January       = rule {(ignoreCase("january")   | ignoreCase("jan")) ~> (() => Month.JANUARY )}
-  def Febuary       = rule {(ignoreCase("february")  | ignoreCase("feb")) ~> (() => Month.FEBRUARY )}
-  def March         = rule {(ignoreCase("march")     | ignoreCase("mar")) ~> (() => Month.MARCH )}
-  def April         = rule {(ignoreCase("april")     | ignoreCase("apr")) ~> (() => Month.APRIL )}
-  def May           = rule {(ignoreCase("may"))                           ~> (() => Month.MAY )}
-  def June          = rule {(ignoreCase("june")      | ignoreCase("jun")) ~> (() => Month.JUNE )}
-  def July          = rule {(ignoreCase("july")      | ignoreCase("jul")) ~> (() => Month.JULY )}
-  def August        = rule {(ignoreCase("august")    | ignoreCase("aug")) ~> (() => Month.AUGUST )}
-  def September     = rule {(ignoreCase("september") | ignoreCase("sept") | ignoreCase("sep")) ~> (() => Month.SEPTEMBER )}
-  def October       = rule {(ignoreCase("october")   | ignoreCase("oct")) ~> (() => Month.OCTOBER )}
-  def November      = rule {(ignoreCase("november")  | ignoreCase("nov")) ~> (() => Month.NOVEMBER )}
-  def December      = rule {(ignoreCase("december")  | ignoreCase("dec")) ~> (() => Month.DECEMBER )}
+  def January       = rule {(ignoreCase("january")   | (ignoreCase("jan") ~ optional (Dot))) ~> (() => Month.JANUARY )}
+  def Febuary       = rule {(ignoreCase("february")  | (ignoreCase("feb") ~ optional (Dot))) ~> (() => Month.FEBRUARY )}
+  def March         = rule {(ignoreCase("march")     | (ignoreCase("mar") ~ optional (Dot))) ~> (() => Month.MARCH )}
+  def April         = rule {(ignoreCase("april")     | (ignoreCase("apr") ~ optional (Dot))) ~> (() => Month.APRIL )}
+  def May           = rule {(ignoreCase("may") ~ optional (Dot))                             ~> (() => Month.MAY )}
+  def June          = rule {(ignoreCase("june")      | (ignoreCase("jun") ~ optional (Dot))) ~> (() => Month.JUNE )}
+  def July          = rule {(ignoreCase("july")      | (ignoreCase("jul") ~ optional (Dot))) ~> (() => Month.JULY )}
+  def August        = rule {(ignoreCase("august")    | (ignoreCase("aug") ~ optional (Dot))) ~> (() => Month.AUGUST )}
+  def September     = rule {(ignoreCase("september") | (ignoreCase("sept") | ignoreCase("sep") ~ optional (Dot))) ~> (() => Month.SEPTEMBER )}
+  def October       = rule {(ignoreCase("october")   | (ignoreCase("oct") ~ optional (Dot))) ~> (() => Month.OCTOBER )}
+  def November      = rule {(ignoreCase("november")  | (ignoreCase("nov") ~ optional (Dot))) ~> (() => Month.NOVEMBER )}
+  def December      = rule {(ignoreCase("december")  | (ignoreCase("dec") ~ optional (Dot))) ~> (() => Month.DECEMBER )}
 }
