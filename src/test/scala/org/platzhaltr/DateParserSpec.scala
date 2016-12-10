@@ -121,16 +121,16 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
     parse(td.name) shouldBe nextWeekdayByName(TUESDAY)
   }
 
-  private def lastWeekendByName(weekday: DayOfWeek) = {
+  private def lastWeekdayByName(weekday: DayOfWeek) = {
     LastWeekdayByName(weekday)
   }
 
   "last monday" in { td =>
-    parse(td.name) shouldBe lastWeekendByName(MONDAY)
+    parse(td.name) shouldBe lastWeekdayByName(MONDAY)
   }
 
   "last tuesday" in { td =>
-    parse(td.name) shouldBe lastWeekendByName(TUESDAY)
+    parse(td.name) shouldBe lastWeekdayByName(TUESDAY)
   }
 
   "last january" in { td =>
