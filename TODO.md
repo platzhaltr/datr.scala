@@ -33,8 +33,6 @@ The idea of a cycle vs duration. A cycle is something that repeats itself eg. `t
 For now here are some things that work for them but not for me:
 
 ```
-now
-mon.
 Mon, February 18
 the 1st of march
 first of march
