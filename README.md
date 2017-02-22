@@ -32,6 +32,7 @@ on 4th Dec
 
 ```
 today
+tom
 tomorrow
 yesterday
 saturday

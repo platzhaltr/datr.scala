@@ -171,7 +171,7 @@ class DateParser(val input: ParserInput) extends Parser {
   def Next         = rule { ignoreCase("next") }
 
   def Today        = rule { ignoreCase("today") }
-  def Tomorrow     = rule { ignoreCase("tomorrow") }
+  def Tomorrow     = rule { ignoreCase("tom") ~ optional(ignoreCase("orrow")) }
   def Yesterday    = rule { ignoreCase("yesterday") }
 
   def Seconds      = rule { ignoreCase("second") ~ optional(ignoreCase("s")) }

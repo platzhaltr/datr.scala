@@ -101,6 +101,10 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
     parse(td.name) shouldBe inDays(0)
   }
 
+  "tom" in { td =>
+    parse(td.name) shouldBe inDays(1)
+  }
+
   "tomorrow" in { td =>
     parse(td.name) shouldBe inDays(1)
   }
