@@ -377,6 +377,10 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
     parse(td.name) shouldBe RelativeDateDuration(WeekdayInMonth(2, SATURDAY, APRIL),ForDays(8))
   }
 
+  "from 5 to 7" in { td =>
+    parse(td.name) shouldBe FromTimeToTime(AtTime(Time(5,0)), AtTime(Time(7,0)))
+  }
+
   "from 9:30 to 12:15" in { td =>
     parse(td.name) shouldBe FromTimeToTime(AtTime(Time(9,30)), AtTime(Time(12,15)))
   }

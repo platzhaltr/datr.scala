@@ -102,6 +102,7 @@ for 3 minutes
 for 6 hours
 until 17
 until 8pm
+from 5 to 7
 from 13:00 to 8:30
 from 9:00 till 12:15
 from 10pm to 12pm
