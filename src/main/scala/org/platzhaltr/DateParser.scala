@@ -119,12 +119,15 @@ class DateParser(val input: ParserInput) extends Parser {
   }
 
   def TimeDurations = rule {
-    DurationPrefix ~ Seconds                   ~> (ForSeconds(_)) |
-    DurationPrefix ~ Minutes                   ~> (ForMinutes(_)) |
-    DurationPrefix ~ Hours                     ~> (ForHours(_)) |
-    From ~ Space ~ AbsoluteTimes ~ Space ~ (To | UnTill) ~ Space ~ AbsoluteTimes ~> (FromTimeToTime(_,_)) |
-    UnTill ~ Space ~ AbsoluteTimes             ~> (UntilTime(_))
+    DurationPrefix ~ Seconds       ~> (ForSeconds(_)) |
+    DurationPrefix ~ Minutes       ~> (ForMinutes(_)) |
+    DurationPrefix ~ Hours         ~> (ForHours(_)) |
+    FromTime ~ Space ~ ToTime      ~> (FromTimeToTime(_,_)) |
+    UnTill ~ Space ~ AbsoluteTimes ~> (UntilTime(_))
   }
+
+  def FromTime = rule { From ~ Space ~ AbsoluteTimes }
+  def ToTime = rule { (To | UnTill) ~ Space ~ AbsoluteTimes }
 
   def DateDurations = rule {
     DurationPrefix ~ Days ~ Space ~ Starting ~ Space ~ RelativeDates ~> ((d, e) => RelativeDateDuration(e,ForDays(d))) |
