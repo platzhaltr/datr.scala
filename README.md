@@ -68,8 +68,10 @@ four years ago
 
 ```
 5:00
+16
 16:00
 at 2:00
+at 5
 5:30 a.m.
 at 7 pm
 ```
@@ -127,6 +129,7 @@ tuesday at 5 a.m.
 24. Dec at 8 pm
 in 2 days at 6 pm
 in 4 weeks at 12:00
+in 6 weeks at 20
 in 3 months at 8 a.m.
 in 1 year at 20:00
 first wednesday of march at 22:00

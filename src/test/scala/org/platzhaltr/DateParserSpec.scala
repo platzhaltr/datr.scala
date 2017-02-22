@@ -255,12 +255,20 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
     AtTime(Time(hours,minutes))
   }
 
+  "5" in { td =>
+    parse(td.name) shouldBe atTime(5,0)
+  }
+
   "5:00" in { td =>
     parse(td.name) shouldBe atTime(5,0)
   }
 
   "at 2:00" in { td =>
     parse(td.name) shouldBe atTime(2,0)
+  }
+
+  "at 20:00" in { td =>
+    parse(td.name) shouldBe atTime(20,0)
   }
 
   "@ 3:00" in { td =>
@@ -423,6 +431,10 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
     parse(td.name) shouldBe onDateTime(12,24,20,0)
   }
 
+  "on 24. Dec 20" in { td =>
+    parse(td.name) shouldBe onDateTime(12,24,20,0)
+  }
+
   "on 24. Dec at 8 pm" in { td =>
     parse(td.name) shouldBe onDateTime(12,24,20,0)
   }
@@ -457,6 +469,10 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
 
   "in 4 weeks at 12:00" in { td =>
     parse(td.name) shouldBe dateTimeEvent(InWeeks(4),AtTime(Time(12,0)))
+  }
+
+  "in 6 weeks at 18:00" in { td =>
+    parse(td.name) shouldBe dateTimeEvent(InWeeks(6),AtTime(Time(18,0)))
   }
 
   "in 3 months at 8 a.m" in { td =>

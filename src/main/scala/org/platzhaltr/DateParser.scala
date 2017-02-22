@@ -45,7 +45,7 @@ class DateParser(val input: ParserInput) extends Parser {
   def FormalTimes = rule {
     TwelveHourTime                             ~> ((t) => AtTime(t)) |
     IsoTime                                    ~> ((t) => AtTime(t)) |
-    At ~ Space ~ TwelveHourTime                ~> ((t) => AtTime(t)) |
+    At ~ Space ~ TwelveHourTime                ~> ((t) => AtTime(t))|
     At ~ Space ~ IsoTime                       ~> ((t) => AtTime(t))
   }
 
@@ -208,7 +208,13 @@ class DateParser(val input: ParserInput) extends Parser {
   def MonthDigits  = rule { capture("0" ~ CharPredicate.Digit | "1" ~ anyOf("012" )) ~> (_.toInt) }
   def DayDigits    = rule { capture(anyOf("012") ~ CharPredicate.Digit | "3" ~ anyOf("01" )) ~> (_.toInt) }
 
-  def IsoTime      = rule { HourDigits ~ Colon ~ MinuteDigits ~> ((h,m) => new Time(h, m)) }
+  def IsoTime      = rule {
+    FullIsoTime | HoursOnly
+  }
+
+  def FullIsoTime  = rule { HourDigits ~ Colon ~ MinuteDigits ~> ((h,m) => new Time(h, m)) }
+  def HoursOnly    = rule { HourDigits ~ &(Space ~ EOI) ~> ((h) => new Time(h.toInt, 0))  }
+
   def HourDigits   = rule { capture(anyOf("01") ~ optional(CharPredicate.Digit) | ("2" ~ optional(anyOf("01234" ))) | anyOf("3456789")) ~> (_.toInt) }
   def MinuteDigits = rule { capture(anyOf("012345") ~ optional(CharPredicate.Digit)) ~> (_.toInt) }
 
