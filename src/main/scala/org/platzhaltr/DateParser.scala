@@ -122,7 +122,8 @@ class DateParser(val input: ParserInput) extends Parser {
     DurationPrefix ~ Seconds       ~> (ForSeconds(_)) |
     DurationPrefix ~ Minutes       ~> (ForMinutes(_)) |
     DurationPrefix ~ Hours         ~> (ForHours(_)) |
-    FromTime ~ Space ~ ToTime      ~> (FromTimeToTime(_,_)) |
+    FromTime ~ Space ~ ToTime ~ Space ~ RelativeDates ~> ((f, t, d) => FromTimeToTime(f,t,Some(d))) |
+    FromTime ~ Space ~ ToTime      ~> (FromTimeToTime(_,_, None)) |
     UnTill ~ Space ~ AbsoluteTimes ~> (UntilTime(_))
   }
 
@@ -217,7 +218,7 @@ class DateParser(val input: ParserInput) extends Parser {
   }
 
   def FullIsoTime  = rule { HourDigits ~ Colon ~ MinuteDigits ~> ((h,m) => new Time(h, m)) }
-  def HoursOnly    = rule { HourDigits ~ &(Space ~ (To | EOI)) ~> ((h) => new Time(h.toInt, 0))  }
+  def HoursOnly    = rule { HourDigits ~ &(Space ~ (To | Next | EOI)) ~> ((h) => new Time(h.toInt, 0))  }
 
   def HourDigits   = rule { capture(anyOf("01") ~ optional(CharPredicate.Digit) | ("2" ~ optional(anyOf("01234" ))) | anyOf("3456789")) ~> (_.toInt) }
   def MinuteDigits = rule { capture(anyOf("012345") ~ optional(CharPredicate.Digit)) ~> (_.toInt) }

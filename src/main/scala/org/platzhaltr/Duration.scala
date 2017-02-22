@@ -38,11 +38,20 @@ case class ForDays(days: Int) extends DateDuration {
   }
 }
 
-case class FromTimeToTime(from: AtTime, to: AtTime) extends TimeDuration {
+case class FromTimeToTime(from: AtTime, to: AtTime, dateEvent: Option[DateEvent] = None) extends TimeDuration {
   override def process(now: LocalDateTime): Interval = {
-    val fromTime = from.process(now)
-    // TODO which time zone?
-    Interval.of(fromTime.toInstant(ZoneOffset.UTC), to.process(fromTime).toInstant(ZoneOffset.UTC))
+    dateEvent match {
+      case None =>
+        val fromTime = from.process(now)
+        // TODO which time zone?
+        Interval.of(fromTime.toInstant(ZoneOffset.UTC), to.process(fromTime).toInstant(ZoneOffset.UTC))
+      case Some(date) =>
+        val fromTime = from.process(now).toLocalTime
+        val toTime = to.process(now).toLocalTime
+        val day = date.process(now.toLocalDate)
+        // TODO which time zone?
+        Interval.of(day.atTime(fromTime).toInstant(ZoneOffset.UTC), day.atTime(toTime).toInstant(ZoneOffset.UTC))
+    }
   }
 }
 
