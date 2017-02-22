@@ -35,6 +35,18 @@ class EventSpec extends FlatSpec with Matchers {
     NextWeekdayByName(SUNDAY).process(today)    shouldBe LocalDate.of(2014, 6, 29)
   }
 
+  it should "interpret next week <weekday>" in {
+    val today = LocalDate.of(2014, 6, 27) // FRIDAY
+
+    NextWeekWeekdayByName(MONDAY).process(today)    shouldBe LocalDate.of(2014, 6, 30)
+    NextWeekWeekdayByName(TUESDAY).process(today)   shouldBe LocalDate.of(2014, 7, 1)
+    NextWeekWeekdayByName(WEDNESDAY).process(today) shouldBe LocalDate.of(2014, 7, 2)
+    NextWeekWeekdayByName(THURSDAY).process(today)  shouldBe LocalDate.of(2014, 7, 3)
+    NextWeekWeekdayByName(FRIDAY).process(today)    shouldBe LocalDate.of(2014, 7, 4)
+    NextWeekWeekdayByName(SATURDAY).process(today)  shouldBe LocalDate.of(2014, 7, 5)
+    NextWeekWeekdayByName(SUNDAY).process(today)    shouldBe LocalDate.of(2014, 7, 6)
+  }
+
   it should "interpret last <month>" in {
     val today = LocalDate.of(2014, 6, 1)
 

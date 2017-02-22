@@ -44,6 +44,7 @@ last week
 last month
 last year
 next thursday
+next week sat
 next week
 next month
 next year
@@ -132,6 +133,7 @@ in 4 weeks at 12:00
 in 6 weeks at 20
 in 3 months at 8 a.m.
 in 1 year at 20:00
+next week tue 5
 first wednesday of march at 22:00
 saturday afternoon
 ```

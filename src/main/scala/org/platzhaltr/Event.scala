@@ -27,6 +27,13 @@ case class LastWeekdayByName(weekday: DayOfWeek) extends DateEvent {
 case class NextWeekdayByName(weekday: DayOfWeek) extends DateEvent {
   override def process(now: LocalDate) = now.plusDays(Calendar.roll(now.getDayOfWeek.getValue, weekday.getValue, 7))
 }
+case class NextWeekWeekdayByName(weekday: DayOfWeek) extends DateEvent {
+  override def process(now: LocalDate) =
+  if (weekday.getValue == 1)
+    NextWeekdayByName(weekday).process(now)
+	else
+    NextWeekdayByName(weekday).process(NextWeekdayByName(DayOfWeek.MONDAY).process(now))
+}
 case class LastMonthByName(month: Month) extends DateEvent {
   override def process(now: LocalDate) = now.minusMonths(Calendar.roll(month.getValue, now.getMonthValue, 12))
 }

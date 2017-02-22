@@ -133,6 +133,10 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
     parse(td.name) shouldBe nextWeekdayByName(TUESDAY)
   }
 
+  "next week tuesday" in { td =>
+    parse(td.name) shouldBe NextWeekWeekdayByName(TUESDAY)
+  }
+
   private def lastWeekdayByName(weekday: DayOfWeek) = {
     LastWeekdayByName(weekday)
   }
@@ -481,6 +485,10 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
 
   "in 1 year at 20:00" in { td =>
     parse(td.name) shouldBe dateTimeEvent(InYears(1),AtTime(Time(20,0)))
+  }
+
+  "next week tue 5" in { td =>
+    parse(td.name) shouldBe dateTimeEvent(NextWeekWeekdayByName(TUESDAY),AtTime(Time(5,0)))
   }
 
   "first wednesday of march at 22:00" in { td =>
