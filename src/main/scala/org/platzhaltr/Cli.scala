@@ -28,7 +28,7 @@ object Cli extends App {
       }
     case Failure(e: ParseError) =>
       println(s"Invalid expression: ${parser.formatError(e, ErrorFmt)}")
-      System.exit(0)
+      System.exit(1)
     case Failure(e)             =>
       println(s"Unexpected error: ${e}")
       System.exit(1)
