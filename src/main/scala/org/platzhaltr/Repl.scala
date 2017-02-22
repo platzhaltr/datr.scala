@@ -7,7 +7,7 @@ import scala.util.{Failure, Success}
 import java.time.{LocalDate,LocalDateTime}
 import org.parboiled2.{ParseError, ErrorFormatter}
 
-object Repl extends App {
+object Repl {
   repl()
 
   @tailrec
