@@ -22,9 +22,12 @@ object Cli extends App {
         case timeEvent: TimeEvent =>
           val now = LocalDateTime.now
           println(s"${timeEvent.process(now)}")
-        case _ =>
-          println(s"Durations are not supported for now")
-          System.exit(1)
+        case dateDuration: DateDuration =>
+          val today = LocalDate.now
+          println(s"${dateDuration.process(today)}")
+        case timeDuration: TimeDuration =>
+          val now = LocalDateTime.now
+          println(s"${timeDuration.process(now)}")
       }
     case Failure(e: ParseError) =>
       println(s"Invalid expression: ${parser.formatError(e, ErrorFmt)}")
