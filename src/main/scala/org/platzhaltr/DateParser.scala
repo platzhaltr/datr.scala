@@ -45,7 +45,7 @@ class DateParser(val input: ParserInput) extends Parser {
   def FormalTimes = rule {
     TwelveHourTime                             ~> ((t) => AtTime(t)) |
     IsoTime                                    ~> ((t) => AtTime(t)) |
-    At ~ Space ~ TwelveHourTime                ~> ((t) => AtTime(t))|
+    At ~ Space ~ TwelveHourTime                ~> ((t) => AtTime(t)) |
     At ~ Space ~ IsoTime                       ~> ((t) => AtTime(t))
   }
 
@@ -57,7 +57,7 @@ class DateParser(val input: ParserInput) extends Parser {
   }
 
   def RelativeTimes = rule {
-    Now                                        ~> (() => InSeconds(0)) |
+    Now                                        ~> (()  => InSeconds(0)) |
     In ~ Space ~ Number ~ Space ~ Seconds      ~> ((s) => InSeconds(s)) |
     In ~ Space ~ Number ~ Space ~ Minutes      ~> ((m) => InMinutes(m)) |
     In ~ Space ~ Number ~ Space ~ Hours        ~> ((h) => InHours(h)) |
@@ -89,7 +89,6 @@ class DateParser(val input: ParserInput) extends Parser {
     Tomorrow                                   ~> (()  => InDays(1)) |
     Yesterday                                  ~> (()  => InDays(-1))
   }
-
 
   def RelativeDatesFuture = rule {
     SpecificWeekday                            ~> ((w) => NextWeekdayByName(w)) |
