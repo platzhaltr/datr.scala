@@ -139,10 +139,11 @@ first wednesday of march at 22:00
 saturday afternoon
 ```
 
-*Durations with relative dates* This is still experimental as I'm solving backtracking issues. For now only relative dates beginning with `next` are working
+*Durations with relative dates* This is still experimental as I'm solving backtracking issues.
 
 ```
 from 9:30 until 12:15 next sunday
+from 14 to 15 on mon
 ```
 
 ## Resources

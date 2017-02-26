@@ -99,6 +99,7 @@ class DateParser(val input: ParserInput) extends Parser {
     Next ~ Space ~ SpecificMonth               ~> ((m) => NextMonthByName(m)) |
     Next ~ Space ~ Weeks                       ~> (()  => InWeeks(1)) |
     Next ~ Space ~ Years                       ~> (()  => InYears(1)) |
+    On ~ Space ~ SpecificWeekday             ~> ((w) => NextWeekdayByName(w)) |
     In ~ Space ~ SpecificMonth                 ~> ((m) => NextMonthByName(m)) |
     In ~ Space ~ (Count | Number) ~ Space ~ Days         ~> ((d) => InDays(d)) |
     In ~ Space ~ (Count | Number) ~ Space ~ Weeks        ~> ((w) => InWeeks(w)) |
@@ -218,7 +219,7 @@ class DateParser(val input: ParserInput) extends Parser {
   }
 
   def FullIsoTime  = rule { HourDigits ~ Colon ~ MinuteDigits ~> ((h,m) => new Time(h, m)) }
-  def HoursOnly    = rule { HourDigits ~ &(Space ~ (To | Next | EOI)) ~> ((h) => new Time(h.toInt, 0))  }
+  def HoursOnly    = rule { HourDigits ~ &(Space ~ (To | Next | On |  EOI)) ~> ((h) => new Time(h.toInt, 0))  }
 
   def HourDigits   = rule { capture(anyOf("01") ~ optional(CharPredicate.Digit) | ("2" ~ optional(anyOf("01234" ))) | anyOf("3456789")) ~> (_.toInt) }
   def MinuteDigits = rule { capture(anyOf("012345") ~ optional(CharPredicate.Digit)) ~> (_.toInt) }
