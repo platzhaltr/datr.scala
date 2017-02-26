@@ -64,6 +64,14 @@ class DurationSpec extends FlatSpec with Matchers {
     FromTimeToTime(AtTime(Time(18,30)), AtTime(Time(19,0))).process(now) shouldBe Interval.of(from.toInstant(ZoneOffset.UTC), to.toInstant(ZoneOffset.UTC))
   }
 
+  it should "interpret 'from <time> [to|till|until] <time> next <weekday>'" in {
+    val now = LocalDateTime.of(2014, 1, 1, 14, 0)
+    val from = LocalDateTime.of(2014, 1, 6, 14, 0)
+    val to = LocalDateTime.of(2014, 1, 6, 15, 0)
+
+    FromTimeToTime(AtTime(Time(14,0)), AtTime(Time(15,0)), Some(NextWeekdayByName(MONDAY))).process(now) shouldBe Interval.of(from.toInstant(ZoneOffset.UTC), to.toInstant(ZoneOffset.UTC))
+  }
+
   it should "interpret 'till <time>'" in {
     val now = LocalDateTime.of(2014, 1, 1, 18, 30)
     val next = LocalDateTime.of(2014, 1, 1, 19, 0)

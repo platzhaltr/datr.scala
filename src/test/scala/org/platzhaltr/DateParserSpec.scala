@@ -397,6 +397,10 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
     parse(td.name) shouldBe FromTimeToTime(AtTime(Time(9,30)), AtTime(Time(12,15)), Some(NextWeekdayByName(SUNDAY)))
   }
 
+  "from 14 to 15 next mon" in { td =>
+    parse(td.name) shouldBe FromTimeToTime(AtTime(Time(14,0)), AtTime(Time(15,0)), Some(NextWeekdayByName(MONDAY)))
+  }
+
   "till 12:15" in { td =>
     parse(td.name) shouldBe UntilTime(AtTime(Time(12,15)))
   }
