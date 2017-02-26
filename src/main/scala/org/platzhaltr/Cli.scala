@@ -11,7 +11,7 @@ object Cli extends App {
 
   private val ErrorFmt = new ErrorFormatter(showTraces = true)
 
-  val parser = new DateParser(args.mkString(" "))
+  private val parser = new DateParser(args.mkString(" "))
 
   parser.InputLine.run() match {
     case Success(result)        =>
