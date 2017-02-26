@@ -4,15 +4,21 @@ import scala.annotation.tailrec
 import scala.io.StdIn
 import scala.util.{Failure, Success}
 
-import java.time.{LocalDate,LocalDateTime}
+import java.time.{LocalDate,LocalDateTime, ZoneId}
 import org.parboiled2.{ParseError, ErrorFormatter}
 
+import java.time.format.DateTimeFormatter
+
 object Cli extends App {
+
+  private val UTC = ZoneId.of("UTC")
+  // 01.03. 10:00
+  private val KhalStartFormatter =  DateTimeFormatter.ofPattern("dd.MM. HH:mm").withZone(UTC)
+  private val KhalEndFormatter =  DateTimeFormatter.ofPattern("HH:mm").withZone(UTC)
 
   private val ErrorFmt = new ErrorFormatter(showTraces = true)
 
   private val parser = new DateParser(args.mkString(" "))
-
   parser.InputLine.run() match {
     case Success(result)        =>
       result match {
@@ -27,7 +33,11 @@ object Cli extends App {
           println(s"${dateDuration.process(today)}")
         case timeDuration: TimeDuration =>
           val now = LocalDateTime.now
-          println(s"${timeDuration.process(now)}")
+          val interval = timeDuration.process(now)
+          val start = KhalStartFormatter.format(interval.getStart)
+          val end = KhalEndFormatter.format(interval.getEnd)
+
+          println(s"$start $end")
       }
     case Failure(e: ParseError) =>
       println(s"Invalid expression: ${parser.formatError(e, ErrorFmt)}")
