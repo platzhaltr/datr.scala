@@ -111,6 +111,7 @@ xmas
 christmas
 new year's eve
 
+this afternoon
 this past weekend
 this week-end
 
