@@ -2,11 +2,10 @@ package org.platzhaltr
 
 import scala.util.{Failure, Success}
 import org.scalatest._
-import org.scalatest.Matchers._
 
 import org.parboiled2.{ParseError, ErrorFormatter}
 
-import java.time.{DayOfWeek, Month}
+import java.time.DayOfWeek
 import java.time.DayOfWeek._
 import java.time.Month._
 
