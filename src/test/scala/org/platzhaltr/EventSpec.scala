@@ -2,7 +2,7 @@ package org.platzhaltr
 
 import org.scalatest._
 
-import java.time.{Duration, LocalDate, LocalDateTime, Month, ZoneOffset}
+import java.time._
 import java.time.DayOfWeek._
 import java.time.Month._
 import org.threeten.extra.Interval
@@ -91,13 +91,13 @@ class EventSpec extends FlatSpec with Matchers {
   it should "interpret <hour>:<minute> if time in future" in {
     val now = LocalDateTime.of(2014, 1, 1, 14, 30)
 
-    AtTime(Time(15,0)).process(now) shouldBe LocalDateTime.of(2014, 1, 1, 15, 0)
+    AtTime(LocalTime.of(15,0)).process(now) shouldBe LocalDateTime.of(2014, 1, 1, 15, 0)
   }
 
   it should "interpret <hour>:<minute> if time in past" in {
     val now = LocalDateTime.of(2014, 1, 1, 14, 30)
 
-    AtTime(Time(14,0)).process(now) shouldBe LocalDateTime.of(2014, 1, 2, 14, 0)
+    AtTime(LocalTime.of(14,0)).process(now) shouldBe LocalDateTime.of(2014, 1, 2, 14, 0)
   }
 
   // Formal dates
@@ -163,21 +163,21 @@ class EventSpec extends FlatSpec with Matchers {
     val from = LocalDateTime.of(2014, 1, 1, 18, 30)
     val to = LocalDateTime.of(2014, 1, 1, 19, 0)
 
-    FromTimeToTime(AtTime(Time(18,30)), AtTime(Time(19,0))).process(now) shouldBe Interval.of(from.toInstant(ZoneOffset.UTC), to.toInstant(ZoneOffset.UTC))
+    FromTimeToTime(AtTime(LocalTime.of(18,30)), AtTime(LocalTime.of(19,0))).process(now) shouldBe Interval.of(from.toInstant(ZoneOffset.UTC), to.toInstant(ZoneOffset.UTC))
   }
 
   it should "interpret 'till <time>'" in {
     val now = LocalDateTime.of(2014, 1, 1, 18, 30)
     val next = LocalDateTime.of(2014, 1, 1, 19, 0)
 
-    UntilTime(AtTime(Time(19,0))).process(now) shouldBe Interval.of(now.toInstant(ZoneOffset.UTC), next.toInstant(ZoneOffset.UTC))
+    UntilTime(AtTime(LocalTime.of(19,0))).process(now) shouldBe Interval.of(now.toInstant(ZoneOffset.UTC), next.toInstant(ZoneOffset.UTC))
   }
 
   it should "interpret 'till <time>', time before now" in {
     val now = LocalDateTime.of(2014, 1, 1, 18, 30)
     val next = LocalDateTime.of(2014, 1, 2, 17, 0)
 
-    UntilTime(AtTime(Time(17,0))).process(now) shouldBe Interval.of(now.toInstant(ZoneOffset.UTC), next.toInstant(ZoneOffset.UTC))
+    UntilTime(AtTime(LocalTime.of(17,0))).process(now) shouldBe Interval.of(now.toInstant(ZoneOffset.UTC), next.toInstant(ZoneOffset.UTC))
   }
 
   it should "interpret 'till <weekday>'" in {
@@ -203,77 +203,77 @@ class EventSpec extends FlatSpec with Matchers {
 
   it should "interpret '<relative-day> <fuzzy-time>', e.g. 'tomorrow afternoon'" in {
     val now  = LocalDateTime.of(2014, 1, 1, 14, 30)
-    val next = DateTimeEvent(InDays(1),AtTime(Time(16,0))).process(now)
+    val next = DateTimeEvent(InDays(1),AtTime(LocalTime.of(16,0))).process(now)
 
     next shouldBe LocalDateTime.of(2014, 1, 2, 16, 0)
   }
 
   it should "interpret '<relative-day> <fuzzy-time>', e.g. 'yesterday evening'" in {
     val now  = LocalDateTime.of(2014, 1, 1, 14, 30)
-    val next = DateTimeEvent(InDays(-1),AtTime(Time(19,0))).process(now)
+    val next = DateTimeEvent(InDays(-1),AtTime(LocalTime.of(19,0))).process(now)
 
     next shouldBe LocalDateTime.of(2013, 12, 31, 19, 0)
   }
 
     it should "interpret '<relative-day> <formal-time>', e.g. 'today at 8 a.m.'" in {
     val now  = LocalDateTime.of(2014, 1, 1, 14, 30)
-    val next = DateTimeEvent(InDays(0),AtTime(Time(8,0))).process(now)
+    val next = DateTimeEvent(InDays(0),AtTime(LocalTime.of(8,0))).process(now)
 
     next shouldBe LocalDateTime.of(2014, 1, 1, 8, 0)
   }
 
   it should "interpret '<relative-day> <formal-time>', e.g. 'tomorrow at 8 a.m.'" in {
     val now  = LocalDateTime.of(2014, 1, 1, 14, 30)
-    val next = DateTimeEvent(InDays(1),AtTime(Time(8,0))).process(now)
+    val next = DateTimeEvent(InDays(1),AtTime(LocalTime.of(8,0))).process(now)
 
     next shouldBe LocalDateTime.of(2014, 1, 2, 8, 0)
   }
 
   it should "interpret '<relative-day> <formal-time>', e.g. 'yesterday at 10 pm'" in {
     val now  = LocalDateTime.of(2014, 1, 1, 14, 30)
-    val next = DateTimeEvent(InDays(-1),AtTime(Time(22,0))).process(now)
+    val next = DateTimeEvent(InDays(-1),AtTime(LocalTime.of(22,0))).process(now)
 
     next shouldBe LocalDateTime.of(2013, 12, 31, 22, 0)
   }
 
   it should "interpret '<relative-day> <formal-time>', e.g. 'in 2 days at 6 pm'" in {
     val now  = LocalDateTime.of(2014, 1, 1, 14, 30)
-    val next = DateTimeEvent(InDays(2),AtTime(Time(18,0))).process(now)
+    val next = DateTimeEvent(InDays(2),AtTime(LocalTime.of(18,0))).process(now)
 
     next shouldBe LocalDateTime.of(2014, 1, 3, 18, 0)
   }
 
   it should "interpret '<relative-weeks> <formal-time>', e.g. 'in 4 weeks at 12:00'" in {
     val now  = LocalDateTime.of(2014, 1, 1, 14, 30)
-    val next = DateTimeEvent(InWeeks(4),AtTime(Time(12,0))).process(now)
+    val next = DateTimeEvent(InWeeks(4),AtTime(LocalTime.of(12,0))).process(now)
 
     next shouldBe LocalDateTime.of(2014, 1, 29, 12, 0)
   }
 
   it should "interpret '<relative-months> <formal-time>', e.g. 'in 3 months at 8 a.m.'" in {
     val now  = LocalDateTime.of(2014, 1, 1, 14, 30)
-    val next = DateTimeEvent(InMonths(3),AtTime(Time(8,0))).process(now)
+    val next = DateTimeEvent(InMonths(3),AtTime(LocalTime.of(8,0))).process(now)
 
     next shouldBe LocalDateTime.of(2014, 4, 1, 8, 0)
   }
 
   it should "interpret '<relative-years> <formal-time>', e.g. 'in 1 year at 20:00'" in {
     val now  = LocalDateTime.of(2014, 1, 1, 14, 30)
-    val next = DateTimeEvent(InYears(1),AtTime(Time(20,0))).process(now)
+    val next = DateTimeEvent(InYears(1),AtTime(LocalTime.of(20,0))).process(now)
 
     next shouldBe LocalDateTime.of(2015, 1, 1, 20, 0)
   }
 
   it should "interpret '<cardinal-weekday> <formal-time>', e.g. 'first wednesday of march at 22:00'" in {
     val now  = LocalDateTime.of(2014, 1, 1, 14, 30)
-    val next = DateTimeEvent(WeekdayInMonth(1,WEDNESDAY,MARCH),AtTime(Time(22,0))).process(now)
+    val next = DateTimeEvent(WeekdayInMonth(1,WEDNESDAY,MARCH),AtTime(LocalTime.of(22,0))).process(now)
 
     next shouldBe LocalDateTime.of(2014, 3, 5, 22, 0)
   }
 
   it should "interpret '<weekday> <fuzzy-time>', e.g. 'saturday afternoon'" in {
     val now  = LocalDateTime.of(2014, 1, 1, 14, 30)
-    val next = DateTimeEvent(NextWeekdayByName(SATURDAY),AtTime(Time(16,0))).process(now)
+    val next = DateTimeEvent(NextWeekdayByName(SATURDAY),AtTime(LocalTime.of(16,0))).process(now)
 
     next shouldBe LocalDateTime.of(2014, 1, 4, 16, 0)
   }

@@ -2,7 +2,7 @@ package org.platzhaltr
 
 import org.scalatest._
 
-import java.time.{Duration, LocalDate, LocalDateTime, ZoneOffset}
+import java.time._
 import java.time.DayOfWeek._
 import org.threeten.extra.Interval
 
@@ -61,7 +61,7 @@ class DurationSpec extends FlatSpec with Matchers {
     val from = LocalDateTime.of(2014, 1, 1, 18, 30)
     val to = LocalDateTime.of(2014, 1, 1, 19, 0)
 
-    FromTimeToTime(AtTime(Time(18,30)), AtTime(Time(19,0))).process(now) shouldBe Interval.of(from.toInstant(ZoneOffset.UTC), to.toInstant(ZoneOffset.UTC))
+    FromTimeToTime(AtTime(LocalTime.of(18,30)), AtTime(LocalTime.of(19,0))).process(now) shouldBe Interval.of(from.toInstant(ZoneOffset.UTC), to.toInstant(ZoneOffset.UTC))
   }
 
   it should "interpret 'from <time> [to|till|until] <time> next <weekday>'" in {
@@ -69,21 +69,21 @@ class DurationSpec extends FlatSpec with Matchers {
     val from = LocalDateTime.of(2014, 1, 6, 14, 0)
     val to = LocalDateTime.of(2014, 1, 6, 15, 0)
 
-    FromTimeToTime(AtTime(Time(14,0)), AtTime(Time(15,0)), Some(NextWeekdayByName(MONDAY))).process(now) shouldBe Interval.of(from.toInstant(ZoneOffset.UTC), to.toInstant(ZoneOffset.UTC))
+    FromTimeToTime(AtTime(LocalTime.of(14,0)), AtTime(LocalTime.of(15,0)), Some(NextWeekdayByName(MONDAY))).process(now) shouldBe Interval.of(from.toInstant(ZoneOffset.UTC), to.toInstant(ZoneOffset.UTC))
   }
 
   it should "interpret 'till <time>'" in {
     val now = LocalDateTime.of(2014, 1, 1, 18, 30)
     val next = LocalDateTime.of(2014, 1, 1, 19, 0)
 
-    UntilTime(AtTime(Time(19,0))).process(now) shouldBe Interval.of(now.toInstant(ZoneOffset.UTC), next.toInstant(ZoneOffset.UTC))
+    UntilTime(AtTime(LocalTime.of(19,0))).process(now) shouldBe Interval.of(now.toInstant(ZoneOffset.UTC), next.toInstant(ZoneOffset.UTC))
   }
 
   it should "interpret 'till <time>', time before now" in {
     val now = LocalDateTime.of(2014, 1, 1, 18, 30)
     val next = LocalDateTime.of(2014, 1, 2, 17, 0)
 
-    UntilTime(AtTime(Time(17,0))).process(now) shouldBe Interval.of(now.toInstant(ZoneOffset.UTC), next.toInstant(ZoneOffset.UTC))
+    UntilTime(AtTime(LocalTime.of(17,0))).process(now) shouldBe Interval.of(now.toInstant(ZoneOffset.UTC), next.toInstant(ZoneOffset.UTC))
   }
 
   it should "interpret 'till <weekday>'" in {

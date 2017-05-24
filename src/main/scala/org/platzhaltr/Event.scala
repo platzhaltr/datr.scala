@@ -1,6 +1,6 @@
 package org.platzhaltr
 
-import java.time.{DayOfWeek, LocalDate, LocalDateTime, Month}
+import java.time._
 import scala.math.signum
 
 sealed trait DateEvent extends ParseResult {
@@ -81,9 +81,9 @@ case class InHours(hours: Int) extends TimeEvent {
 
 // Formal times
 
-case class AtTime(time: Time) extends TimeEvent {
+case class AtTime(time: LocalTime) extends TimeEvent {
   override def process(now: LocalDateTime) = {
-    val date = LocalDateTime.of(now.getYear, now.getMonth, now.getDayOfMonth, time.hours, time.minutes)
+    val date = now.toLocalDate.atTime(time)
     if (Calendar.nowBeforeNext(now, time))
       date
     else

@@ -1,6 +1,6 @@
 package org.platzhaltr
 
-import java.time.{DayOfWeek, Month}
+import java.time.{DayOfWeek, LocalTime, Month}
 import org.parboiled2._
 
 trait ParseResult
@@ -188,10 +188,10 @@ class DateParser(val input: ParserInput) extends Parser {
   def Months       = rule { ignoreCase("month")  ~ optional(ignoreCase("s")) }
   def Years        = rule { ignoreCase("year")   ~ optional(ignoreCase("s")) }
 
-  def Noon         = rule { ignoreCase("noon") ~> (() => new Time(12,0))}
-  def Afternoon    = rule { ignoreCase("afternoon") ~> (() => new Time(16,0))}
-  def Evening      = rule { ignoreCase("evening") ~> (() => new Time(19,0))}
-  def Midnight     = rule { ignoreCase("midnight") ~> (() => new Time(0,0))}
+  def Noon         = rule { ignoreCase("noon") ~> (() => LocalTime.of(12,0))}
+  def Afternoon    = rule { ignoreCase("afternoon") ~> (() => LocalTime.of(16,0))}
+  def Evening      = rule { ignoreCase("evening") ~> (() => LocalTime.of(19,0))}
+  def Midnight     = rule { ignoreCase("midnight") ~> (() => LocalTime.of(0,0))}
 
   def Number       = rule { capture(Digits) ~> (_.toInt) }
   def Digits       = rule { oneOrMore(CharPredicate.Digit) }
@@ -218,19 +218,19 @@ class DateParser(val input: ParserInput) extends Parser {
     FullIsoTime | HoursOnly
   }
 
-  def FullIsoTime  = rule { HourDigits ~ Colon ~ MinuteDigits ~> ((h,m) => new Time(h, m)) }
-  def HoursOnly    = rule { HourDigits ~ &(Space ~ (To | Next | On |  EOI)) ~> ((h) => new Time(h.toInt, 0))  }
+  def FullIsoTime  = rule { HourDigits ~ Colon ~ MinuteDigits ~> ((h,m) => LocalTime.of(h, m)) }
+  def HoursOnly    = rule { HourDigits ~ &(Space ~ (To | Next | On |  EOI)) ~> ((h) => LocalTime.of(h.toInt, 0))  }
 
   def HourDigits   = rule { capture(anyOf("01") ~ optional(CharPredicate.Digit) | ("2" ~ optional(anyOf("01234" ))) | anyOf("3456789")) ~> (_.toInt) }
   def MinuteDigits = rule { capture(anyOf("012345") ~ optional(CharPredicate.Digit)) ~> (_.toInt) }
 
   def TwelveHourTime = rule {
-    TwelveHour ~ Colon ~ MinuteDigits ~ Space ~ Am ~> ((h,m) => new Time(h % 12,m)) |
-    TwelveHour ~ Colon ~ MinuteDigits ~ Space ~ Pm ~> ((h,m) => new Time((h % 12) + 12,m)) |
-    TwelveHour ~ Am                     ~> ((h) => new Time(h % 12,0)) |
-    TwelveHour ~ Pm                     ~> ((h) => new Time((h % 12) + 12,0)) |
-    TwelveHour ~ Space ~ Am             ~> ((h) => new Time(h % 12,0)) |
-    TwelveHour ~ Space ~ Pm             ~> ((h) => new Time((h % 12) + 12,0))
+    TwelveHour ~ Colon ~ MinuteDigits ~ Space ~ Am ~> ((h,m) => LocalTime.of(h % 12,m)) |
+    TwelveHour ~ Colon ~ MinuteDigits ~ Space ~ Pm ~> ((h,m) => LocalTime.of((h % 12) + 12,m)) |
+    TwelveHour ~ Am                     ~> ((h) => LocalTime.of(h % 12,0)) |
+    TwelveHour ~ Pm                     ~> ((h) => LocalTime.of((h % 12) + 12,0)) |
+    TwelveHour ~ Space ~ Am             ~> ((h) => LocalTime.of(h % 12,0)) |
+    TwelveHour ~ Space ~ Pm             ~> ((h) => LocalTime.of((h % 12) + 12,0))
   }
   def TwelveHour = rule { capture("0" ~ CharPredicate.Digit | "1" ~ anyOf("012") | CharPredicate.Digit) ~> (_.toInt) }
   def Am         = rule { ignoreCase("a") ~ optional (Dot) ~ ignoreCase("m") ~ optional(Dot) }

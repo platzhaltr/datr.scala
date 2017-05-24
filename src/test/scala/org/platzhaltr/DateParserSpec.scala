@@ -5,7 +5,7 @@ import org.scalatest._
 
 import org.parboiled2.{ParseError, ErrorFormatter}
 
-import java.time.DayOfWeek
+import java.time.{DayOfWeek, LocalTime}
 import java.time.DayOfWeek._
 import java.time.Month._
 
@@ -255,7 +255,7 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
   // Formal times
 
   private def atTime(hours: Int, minutes: Int) = {
-    AtTime(Time(hours,minutes))
+    AtTime(LocalTime.of(hours,minutes))
   }
 
   "5" in { td =>
@@ -377,39 +377,39 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
   }
 
   "from 5 to 7" in { td =>
-    parse(td.name) shouldBe FromTimeToTime(AtTime(Time(5,0)), AtTime(Time(7,0)))
+    parse(td.name) shouldBe FromTimeToTime(AtTime(LocalTime.of(5,0)), AtTime(LocalTime.of(7,0)))
   }
 
   "from 9:30 to 12:15" in { td =>
-    parse(td.name) shouldBe FromTimeToTime(AtTime(Time(9,30)), AtTime(Time(12,15)))
+    parse(td.name) shouldBe FromTimeToTime(AtTime(LocalTime.of(9,30)), AtTime(LocalTime.of(12,15)))
   }
 
   "from 9:30 till 12:15" in { td =>
-    parse(td.name) shouldBe FromTimeToTime(AtTime(Time(9,30)), AtTime(Time(12,15)))
+    parse(td.name) shouldBe FromTimeToTime(AtTime(LocalTime.of(9,30)), AtTime(LocalTime.of(12,15)))
   }
 
   "from 9:30 until 12:15" in { td =>
-    parse(td.name) shouldBe FromTimeToTime(AtTime(Time(9,30)), AtTime(Time(12,15)))
+    parse(td.name) shouldBe FromTimeToTime(AtTime(LocalTime.of(9,30)), AtTime(LocalTime.of(12,15)))
   }
 
   "from 9:30 until 12:15 next sunday" in { td =>
-    parse(td.name) shouldBe FromTimeToTime(AtTime(Time(9,30)), AtTime(Time(12,15)), Some(NextWeekdayByName(SUNDAY)))
+    parse(td.name) shouldBe FromTimeToTime(AtTime(LocalTime.of(9,30)), AtTime(LocalTime.of(12,15)), Some(NextWeekdayByName(SUNDAY)))
   }
 
   "from 14 to 15 on mon" in { td =>
-    parse(td.name) shouldBe FromTimeToTime(AtTime(Time(14,0)), AtTime(Time(15,0)), Some(NextWeekdayByName(MONDAY)))
+    parse(td.name) shouldBe FromTimeToTime(AtTime(LocalTime.of(14,0)), AtTime(LocalTime.of(15,0)), Some(NextWeekdayByName(MONDAY)))
   }
 
   "from 14 to 15 next mon" in { td =>
-    parse(td.name) shouldBe FromTimeToTime(AtTime(Time(14,0)), AtTime(Time(15,0)), Some(NextWeekdayByName(MONDAY)))
+    parse(td.name) shouldBe FromTimeToTime(AtTime(LocalTime.of(14,0)), AtTime(LocalTime.of(15,0)), Some(NextWeekdayByName(MONDAY)))
   }
 
   "till 12:15" in { td =>
-    parse(td.name) shouldBe UntilTime(AtTime(Time(12,15)))
+    parse(td.name) shouldBe UntilTime(AtTime(LocalTime.of(12,15)))
   }
 
   "until 7 pm" in { td =>
-    parse(td.name) shouldBe UntilTime(AtTime(Time(19,0)))
+    parse(td.name) shouldBe UntilTime(AtTime(LocalTime.of(19,0)))
   }
 
   "till friday" in { td =>
@@ -431,11 +431,11 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
   }
 
   private def inDaysAtTime (days: Int)(hours: Int, minutes: Int) = {
-    dateTimeEvent(InDays(days),AtTime(Time(hours,minutes)))
+    dateTimeEvent(InDays(days),AtTime(LocalTime.of(hours,minutes)))
   }
 
   private def onDateTime(month: Int, day: Int, hours: Int, minutes: Int, year: Option[Int] = None) = {
-    dateTimeEvent(OnDate(Date(month, day, year)),AtTime(Time(hours,minutes)))
+    dateTimeEvent(OnDate(Date(month, day, year)),AtTime(LocalTime.of(hours,minutes)))
   }
 
   "23. July 12:00" in { td =>
@@ -475,11 +475,11 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
   }
 
   "monday 12:00" in { td =>
-    parse(td.name) shouldBe dateTimeEvent(NextWeekdayByName(MONDAY), AtTime(Time(12,0)))
+    parse(td.name) shouldBe dateTimeEvent(NextWeekdayByName(MONDAY), AtTime(LocalTime.of(12,0)))
   }
 
   "tuesday at 5 a.m." in { td =>
-    parse(td.name) shouldBe dateTimeEvent(NextWeekdayByName(TUESDAY), AtTime(Time(5,0)))
+    parse(td.name) shouldBe dateTimeEvent(NextWeekdayByName(TUESDAY), AtTime(LocalTime.of(5,0)))
   }
 
   "in 2 days at 6 pm" in { td =>
@@ -487,31 +487,31 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
   }
 
   "in 4 weeks at 12:00" in { td =>
-    parse(td.name) shouldBe dateTimeEvent(InWeeks(4),AtTime(Time(12,0)))
+    parse(td.name) shouldBe dateTimeEvent(InWeeks(4),AtTime(LocalTime.of(12,0)))
   }
 
   "in 6 weeks at 18:00" in { td =>
-    parse(td.name) shouldBe dateTimeEvent(InWeeks(6),AtTime(Time(18,0)))
+    parse(td.name) shouldBe dateTimeEvent(InWeeks(6),AtTime(LocalTime.of(18,0)))
   }
 
   "in 3 months at 8 a.m" in { td =>
-    parse(td.name) shouldBe dateTimeEvent(InMonths(3),AtTime(Time(8,0)))
+    parse(td.name) shouldBe dateTimeEvent(InMonths(3),AtTime(LocalTime.of(8,0)))
   }
 
   "in 1 year at 20:00" in { td =>
-    parse(td.name) shouldBe dateTimeEvent(InYears(1),AtTime(Time(20,0)))
+    parse(td.name) shouldBe dateTimeEvent(InYears(1),AtTime(LocalTime.of(20,0)))
   }
 
   "next week tue 5" in { td =>
-    parse(td.name) shouldBe dateTimeEvent(NextWeekWeekdayByName(TUESDAY),AtTime(Time(5,0)))
+    parse(td.name) shouldBe dateTimeEvent(NextWeekWeekdayByName(TUESDAY),AtTime(LocalTime.of(5,0)))
   }
 
   "first wednesday of march at 22:00" in { td =>
-    parse(td.name) shouldBe dateTimeEvent(WeekdayInMonth(1,WEDNESDAY,MARCH),AtTime(Time(22,0)))
+    parse(td.name) shouldBe dateTimeEvent(WeekdayInMonth(1,WEDNESDAY,MARCH),AtTime(LocalTime.of(22,0)))
   }
 
   "saturday afternoon" in { td =>
-    parse(td.name) shouldBe dateTimeEvent(NextWeekdayByName(SATURDAY),AtTime(Time(16,0)))
+    parse(td.name) shouldBe dateTimeEvent(NextWeekdayByName(SATURDAY),AtTime(LocalTime.of(16,0)))
   }
 
   def parse(line: String): ParseResult = {
