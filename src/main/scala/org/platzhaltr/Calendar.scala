@@ -12,8 +12,3 @@ object Calendar {
   }
 }
 
-case class Date(month: Int, day: Int,year: Option[Int] = None) {
-  require(month >= 1 && month <= 12)
-  // TODO stricter day checking?
-  require(day >= 1 && day <= 31)
-}

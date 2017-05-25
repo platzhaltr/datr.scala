@@ -1,6 +1,6 @@
 package org.platzhaltr
 
-import java.time.{DayOfWeek, LocalTime, Month}
+import java.time.{DayOfWeek, LocalDate, LocalTime, Month, MonthDay}
 import org.parboiled2._
 
 trait ParseResult
@@ -203,13 +203,14 @@ class DateParser(val input: ParserInput) extends Parser {
   def Space        = rule { zeroOrMore(" ") }
 
   def FormalDate   = rule {
-   DayDigits ~ optional(Dot | Th) ~ Space ~ SpecificMonth ~ Space ~ YearDigits ~> ((d,m,y) => new Date(m.getValue,d,Some(y))) |
-   DayDigits ~ optional(Dot | Th) ~ Space ~ SpecificMonth ~> ((d,m) => new Date(m.getValue,d)) |
-   Cardinal ~ Space ~ SpecificMonth ~ Space ~ YearDigits ~> ((d,m,y) => new Date(m.getValue,d,Some(y))) |
-   Cardinal ~ Space ~ optional(Of) ~ Space ~ SpecificMonth ~> ((d,m) => new Date(m.getValue,d))
+   DayDigits ~ optional(Dot | Th) ~ Space ~ SpecificMonth ~ Space ~ YearDigits ~> ((d,m,y) => Right(LocalDate.of(y, m.getValue, d))) |
+   DayDigits ~ optional(Dot | Th) ~ Space ~ SpecificMonth ~> ((d,m) => Left(MonthDay.of(m.getValue,d))) |
+   Cardinal ~ Space ~ SpecificMonth ~ Space ~ YearDigits ~> ((d,m,y) => Right(LocalDate.of(y, m.getValue, d))) |
+   Cardinal ~ Space ~ optional(Of) ~ Space ~ SpecificMonth ~> ((d,m) => Left(MonthDay.of(m.getValue,d)))
   }
-  def IsoDate      = rule { YearDigits ~ optional(Dash | Slash) ~ MonthDigits ~ optional(Dash | Slash) ~ DayDigits ~> ((y,m,d) => new Date(m,d, Some(y))) }
-  def LittleEndianDate = rule { DayDigits ~ optional(Dash | Slash) ~ MonthDigits ~ optional(Dash | Slash) ~ YearDigits ~> ((d,m,y) => new Date(m,d, Some(y))) }
+
+  def IsoDate      = rule { YearDigits ~ optional(Dash | Slash) ~ MonthDigits ~ optional(Dash | Slash) ~ DayDigits ~> ((y,m,d) => Right(LocalDate.of(y, m, d))) }
+  def LittleEndianDate = rule { DayDigits ~ optional(Dash | Slash) ~ MonthDigits ~ optional(Dash | Slash) ~ YearDigits ~> ((d,m,y) => Right(LocalDate.of(y, m, d))) }
   def YearDigits   = rule { capture(4.times(CharPredicate.Digit)) ~> (_.toInt) }
   def MonthDigits  = rule { capture("0" ~ CharPredicate.Digit | "1" ~ anyOf("012" )) ~> (_.toInt) }
   def DayDigits    = rule { capture(anyOf("012") ~ CharPredicate.Digit | "3" ~ anyOf("01" )) ~> (_.toInt) }

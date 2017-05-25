@@ -105,7 +105,7 @@ class EventSpec extends FlatSpec with Matchers {
   it should "interpret yyyy-mm-dd" in {
     val today = LocalDate.of(1970, 6, 20)
 
-    OnDate(Date(1,1,Some(2014))).process(today) shouldBe LocalDate.of(2014, 1, 1)
+    OnDate(Right(LocalDate.of(2014, 1, 1))).process(today) shouldBe LocalDate.of(2014, 1, 1)
   }
 
   // Durations

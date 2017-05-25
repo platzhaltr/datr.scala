@@ -12,10 +12,12 @@ sealed trait TimeEvent extends ParseResult {
 
 // Formal Dates
 
-case class OnDate(date: Date) extends DateEvent {
+case class OnDate(date: Either[MonthDay, LocalDate]) extends DateEvent {
   override def process(now: LocalDate) =
-
-  LocalDate.of(date.year.getOrElse(now.getYear), date.month, date.day)
+    date match {
+      case Left(monthDay) => monthDay.atYear(now.getYear)
+      case Right(localDate) => localDate
+    }
 }
 
 // Relaxed Dates

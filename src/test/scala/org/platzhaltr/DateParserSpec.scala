@@ -5,7 +5,7 @@ import org.scalatest._
 
 import org.parboiled2.{ParseError, ErrorFormatter}
 
-import java.time.{DayOfWeek, LocalTime}
+import java.time.{DayOfWeek, LocalDate, LocalTime, MonthDay}
 import java.time.DayOfWeek._
 import java.time.Month._
 
@@ -18,40 +18,43 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
   }
 
   // Formal dates
-  private def onDate(month: Int, day: Int, year: Option[Int] = None) = {
-    OnDate(Date(month,day,year))
+  private def onDate(month: Int, day: Int) = {
+    OnDate(Left(MonthDay.of(month, day)))
+  }
+  private def onDate(month: Int, day: Int, year: Int) = {
+    OnDate(Right(LocalDate.of(year, month, day)))
   }
 
   "2014-10-23" in { td =>
-    parse(td.name) shouldBe onDate(10,23,Some(2014))
+    parse(td.name) shouldBe onDate(10,23, 2014)
   }
 
   "20141023" in { td =>
-    parse(td.name) shouldBe onDate(10,23,Some(2014))
+    parse(td.name) shouldBe onDate(10,23,2014)
   }
 
   "2014/10/23" in { td =>
-    parse(td.name) shouldBe onDate(10,23,Some(2014))
+    parse(td.name) shouldBe onDate(10,23,2014)
   }
 
   "23/10/2014" in { td =>
-    parse(td.name) shouldBe onDate(10,23,Some(2014))
+    parse(td.name) shouldBe onDate(10,23,2014)
   }
 
   "on 2014-10-23" in { td =>
-    parse(td.name) shouldBe onDate(10,23,Some(2014))
+    parse(td.name) shouldBe onDate(10,23,2014)
   }
 
   "on 20141023" in { td =>
-    parse(td.name) shouldBe onDate(10,23,Some(2014))
+    parse(td.name) shouldBe onDate(10,23,2014)
   }
 
   "on 2014/10/23" in { td =>
-    parse(td.name) shouldBe onDate(10,23,Some(2014))
+    parse(td.name) shouldBe onDate(10,23,2014)
   }
 
   "on 23/10/2014" in { td =>
-    parse(td.name) shouldBe onDate(10,23,Some(2014))
+    parse(td.name) shouldBe onDate(10,23,2014)
   }
 
   "23. October" in { td =>
@@ -59,7 +62,7 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
   }
 
   "on 23. Oct 2014" in { td =>
-    parse(td.name) shouldBe onDate(10,23,Some(2014))
+    parse(td.name) shouldBe onDate(10,23,2014)
   }
 
   "on 1st August" in { td =>
@@ -75,19 +78,19 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
   }
 
   "on 2nd August 2015" in { td =>
-    parse(td.name) shouldBe onDate(8,2,Some(2015))
+    parse(td.name) shouldBe onDate(8, 2, 2015)
   }
 
   "on 3rd Sep 2015" in { td =>
-    parse(td.name) shouldBe onDate(9,3,Some(2015))
+    parse(td.name) shouldBe onDate(9,3, 2015)
   }
 
   "on 4th Dec 2015" in { td =>
-    parse(td.name) shouldBe onDate(12,4,Some(2015))
+    parse(td.name) shouldBe onDate(12, 4, 2015)
   }
 
   "on 5th August 2015" in { td =>
-    parse(td.name) shouldBe onDate(8,5,Some(2015))
+    parse(td.name) shouldBe onDate(8, 5, 2015)
   }
 
   // Relaxed dates
@@ -435,7 +438,11 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
   }
 
   private def onDateTime(month: Int, day: Int, hours: Int, minutes: Int, year: Option[Int] = None) = {
-    dateTimeEvent(OnDate(Date(month, day, year)),AtTime(LocalTime.of(hours,minutes)))
+    val date = year match {
+      case None => onDate(month, day)
+      case Some(y) => onDate(month, day, y)
+    }
+    dateTimeEvent(date, AtTime(LocalTime.of(hours,minutes)))
   }
 
   "23. July 12:00" in { td =>
@@ -443,7 +450,7 @@ class DateParserSpec extends fixture.FreeSpec with Matchers {
   }
 
   "on 1st August 2015 5 a.m." in { td =>
-    parse(td.name) shouldBe onDateTime(8,1,5,0, Some(2015))
+    parse(td.name) shouldBe onDateTime(8,1,5,0,Some(2015))
   }
 
   "on 24. Dec 8 pm" in { td =>
