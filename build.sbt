@@ -24,7 +24,6 @@ scalacOptions ++= Seq(
     "-unchecked",
     //"-Ywarn-unused-import",
     "-Ywarn-nullary-unit",
-    "-Xfatal-warnings",
     "-Xlint",
     //"-Yinline-warnings",
     "-Ywarn-dead-code",
