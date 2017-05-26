@@ -25,7 +25,7 @@ object Cli extends App {
           println(s"${today.`with`(dateEvent)}")
         case timeEvent: TimeEvent =>
           val now = LocalDateTime.now
-          println(s"${timeEvent.process(now)}")
+          println(s"${now.`with`(timeEvent)}")
         case dateDuration: DateDuration =>
           val today = LocalDate.now
           println(s"${dateDuration.process(today)}")

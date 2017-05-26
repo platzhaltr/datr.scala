@@ -44,12 +44,12 @@ case class FromTimeToTime(from: AtTime, to: AtTime, dateEvent: Option[TemporalAd
   override def process(now: LocalDateTime): Interval = {
     dateEvent match {
       case None =>
-        val fromTime = from.process(now)
+        val fromTime = now.`with`(from)
         // TODO which time zone?
-        Interval.of(fromTime.toInstant(ZoneOffset.UTC), to.process(fromTime).toInstant(ZoneOffset.UTC))
+        Interval.of(fromTime.toInstant(ZoneOffset.UTC), fromTime.`with`(to).toInstant(ZoneOffset.UTC))
       case Some(adjuster) =>
-        val fromTime = from.process(now).toLocalTime
-        val toTime = to.process(now).toLocalTime
+        val fromTime = now.`with`(from).toLocalTime
+        val toTime = now.`with`(to).toLocalTime
         val day = now.toLocalDate.`with`(adjuster)
         // TODO which time zone?
         Interval.of(day.atTime(fromTime).toInstant(ZoneOffset.UTC), day.atTime(toTime).toInstant(ZoneOffset.UTC))
@@ -61,8 +61,8 @@ case class FromDateTimeToDateTime(from: DateTimeEvent, to: DateTimeEvent) extend
   override def process(now: LocalDateTime): Interval = {
     // TODO which time zone?
     // TODO rename vals
-    val fromDateTime = from.process(now)
-    val nextDateTime = to.process(fromDateTime).toInstant(ZoneOffset.UTC)
+    val fromDateTime = now.`with`(from)
+    val nextDateTime = fromDateTime.`with`(to).toInstant(ZoneOffset.UTC)
 
     Interval.of(fromDateTime.toInstant(ZoneOffset.UTC), nextDateTime)
   }
@@ -71,7 +71,7 @@ case class FromDateTimeToDateTime(from: DateTimeEvent, to: DateTimeEvent) extend
 case class UntilTime(atTime: AtTime) extends TimeDuration {
   override def process(now: LocalDateTime): Interval = {
     // TODO which time zone?
-    Interval.of(now.toInstant(ZoneOffset.UTC), atTime.process(now).toInstant(ZoneOffset.UTC))
+    Interval.of(now.toInstant(ZoneOffset.UTC), now.`with`(atTime).toInstant(ZoneOffset.UTC))
   }
 }
 

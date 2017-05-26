@@ -24,7 +24,7 @@ object SimpleInterface {
         s"${today.`with`(dateEvent)}"
       case timeEvent: TimeEvent =>
         val now = LocalDateTime.now
-        s"${timeEvent.process(now)}"
+        s"${now.`with`(timeEvent)}"
       case dateDuration: DateDuration =>
         val today = LocalDate.now
         s"${dateDuration.process(today)}"

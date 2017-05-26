@@ -8,8 +8,8 @@ import scala.math.signum
 sealed trait DateEvent extends TemporalAdjuster with ParseResult {
   def adjustInto(temporal: Temporal): Temporal
 }
-sealed trait TimeEvent extends ParseResult {
-  def process(now: LocalDateTime): LocalDateTime
+sealed trait TimeEvent extends TemporalAdjuster with ParseResult {
+  def adjustInto(temporal: Temporal): Temporal
 }
 
 // Formal Dates
@@ -98,19 +98,23 @@ case class InYears(years: Int) extends DateEvent{
 // Relative Times
 
 case class InSeconds(seconds: Int) extends TimeEvent {
-  override def process(now: LocalDateTime): LocalDateTime = now.plusSeconds(seconds)
+  override def adjustInto(temporal: Temporal): Temporal =
+    LocalDateTime.from(temporal).plusSeconds(seconds)
 }
 case class InMinutes(minutes: Int) extends TimeEvent {
-  override def process(now: LocalDateTime): LocalDateTime = now.plusMinutes(minutes)
+  override def adjustInto(temporal: Temporal): Temporal =
+    LocalDateTime.from(temporal).plusMinutes(minutes)
 }
 case class InHours(hours: Int) extends TimeEvent {
-  override def process(now: LocalDateTime): LocalDateTime = now.plusHours(hours)
+  override def adjustInto(temporal: Temporal): Temporal =
+    LocalDateTime.from(temporal).plusHours(hours)
 }
 
 // Formal times
 
 case class AtTime(time: LocalTime) extends TimeEvent {
-  override def process(now: LocalDateTime): LocalDateTime = {
+  override def adjustInto(temporal: Temporal): Temporal = {
+    val now = LocalDateTime.from(temporal)
     val date = now.toLocalDate.atTime(time)
     if (Calendar.nowBeforeNext(now, time))
       date
@@ -136,8 +140,9 @@ case class DateTimeEvent(dateAdjuster: TemporalAdjuster, timeEvent: TimeEvent) e
     }
   }
 
-  override def process(now: LocalDateTime): LocalDateTime = {
-    val newTime = timeEvent.process(now)
+  override def adjustInto(temporal: Temporal): Temporal = {
+    val now = LocalDateTime.from(temporal)
+    val newTime = now.`with`(timeEvent)
     val newDate = newTime.toLocalDate.`with`(dateAdjuster)
 
     val dayAdjustment = dateAdjuster match {
