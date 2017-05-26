@@ -1,10 +1,12 @@
 package org.platzhaltr
 
 import java.time._
+import java.time.temporal.{Temporal, TemporalAdjuster, TemporalAdjusters}
+
 import scala.math.signum
 
-sealed trait DateEvent extends ParseResult {
-  def process(now: LocalDate): LocalDate
+sealed trait DateEvent extends TemporalAdjuster with ParseResult {
+  def adjustInto(temporal: Temporal): Temporal
 }
 sealed trait TimeEvent extends ParseResult {
   def process(now: LocalDateTime): LocalDateTime
@@ -13,78 +15,109 @@ sealed trait TimeEvent extends ParseResult {
 // Formal Dates
 
 case class OnDate(date: Either[MonthDay, LocalDate]) extends DateEvent {
-  override def process(now: LocalDate) =
+  override def adjustInto(temporal: Temporal): Temporal = {
+    val now = LocalDate.from(temporal)
     date match {
       case Left(monthDay) => monthDay.atYear(now.getYear)
       case Right(localDate) => localDate
     }
+  }
 }
 
 // Relaxed Dates
 
 case class LastWeekdayByName(weekday: DayOfWeek) extends DateEvent {
-  override def process(now: LocalDate) = now.minusDays(Calendar.roll(weekday.getValue, now.getDayOfWeek.getValue, 7))
+  override def adjustInto(temporal: Temporal): Temporal = {
+    val now = LocalDate.from(temporal)
+    now.minusDays(Calendar.roll(weekday.getValue, now.getDayOfWeek.getValue, 7))
+  }
 }
-case class NextWeekdayByName(weekday: DayOfWeek) extends DateEvent {
-  override def process(now: LocalDate) = now.plusDays(Calendar.roll(now.getDayOfWeek.getValue, weekday.getValue, 7))
-}
-case class NextWeekWeekdayByName(weekday: DayOfWeek) extends DateEvent {
-  override def process(now: LocalDate) =
-  if (weekday.getValue == 1)
-    NextWeekdayByName(weekday).process(now)
-	else
-    NextWeekdayByName(weekday).process(NextWeekdayByName(DayOfWeek.MONDAY).process(now))
-}
-case class LastMonthByName(month: Month) extends DateEvent {
-  override def process(now: LocalDate) = now.minusMonths(Calendar.roll(month.getValue, now.getMonthValue, 12))
-}
-case class NextMonthByName(month: Month) extends DateEvent {
-  override def process(now: LocalDate) = now.plusMonths(Calendar.roll(now.getMonthValue, month.getValue, 12))
-}
-case class WeekdayInMonth(count: Int, weekday: DayOfWeek, month: Month) extends DateEvent {
-  override def process(now: LocalDate) = {
-    val nextMonth = NextMonthByName(month).process(now)
-    val firstOfMonth = nextMonth.withDayOfMonth(1)
 
-    val firstOccurence = if (firstOfMonth.getDayOfWeek == weekday.getValue)
-                          firstOfMonth else NextWeekdayByName(weekday).process(firstOfMonth)
+case class NextWeekdayByName(weekday: DayOfWeek) extends DateEvent {
+  override def adjustInto(temporal: Temporal): Temporal = {
+    val now = LocalDate.from(temporal)
+    now.plusDays(Calendar.roll(now.getDayOfWeek.getValue, weekday.getValue, 7))
+  }
+}
+
+case class NextWeekWeekdayByName(weekday: DayOfWeek) extends DateEvent{
+  override def adjustInto(temporal: Temporal): Temporal = {
+    val now = LocalDate.from(temporal)
+    if (weekday == DayOfWeek.MONDAY)
+      now.`with`(NextWeekdayByName(weekday))
+    else
+      now.`with`(NextWeekdayByName(DayOfWeek.MONDAY)).`with`(NextWeekdayByName(weekday))
+  }
+}
+case class LastMonthByName(month: Month) extends DateEvent{
+  override def adjustInto(temporal: Temporal): Temporal = {
+    val now = LocalDate.from(temporal)
+    now.minusMonths(Calendar.roll( month.getValue, now.getMonthValue, 12))
+  }
+}
+
+case class NextMonthByName(month: Month) extends DateEvent {
+  override def adjustInto(temporal: Temporal): Temporal = {
+    val now = LocalDate.from(temporal)
+    now.plusMonths(Calendar.roll(now.getMonthValue, month.getValue, 12))
+  }
+}
+
+case class WeekdayInMonth(count: Int, weekday: DayOfWeek, month: Month) extends DateEvent{
+  override def adjustInto(temporal: Temporal): Temporal = {
+    val now = LocalDate.from(temporal)
+    val firstOfMonth = now.`with`(NextMonthByName(month)).`with`(TemporalAdjusters.firstDayOfMonth())
+    val firstOccurence =
+      if (firstOfMonth.getDayOfWeek == weekday) firstOfMonth
+      else firstOfMonth.`with`(NextWeekdayByName(weekday))
 
     // TODO guard against user error, check if still in correct month
-    InWeeks(count - 1).process(firstOccurence)
+    firstOccurence.`with`(InWeeks(count - 1))
   }
 }
 
 // Relative Dates
 
-case class InDays(days: Int) extends DateEvent {
-  override def process(now: LocalDate) = now.plusDays(days)
+case class InDays(years: Int) extends DateEvent{
+  override def adjustInto(temporal: Temporal): Temporal = {
+    LocalDate.from(temporal).plusDays(years)
+  }
 }
-case class InWeeks(weeks: Int) extends DateEvent {
-  override def process(now: LocalDate) = now.plusWeeks(weeks)
+
+case class InWeeks(years: Int) extends DateEvent{
+  override def adjustInto(temporal: Temporal): Temporal = {
+    LocalDate.from(temporal).plusWeeks(years)
+  }
 }
-case class InMonths(months: Int) extends DateEvent {
-  override def process(now: LocalDate) = now.plusMonths(months)
+
+case class InMonths(years: Int) extends DateEvent{
+  override def adjustInto(temporal: Temporal): Temporal = {
+    LocalDate.from(temporal).plusMonths(years)
+  }
 }
-case class InYears(years: Int) extends DateEvent {
-  override def process(now: LocalDate) = now.plusYears(years)
+
+case class InYears(years: Int) extends DateEvent{
+  override def adjustInto(temporal: Temporal): Temporal = {
+    LocalDate.from(temporal).plusYears(years)
+  }
 }
 
 // Relative Times
 
 case class InSeconds(seconds: Int) extends TimeEvent {
-  override def process(now: LocalDateTime) = now.plusSeconds(seconds)
+  override def process(now: LocalDateTime): LocalDateTime = now.plusSeconds(seconds)
 }
 case class InMinutes(minutes: Int) extends TimeEvent {
-  override def process(now: LocalDateTime) = now.plusMinutes(minutes)
+  override def process(now: LocalDateTime): LocalDateTime = now.plusMinutes(minutes)
 }
 case class InHours(hours: Int) extends TimeEvent {
-  override def process(now: LocalDateTime) = now.plusHours(hours)
+  override def process(now: LocalDateTime): LocalDateTime = now.plusHours(hours)
 }
 
 // Formal times
 
 case class AtTime(time: LocalTime) extends TimeEvent {
-  override def process(now: LocalDateTime) = {
+  override def process(now: LocalDateTime): LocalDateTime = {
     val date = now.toLocalDate.atTime(time)
     if (Calendar.nowBeforeNext(now, time))
       date
@@ -94,7 +127,7 @@ case class AtTime(time: LocalTime) extends TimeEvent {
 }
 
 // Combinations
-case class DateTimeEvent(dateEvent: DateEvent, timeEvent: TimeEvent) extends TimeEvent {
+case class DateTimeEvent(dateAdjuster: TemporalAdjuster, timeEvent: TimeEvent) extends TimeEvent {
 
   private def adjustDays(now: LocalDateTime, signum: Int, timeEvent: TimeEvent) = {
     timeEvent match {
@@ -110,11 +143,11 @@ case class DateTimeEvent(dateEvent: DateEvent, timeEvent: TimeEvent) extends Tim
     }
   }
 
-  override def process(now: LocalDateTime) = {
+  override def process(now: LocalDateTime): LocalDateTime = {
     val newTime = timeEvent.process(now)
-    val newDate = dateEvent.process(newTime.toLocalDate)
+    val newDate = newTime.toLocalDate.`with`(dateAdjuster)
 
-    val dayAdjustment = dateEvent match {
+    val dayAdjustment = dateAdjuster match {
       case InDays(days)     => adjustDays(now, signum(days), timeEvent)
       case InWeeks(weeks)   => adjustDays(now, signum(weeks), timeEvent)
       case InMonths(months) => adjustDays(now, signum(months), timeEvent)

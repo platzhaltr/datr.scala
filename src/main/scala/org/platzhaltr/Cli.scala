@@ -22,7 +22,7 @@ object Cli extends App {
       result match {
         case dateEvent: DateEvent =>
           val today = LocalDate.now
-          println(s"${dateEvent.process(today)}")
+          println(s"${today.`with`(dateEvent)}")
         case timeEvent: TimeEvent =>
           val now = LocalDateTime.now
           println(s"${timeEvent.process(now)}")
@@ -41,7 +41,7 @@ object Cli extends App {
       println(s"Invalid expression: ${parser.formatError(e, ErrorFmt)}")
       System.exit(1)
     case Failure(e)             =>
-      println(s"Unexpected error: ${e}")
+      println(s"Unexpected error: $e")
       System.exit(1)
   }
 }

@@ -1,6 +1,7 @@
 package org.platzhaltr
 
 import java.time.{DayOfWeek, LocalDate, LocalTime, Month, MonthDay}
+
 import org.parboiled2._
 
 trait ParseResult
@@ -10,7 +11,7 @@ class DateParser(val input: ParserInput) extends Parser {
   def InputLine = rule { Expression ~ EOI }
 
   def Expression: Rule1[ParseResult] = rule {
-    DateTimes                                  ~> ((d: DateEvent,t: TimeEvent) => DateTimeEvent(d,t)) |
+    DateTimes                                  ~> ((d: DateEvent, t: TimeEvent) => DateTimeEvent(d,t)) |
     Times                                      ~> ((t: TimeEvent) => t)|
     Dates                                      ~> ((d: DateEvent) => d)  |
     TimeDurations                              ~> ((d: TimeDuration) =>  d) |

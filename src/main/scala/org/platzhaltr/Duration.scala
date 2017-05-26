@@ -1,6 +1,8 @@
 package org.platzhaltr
 
+import java.time.temporal.TemporalAdjuster
 import java.time.{DayOfWeek, Duration, LocalDate, LocalDateTime, ZoneOffset}
+
 import org.threeten.extra.Interval
 
 sealed trait DateDuration extends ParseResult {
@@ -38,17 +40,17 @@ case class ForDays(days: Int) extends DateDuration {
   }
 }
 
-case class FromTimeToTime(from: AtTime, to: AtTime, dateEvent: Option[DateEvent] = None) extends TimeDuration {
+case class FromTimeToTime(from: AtTime, to: AtTime, dateEvent: Option[TemporalAdjuster] = None) extends TimeDuration {
   override def process(now: LocalDateTime): Interval = {
     dateEvent match {
       case None =>
         val fromTime = from.process(now)
         // TODO which time zone?
         Interval.of(fromTime.toInstant(ZoneOffset.UTC), to.process(fromTime).toInstant(ZoneOffset.UTC))
-      case Some(date) =>
+      case Some(adjuster) =>
         val fromTime = from.process(now).toLocalTime
         val toTime = to.process(now).toLocalTime
-        val day = date.process(now.toLocalDate)
+        val day = now.toLocalDate.`with`(adjuster)
         // TODO which time zone?
         Interval.of(day.atTime(fromTime).toInstant(ZoneOffset.UTC), day.atTime(toTime).toInstant(ZoneOffset.UTC))
     }
@@ -76,15 +78,15 @@ case class UntilTime(atTime: AtTime) extends TimeDuration {
 case class UntilWeekday(weekday: DayOfWeek) extends DateDuration {
 
   override def process(start: LocalDate): Interval = {
-    val finishWeekday = NextWeekdayByName(weekday).process(start)
+    val finishWeekday = start.`with`(NextWeekdayByName(weekday))
 
     // TODO which time zone?
     Interval.of(start.atStartOfDay().toInstant(ZoneOffset.UTC), finishWeekday.atStartOfDay().toInstant(ZoneOffset.UTC))
   }
 }
 
-case class RelativeDateDuration(dateEvent: DateEvent, dateDuration: DateDuration) extends DateDuration {
+case class RelativeDateDuration(dateEvent: TemporalAdjuster, dateDuration: DateDuration) extends DateDuration {
   override def process(today: LocalDate): Interval = {
-    dateDuration.process(dateEvent.process(today))
+    dateDuration.process(LocalDate.from(today.`with`(dateEvent)))
   }
 }

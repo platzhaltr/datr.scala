@@ -13,7 +13,7 @@ object SimpleInterface {
     parser.InputLine.run() match {
       case Success(result)        => s"Result: ${format(result)}"
       case Failure(e: ParseError) => s"Invalid expression: ${parser.formatError(e, errorFmt)}"
-      case Failure(e)             => s"Unexpected error: ${e}"
+      case Failure(e)             => s"Unexpected error: $e"
     }
   }
 
@@ -21,7 +21,7 @@ object SimpleInterface {
     result match {
       case dateEvent: DateEvent =>
         val today = LocalDate.now
-        s"${dateEvent.process(today)}"
+        s"${today.`with`(dateEvent)}"
       case timeEvent: TimeEvent =>
         val now = LocalDateTime.now
         s"${timeEvent.process(now)}"
