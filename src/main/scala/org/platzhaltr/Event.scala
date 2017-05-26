@@ -28,15 +28,13 @@ case class OnDate(date: Either[MonthDay, LocalDate]) extends DateEvent {
 
 case class LastWeekdayByName(weekday: DayOfWeek) extends DateEvent {
   override def adjustInto(temporal: Temporal): Temporal = {
-    val now = LocalDate.from(temporal)
-    now.minusDays(Calendar.roll(weekday.getValue, now.getDayOfWeek.getValue, 7))
+    temporal.`with`(TemporalAdjusters.previous(weekday))
   }
 }
 
 case class NextWeekdayByName(weekday: DayOfWeek) extends DateEvent {
   override def adjustInto(temporal: Temporal): Temporal = {
-    val now = LocalDate.from(temporal)
-    now.plusDays(Calendar.roll(now.getDayOfWeek.getValue, weekday.getValue, 7))
+    temporal.`with`(TemporalAdjusters.next(weekday))
   }
 }
 
@@ -67,12 +65,7 @@ case class WeekdayInMonth(count: Int, weekday: DayOfWeek, month: Month) extends 
   override def adjustInto(temporal: Temporal): Temporal = {
     val now = LocalDate.from(temporal)
     val firstOfMonth = now.`with`(NextMonthByName(month)).`with`(TemporalAdjusters.firstDayOfMonth())
-    val firstOccurence =
-      if (firstOfMonth.getDayOfWeek == weekday) firstOfMonth
-      else firstOfMonth.`with`(NextWeekdayByName(weekday))
-
-    // TODO guard against user error, check if still in correct month
-    firstOccurence.`with`(InWeeks(count - 1))
+    firstOfMonth.`with`(TemporalAdjusters.dayOfWeekInMonth(count, weekday))
   }
 }
 
