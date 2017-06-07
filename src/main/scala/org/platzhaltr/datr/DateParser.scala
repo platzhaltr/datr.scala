@@ -221,7 +221,7 @@ class DateParser(val input: ParserInput) extends Parser {
   }
 
   def FullIsoTime  = rule { HourDigits ~ Colon ~ MinuteDigits ~> ((h,m) => LocalTime.of(h, m)) }
-  def HoursOnly    = rule { HourDigits ~ &(Space ~ (To | Next | On |  EOI)) ~> ((h) => LocalTime.of(h.toInt, 0))  }
+  def HoursOnly    = rule { HourDigits ~ &(Space ~ (To | Next | On |  EOI)) ~> ((h) => LocalTime.of(h, 0))  }
 
   def HourDigits   = rule { capture(anyOf("01") ~ optional(CharPredicate.Digit) | ("2" ~ optional(anyOf("01234" ))) | anyOf("3456789")) ~> (_.toInt) }
   def MinuteDigits = rule { capture(anyOf("012345") ~ optional(CharPredicate.Digit)) ~> (_.toInt) }
