@@ -1,9 +1,5 @@
 # TODO
 
-## Technical
-
-* have test suite with a reference date and only have simple, but a lot of, integration tests over the parsed dates
-
 ## Duckling corpus
 
 [duckling](https://github.com/wit-ai/duckling) is an amazing Clojure library and pretty much achieves what I wanted to achieve with this little grammar. They went and build a stochastic parsing engine that you can train. I have to look into that.
@@ -100,7 +96,7 @@ in a sec
 in one minute
 in half an hour
 in 2.5 hours
-in one hourj
+in one hour
 in 1h
 a day from now
 3 years from today
@@ -111,7 +107,6 @@ xmas
 christmas
 new year's eve
 
-this afternoon
 this past weekend
 this week-end
 
