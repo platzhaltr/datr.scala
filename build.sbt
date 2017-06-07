@@ -6,7 +6,7 @@ organization := "platzhaltr"
 
 scalaVersion := "2.12.2"
 
-libraryDependencies += "org.threeten" % "threeten-extra" % "1.1"
+libraryDependencies += "org.threeten" % "threeten-extra" % "1.2"
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.3" % "test"
 
