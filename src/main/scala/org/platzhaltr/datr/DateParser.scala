@@ -1,4 +1,4 @@
-package org.platzhaltr
+package org.platzhaltr.datr
 
 import java.time.{DayOfWeek, LocalDate, LocalTime, Month, MonthDay}
 

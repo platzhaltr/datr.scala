@@ -1,4 +1,4 @@
-package org.platzhaltr
+package org.platzhaltr.datr
 
 import java.time.{LocalDateTime, LocalTime}
 

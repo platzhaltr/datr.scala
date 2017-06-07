@@ -1,9 +1,9 @@
-package org.platzhaltr
+package org.platzhaltr.datr
 
 import scala.util.{Failure, Success}
-
 import java.time.{LocalDate, LocalDateTime}
-import org.parboiled2.{ParseError, ErrorFormatter}
+
+import org.parboiled2.{ErrorFormatter, ParseError}
 
 object SimpleInterface {
   val errorFmt = new ErrorFormatter(showTraces = true)

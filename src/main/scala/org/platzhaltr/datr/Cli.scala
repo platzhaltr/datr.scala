@@ -1,4 +1,4 @@
-package org.platzhaltr
+package org.platzhaltr.datr
 
 import scala.util.{Failure, Success}
 

@@ -1,4 +1,4 @@
-package org.platzhaltr
+package org.platzhaltr.datr
 
 import scala.annotation.tailrec
 import scala.io.StdIn
