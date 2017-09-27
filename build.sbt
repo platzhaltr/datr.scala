@@ -4,7 +4,7 @@ version      := "0.1"
 
 organization := "platzhaltr"
 
-scalaVersion := "2.12.2"
+scalaVersion := "2.12.3"
 
 libraryDependencies += "org.threeten" % "threeten-extra" % "1.2"
 
