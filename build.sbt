@@ -8,7 +8,7 @@ scalaVersion := "2.12.3"
 
 libraryDependencies += "org.threeten" % "threeten-extra" % "1.2"
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.3" % "test"
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.4" % "test"
 
 libraryDependencies += "org.parboiled" %% "parboiled" % "2.1.4"
 
