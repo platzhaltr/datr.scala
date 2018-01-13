@@ -28,3 +28,5 @@ scalacOptions ++= Seq(
     //"-Yinline-warnings",
     "-Ywarn-dead-code",
     "-Xfuture")
+
+bintrayOmitLicense := true
