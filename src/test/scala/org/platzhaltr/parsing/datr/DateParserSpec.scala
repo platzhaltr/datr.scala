@@ -1,13 +1,13 @@
-package org.platzhaltr.datr
+package org.platzhaltr.parsing.datr
 
-import scala.util.{Failure, Success}
-import org.scalatest._
-
-import org.parboiled2.{ParseError, ErrorFormatter}
-
-import java.time.{DayOfWeek, LocalDate, LocalTime, MonthDay}
 import java.time.DayOfWeek._
 import java.time.Month._
+import java.time.{DayOfWeek, LocalDate, LocalTime, MonthDay}
+
+import org.parboiled2.{ErrorFormatter, ParseError}
+import org.scalatest._
+
+import scala.util.{Failure, Success}
 
 class DateParserSpec extends fixture.FreeSpec with Matchers {
 

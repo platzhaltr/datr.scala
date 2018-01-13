@@ -1,4 +1,4 @@
-package org.platzhaltr.datr
+package org.platzhaltr.parsing.datr
 
 import java.time.temporal.TemporalAdjuster
 import java.time.{DayOfWeek, Duration, LocalDate, LocalDateTime, ZoneOffset}
