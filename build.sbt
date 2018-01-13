@@ -1,6 +1,6 @@
 name         := "datr.scala"
 
-version      := "0.1"
+version      := "0.1.0"
 
 organization := "platzhaltr"
 
