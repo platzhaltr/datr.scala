@@ -26,4 +26,6 @@ scalacOptions ++= Seq(
     "-Ywarn-dead-code",
     "-Xfuture")
 
+conflictManager := ConflictManager.strict
+
 bintrayOmitLicense := true
