@@ -1,9 +1,8 @@
 # README
 
 ```
-sbt compile
-sbt run
-Enter expression >
+sbt assembly
+./datr next Friday
 ```
 
 ## Supported formats
