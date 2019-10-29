@@ -7,4 +7,4 @@ if ! [ -x "$(command -v drip)" ]; then
   JAVA_CMD="drip" 
 fi
 
-$JAVA_CMD -jar target/scala-2.12/datr.scala-assembly-*.jar $@
+$JAVA_CMD -jar target/scala-2.13/datr.scala-assembly-*.jar $@
