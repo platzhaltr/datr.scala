@@ -23,8 +23,7 @@ scalacOptions ++= Seq(
     "-language:experimental.macros",
     "-unchecked",
     "-Xlint",
-    "-Ywarn-dead-code",
-    "-Xfuture")
+    "-Ywarn-dead-code")
 
 conflictManager := ConflictManager.strict
 
