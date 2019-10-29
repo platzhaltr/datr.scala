@@ -22,9 +22,7 @@ scalacOptions ++= Seq(
     "-language:implicitConversions",
     "-language:experimental.macros",
     "-unchecked",
-    //"-Ywarn-unused-import",
     "-Xlint",
-    //"-Yinline-warnings",
     "-Ywarn-dead-code",
     "-Xfuture")
 
