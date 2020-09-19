@@ -8,8 +8,10 @@ import org.parboiled2.{ErrorFormatter, ParseError}
 import org.scalatest._
 
 import scala.util.{Failure, Success}
+import org.scalatest.freespec
+import org.scalatest.matchers.should.Matchers
 
-class DateParserSpec extends fixture.FreeSpec with Matchers {
+class DateParserSpec extends freespec.FixtureAnyFreeSpec with Matchers {
 
   type FixtureParam = TestData
 

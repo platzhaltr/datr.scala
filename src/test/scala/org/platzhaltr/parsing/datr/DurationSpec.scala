@@ -1,12 +1,12 @@
 package org.platzhaltr.parsing.datr
 
-import org.scalatest._
-
 import java.time._
 import java.time.DayOfWeek._
 import org.threeten.extra.Interval
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class DurationSpec extends FlatSpec with Matchers {
+class DurationSpec extends AnyFlatSpec with Matchers {
 
   it should "interpret 'for <n> seconds'" in {
     val now = LocalDateTime.of(2014, 1, 1, 18, 30, 30)

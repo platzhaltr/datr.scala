@@ -4,13 +4,13 @@ version      := "0.1.0"
 
 organization := "org.platzhaltr.parsing"
 
-scalaVersion := "2.13.1"
+scalaVersion := "2.13.2"
 
 libraryDependencies += "org.threeten" % "threeten-extra" % "1.5.0"
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.8" % "test"
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.2" % "test"
 
-libraryDependencies += "org.parboiled" %% "parboiled" % "2.1.8"
+libraryDependencies += "org.parboiled" %% "parboiled" % "2.2.0"
 
 scalacOptions ++= Seq(
     "-target:jvm-1.8",

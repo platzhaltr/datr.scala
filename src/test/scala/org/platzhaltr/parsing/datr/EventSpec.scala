@@ -1,14 +1,14 @@
 package org.platzhaltr.parsing.datr
 
-import org.scalatest._
-
 import java.time._
 import java.time.DayOfWeek._
 import org.threeten.extra.Interval
 
 import Month._
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class EventSpec extends FlatSpec with Matchers {
+class EventSpec extends AnyFlatSpec with Matchers {
 
   it should "interpret last <weekday>" in {
     val today = LocalDate.of(2014, 6, 27) // FRIDAY
